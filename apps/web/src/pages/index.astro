@@ -2,8 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
-import LiveDemo from '../components/LiveDemo';
-import CodeExamples from '../components/CodeExamples';
+import LiveDemoEnhanced from '../components/LiveDemoEnhanced';
+import CodeExamplesEnhanced from '../components/CodeExamplesEnhanced';
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -38,6 +38,9 @@ const structuredData = {
   keywords="placeholder images, image placeholder api, dummy images, developer tools, web development, mockup images, fallback images, svg placeholder, png placeholder, image generator api"
   ogImage="https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics+-+Never+show+broken+images+again"
 >
+  <!-- Import modern styles -->
+  <link rel="stylesheet" href="/src/styles/modern-ui.css" />
+  <link rel="stylesheet" href="/src/styles/accessibility.css" />
   <!-- Hero Section with Animated Background -->
   <main id="main-content">
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-900 via-purple-700 to-blue-600 py-12 sm:py-0" role="banner" aria-labelledby="hero-heading">
@@ -55,8 +58,8 @@ const structuredData = {
         </div>
       </div>
 
-      <!-- Main Heading with Animation -->
-      <h1 id="hero-heading" class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 sm:mb-6 animate-fade-in leading-tight">
+      <!-- Main Heading with Enhanced Animation -->
+      <h1 id="hero-heading" class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-4 sm:mb-6 animate-fade-in leading-tight" style="letter-spacing: -0.05em; line-height: 0.95;">
         Never Show<br />
         <span class="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Broken Images</span><br />
         Again
@@ -68,9 +71,9 @@ const structuredData = {
         <span class="font-semibold">Zero config</span>, <span class="font-semibold">instant results</span>, <span class="font-semibold">global CDN</span>.
       </p>
 
-      <!-- CTA Buttons -->
+      <!-- CTA Buttons with Enhanced Animations -->
       <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12">
-        <a href="#playground" class="group relative px-6 sm:px-8 py-3.5 sm:py-4 bg-white text-purple-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 text-base sm:text-base focus:outline-none focus:ring-4 focus:ring-purple-400" aria-label="Try the interactive playground">
+        <a href="#playground" class="btn-magnetic group relative px-6 sm:px-8 py-3.5 sm:py-4 bg-white text-purple-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transform transition-all duration-200 text-base sm:text-base focus:outline-none focus:ring-4 focus:ring-purple-400" aria-label="Try the interactive playground">
           <span class="relative z-10">Try It Now →</span>
         </a>
         <a href="/docs" class="px-6 sm:px-8 py-3.5 sm:py-4 bg-white/20 backdrop-blur-md text-white font-bold rounded-xl border border-white/40 hover:bg-white/30 transition-all duration-200 text-base sm:text-base focus:outline-none focus:ring-4 focus:ring-white/70" aria-label="View complete documentation">
@@ -83,8 +86,8 @@ const structuredData = {
         </a>
       </div>
 
-      <!-- Live Example -->
-      <div class="bg-white/10 backdrop-blur-xl rounded-xl p-3 sm:p-6 md:p-8 max-w-4xl mx-auto border border-white/20 shadow-2xl" role="region" aria-label="Live code example">
+      <!-- Live Example with Float Animation -->
+      <div class="glass-card bg-white/10 backdrop-blur-xl rounded-xl p-3 sm:p-6 md:p-8 max-w-4xl mx-auto border border-white/20 shadow-2xl float-animation" role="region" aria-label="Live code example">
         <div class="text-left mb-2 sm:mb-4">
           <span class="text-white/90 text-xs font-mono">// Just use our URL directly</span>
         </div>
@@ -96,14 +99,14 @@ const structuredData = {
         <img src="https://fallback.pics/api/v1/800x400/7C3AED/FFFFFF?text=Your+Image+Here" alt="Example placeholder image showing 'Your Image Here' text on purple background" class="w-full rounded-lg shadow-xl" loading="lazy" />
       </div>
 
-      <!-- Stats -->
-      <div class="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+      <!-- Stats with Counter Animation -->
+      <div class="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 fade-in-scroll">
         <div class="text-center">
-          <div class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-1 sm:mb-2">&lt;50ms</div>
+          <div class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-1 sm:mb-2">&lt;<span class="counter" data-target="50" data-duration="1500">0</span>ms</div>
           <div class="text-white/90 text-xs sm:text-sm font-medium">Response Time</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-1 sm:mb-2">200+</div>
+          <div class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-1 sm:mb-2"><span class="counter" data-target="200" data-duration="2000">0</span>+</div>
           <div class="text-white/90 text-xs sm:text-sm font-medium">CDN Locations</div>
         </div>
         <div class="text-center">
@@ -359,21 +362,21 @@ const structuredData = {
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-        <!-- Feature Cards with Hover Effects -->
-        <div class="group relative bg-gradient-to-br from-purple-50 to-blue-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2">
+        <!-- Feature Cards with Enhanced Effects -->
+        <div class="group relative glass-card bg-gradient-to-br from-purple-50 to-blue-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2 slide-up-scroll">
           <div class="absolute top-0 right-0 -mt-2 -mr-2 sm:-mt-4 sm:-mr-4 bg-purple-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full">NEW</div>
           <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">AI-Powered Generation</h3>
           <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">Context-aware patterns for any industry. E-commerce, tech, healthcare, and more.</p>
           <a href="/docs#ai" class="text-purple-600 font-semibold hover:text-purple-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 rounded" aria-label="Learn more about AI-Powered Generation">Learn more →</a>
         </div>
 
-        <div class="group relative bg-gradient-to-br from-green-50 to-teal-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2">
+        <div class="group relative glass-card bg-gradient-to-br from-green-50 to-teal-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2 slide-up-scroll" style="animation-delay: 0.1s;">
           <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Animated Placeholders</h3>
           <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">6 CSS-only animations: skeleton, pulse, wave, shimmer, gradient, dots.</p>
           <a href="/docs#animations" class="text-green-600 font-semibold hover:text-green-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 rounded" aria-label="See available animations">See animations →</a>
         </div>
 
-        <div class="group relative bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2">
+        <div class="group relative glass-card bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 sm:hover:-translate-y-2 slide-up-scroll" style="animation-delay: 0.2s;">
           <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Chart Mockups</h3>
           <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">8 chart types for dashboard prototypes. Bar, pie, line, area, and more.</p>
           <a href="/docs#charts" class="text-blue-600 font-semibold hover:text-blue-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded" aria-label="View chart mockup options">View charts →</a>
@@ -409,7 +412,7 @@ const structuredData = {
         </h2>
         <p class="text-xl text-gray-600">No signup. No API key. Just works.</p>
       </div>
-      <LiveDemo client:load />
+      <LiveDemoEnhanced client:load />
     </div>
   </section>
 
@@ -422,7 +425,7 @@ const structuredData = {
         </h2>
         <p class="text-xl text-gray-400">Works with any framework, any language, anywhere.</p>
       </div>
-      <CodeExamples client:visible />
+      <CodeExamplesEnhanced client:visible />
     </div>
   </section>
 
@@ -612,6 +615,9 @@ const structuredData = {
   <!-- Structured Data for SEO -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
 </Layout>
+
+<!-- Load animations script -->
+<script src="/src/scripts/animations.js" defer></script>
 
 <style>
   @keyframes fade-in {

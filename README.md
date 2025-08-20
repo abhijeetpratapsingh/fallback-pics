@@ -229,7 +229,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Built with [Cloudflare Workers](https://workers.cloudflare.com/)
-- Inspired by [placeholder.com](https://placeholder.com) and [placehold.it](https://placehold.it)
+
 - Typography from [Inter](https://rsms.me/inter/) and [Geist](https://vercel.com/font)
 
 ## Sponsors
