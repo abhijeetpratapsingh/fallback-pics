@@ -1,0 +1,494 @@
+---
+import DocsLayout from '../layouts/DocsLayout.astro';
+
+const baseUrl = 'https://fallback.pics/api/v1';
+---
+
+<DocsLayout title="API Reference">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent mb-4">
+        API Reference
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Complete documentation for integrating Fallback.pics into your applications
+      </p>
+    </div>
+
+    <!-- Base URL Section -->
+    <div class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-xl p-8 mb-12 text-white">
+      <div class="flex items-center mb-4">
+        <svg class="h-8 w-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+        </svg>
+        <h2 class="text-2xl font-bold">Base URL</h2>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-xl p-4 mb-4">
+        <code class="text-2xl font-mono text-white/95 block">{baseUrl}</code>
+      </div>
+      <p class="text-blue-100">All API endpoints are relative to this base URL. No authentication required!</p>
+    </div>
+
+    <!-- Quick Start Examples -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Quick Start</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-xl transition-all">
+          <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+            <h3 class="font-semibold text-white">Basic Image</h3>
+          </div>
+          <div class="p-4">
+            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300</code>
+            <img src="https://fallback.pics/api/v1/400x300" alt="Basic" class="rounded-lg w-full" />
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-xl transition-all">
+          <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-4">
+            <h3 class="font-semibold text-white">Custom Colors</h3>
+          </div>
+          <div class="p-4">
+            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300/FF6B6B/FFFFFF</code>
+            <img src="https://fallback.pics/api/v1/400x300/FF6B6B/FFFFFF" alt="Colors" class="rounded-lg w-full" />
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-xl transition-all">
+          <div class="bg-gradient-to-r from-green-500 to-green-600 p-4">
+            <h3 class="font-semibold text-white">With Text</h3>
+          </div>
+          <div class="p-4">
+            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300?text=Hello</code>
+            <img src="https://fallback.pics/api/v1/400x300?text=Hello" alt="Text" class="rounded-lg w-full" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- URL Structure -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">URL Structure</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <span class="bg-indigo-100 text-indigo-600 rounded-lg p-2 mr-3">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+              </svg>
+            </span>
+            Standard Format
+          </h3>
+          <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-4 mb-4">
+            <code class="text-emerald-400 text-sm font-mono block">
+              /[width]x[height][.format][/bgColor][/textColor][?params]
+            </code>
+          </div>
+          
+          <div class="space-y-3">
+            <h4 class="font-semibold text-gray-700">Components:</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start">
+                <span class="text-indigo-500 mr-2">•</span>
+                <div>
+                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">width</code>
+                  <span class="text-gray-600 ml-2">10-4000 pixels</span>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <span class="text-indigo-500 mr-2">•</span>
+                <div>
+                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">height</code>
+                  <span class="text-gray-600 ml-2">10-4000 pixels</span>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <span class="text-indigo-500 mr-2">•</span>
+                <div>
+                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">format</code>
+                  <span class="text-gray-600 ml-2">svg, png, jpg, webp</span>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <span class="text-indigo-500 mr-2">•</span>
+                <div>
+                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">colors</code>
+                  <span class="text-gray-600 ml-2">Hex without #</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <span class="bg-purple-100 text-purple-600 rounded-lg p-2 mr-3">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </span>
+            Preset Format
+          </h3>
+          <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-4 mb-4">
+            <code class="text-purple-400 text-sm font-mono block">
+              /[preset]/[...parameters]
+            </code>
+          </div>
+          
+          <div class="space-y-3">
+            <h4 class="font-semibold text-gray-700">Available Presets:</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              {['square', 'avatar', 'banner', 'skeleton', 'blur', 'ai', 'animated', 'chart'].map(preset => (
+                <div class="flex items-center">
+                  <span class="text-purple-500 mr-2">•</span>
+                  <code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">{preset}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Query Parameters -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Query Parameters</h2>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 border-b border-green-100">
+          <p class="text-green-800 font-medium">Customize your images with these optional parameters</p>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Parameter</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Type</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Description</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Example</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {[
+                { param: 'bg / bgColor', type: 'string', desc: 'Background color (hex or CSS)', example: '?bg=FF0000' },
+                { param: 'fg / textColor', type: 'string', desc: 'Text/foreground color', example: '?fg=FFFFFF' },
+                { param: 'text / label', type: 'string', desc: 'Custom text (+ for spaces)', example: '?text=Hello+World' },
+                { param: 'font', type: 'string', desc: 'Font family name', example: '?font=roboto' },
+                { param: 'fontSize', type: 'number', desc: 'Font size in pixels', example: '?fontSize=24' },
+                { param: 'retina', type: 'number', desc: 'Retina multiplier (2 or 3)', example: '?retina=2' },
+                { param: 'context', type: 'string', desc: 'AI context (with /ai preset)', example: '?context=tech' },
+                { param: 'mood', type: 'string', desc: 'AI mood (with /ai preset)', example: '?mood=minimal' },
+                { param: 'reducedMotion', type: 'boolean', desc: 'Disable animations', example: '?reducedMotion=true' }
+              ].map((item, index) => (
+                <tr class={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <td class="px-6 py-4">
+                    <code class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded font-mono">
+                      {item.param}
+                    </code>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm text-gray-600">{item.type}</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm text-gray-700">{item.desc}</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <code class="text-xs bg-gray-100 px-2 py-1 rounded font-mono text-gray-700">
+                      {item.example}
+                    </code>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Examples -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Interactive Examples</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { 
+            title: 'Product Card', 
+            url: '/600x400/gradient?text=Product+Image',
+            color: 'from-blue-500 to-purple-500'
+          },
+          { 
+            title: 'User Avatar', 
+            url: '/avatar/200?text=JD',
+            color: 'from-green-500 to-teal-500'
+          },
+          { 
+            title: 'Loading State', 
+            url: '/animated/skeleton/400x300',
+            color: 'from-purple-500 to-pink-500'
+          },
+          { 
+            title: 'Dashboard Chart', 
+            url: '/chart/bar/600x400',
+            color: 'from-orange-500 to-red-500'
+          }
+        ].map(example => (
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class={`bg-gradient-to-r ${example.color} p-4`}>
+              <h3 class="font-semibold text-white">{example.title}</h3>
+            </div>
+            <div class="p-6">
+              <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                <code class="text-cyan-400 font-mono text-xs">{example.url}</code>
+              </div>
+              <img 
+                src={`${baseUrl}${example.url}`} 
+                alt={example.title} 
+                class="rounded-lg shadow-sm w-full"
+              />
+              <div class="mt-4 text-center">
+                <a 
+                  href={`${baseUrl}${example.url}`} 
+                  target="_blank"
+                  class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Open in new tab
+                  <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Code Examples -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Code Examples</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- HTML Example -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">HTML</h3>
+            <button class="text-white/80 hover:text-white transition-colors" title="Copy">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+          <div class="bg-gray-900 p-4 overflow-x-auto">
+            <pre class="text-sm"><code class="text-green-400 font-mono">&lt;!-- Basic --&gt;
+&lt;img src="{baseUrl}/400x300"&gt;
+
+&lt;!-- Custom --&gt;
+&lt;img src="{baseUrl}/600x400/3B82F6/FFFFFF?text=Product"&gt;
+
+&lt;!-- Avatar --&gt;
+&lt;img src="{baseUrl}/avatar/100?text=JD"&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- CSS Example -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">CSS</h3>
+            <button class="text-white/80 hover:text-white transition-colors" title="Copy">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+          <div class="bg-gray-900 p-4 overflow-x-auto">
+            <pre class="text-sm"><code class="text-cyan-400 font-mono">.hero &#123;
+  background: url('{baseUrl}/1920x1080');
+&#125;
+
+.avatar &#123;
+  background: url('{baseUrl}/avatar/200');
+&#125;</code></pre>
+          </div>
+        </div>
+
+        <!-- JavaScript Example -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div class="bg-gradient-to-r from-yellow-500 to-amber-500 p-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">JavaScript</h3>
+            <button class="text-white/80 hover:text-white transition-colors" title="Copy">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+          <div class="bg-gray-900 p-4 overflow-x-auto">
+            <pre class="text-sm"><code class="text-yellow-400 font-mono">function getPlaceholder(w, h, opts = &#123;&#125;) &#123;
+  const base = '{baseUrl}';
+  let url = `$&#123;base&#125;/$&#123;w&#125;x$&#123;h&#125;`;
+  
+  const params = new URLSearchParams();
+  if (opts.text) params.append('text', opts.text);
+  if (opts.bg) params.append('bg', opts.bg);
+  
+  return params.toString() 
+    ? `$&#123;url&#125;?$&#123;params&#125;` 
+    : url;
+&#125;</code></pre>
+          </div>
+        </div>
+
+        <!-- React Example -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div class="bg-gradient-to-r from-cyan-500 to-blue-500 p-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">React</h3>
+            <button class="text-white/80 hover:text-white transition-colors" title="Copy">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+          <div class="bg-gray-900 p-4 overflow-x-auto">
+            <pre class="text-sm"><code class="text-cyan-400 font-mono">const Placeholder = (&#123;w, h, text&#125;) => &#123;
+  const url = `{baseUrl}/$&#123;w&#125;x$&#123;h&#125;`;
+  const params = text ? `?text=$&#123;text&#125;` : '';
+  
+  return &lt;img src=&#123;`$&#123;url&#125;$&#123;params&#125;`&#125; /&gt;;
+&#125;;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Response Headers -->
+    <section class="mb-16">
+      <div class="flex items-center mb-8">
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg p-3 mr-4">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Response Headers</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="bg-purple-100 text-purple-600 rounded-lg p-3 mb-4 inline-block">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Content-Type</h3>
+          <div class="space-y-1 text-sm">
+            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/svg+xml</code></div>
+            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/png</code></div>
+            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/jpeg</code></div>
+            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/webp</code></div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="bg-blue-100 text-blue-600 rounded-lg p-3 mb-4 inline-block">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Cache-Control</h3>
+          <code class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">public, max-age=31536000</code>
+          <p class="text-gray-600 mt-2 text-sm">Images cached for 1 year</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="bg-green-100 text-green-600 rounded-lg p-3 mb-4 inline-block">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">CORS</h3>
+          <code class="bg-green-50 text-green-700 px-2 py-1 rounded text-xs">Access-Control-Allow-Origin: *</code>
+          <p class="text-gray-600 mt-2 text-sm">Available from any origin</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rate Limits -->
+    <section>
+      <div class="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl shadow-xl p-8 text-white">
+        <div class="flex items-center mb-6">
+          <svg class="h-10 w-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h2 class="text-3xl font-bold">No Rate Limits!</h2>
+            <p class="text-green-100">Free forever. No authentication required.</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div class="bg-white/10 backdrop-blur rounded-xl p-4">
+            <svg class="h-8 w-8 mb-2 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <h3 class="font-bold text-lg">Unlimited Requests</h3>
+            <p class="text-green-100 text-sm mt-1">No daily or monthly limits</p>
+          </div>
+          
+          <div class="bg-white/10 backdrop-blur rounded-xl p-4">
+            <svg class="h-8 w-8 mb-2 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <h3 class="font-bold text-lg">No API Keys</h3>
+            <p class="text-green-100 text-sm mt-1">Start using immediately</p>
+          </div>
+          
+          <div class="bg-white/10 backdrop-blur rounded-xl p-4">
+            <svg class="h-8 w-8 mb-2 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <h3 class="font-bold text-lg">All Features</h3>
+            <p class="text-green-100 text-sm mt-1">Everything included free</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</DocsLayout>

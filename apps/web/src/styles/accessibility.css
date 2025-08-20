@@ -1,0 +1,284 @@
+/* Accessibility Improvements for fallback.pics */
+
+/* Screen Reader Only Class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Make sr-only visible on focus */
+.sr-only:focus,
+.focus\:not-sr-only:focus {
+  position: absolute;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  z-index: 9999;
+}
+
+/* Skip Links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #7C3AED;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  z-index: 100;
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Enhanced Focus Indicators */
+*:focus-visible {
+  outline: 3px solid #7C3AED;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Button Focus States */
+button:focus-visible,
+a[role="button"]:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Form Control Focus */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #7C3AED;
+  outline-offset: 0;
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+/* Disabled State Styling */
+:disabled,
+[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline-width: 4px;
+  }
+  
+  button,
+  a {
+    text-decoration: underline;
+  }
+  
+  button:hover,
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-fade-in,
+  .animate-bounce {
+    animation: none;
+  }
+}
+
+/* Color Contrast Improvements */
+.text-gray-600 {
+  color: #4B5563; /* Improved contrast ratio */
+}
+
+.text-gray-400 {
+  color: #6B7280; /* Better contrast on dark backgrounds */
+}
+
+/* Link Underlines for Better Visibility */
+a:not(.no-underline) {
+  text-underline-offset: 2px;
+}
+
+a:not(.no-underline):hover,
+a:not(.no-underline):focus {
+  text-decoration-thickness: 2px;
+}
+
+/* Focus Within for Interactive Containers */
+.interactive-container:focus-within {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #7C3AED;
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-navigable {
+  position: relative;
+}
+
+.keyboard-navigable:focus::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid #7C3AED;
+  border-radius: 0.375rem;
+  pointer-events: none;
+}
+
+/* Error States with ARIA */
+[aria-invalid="true"] {
+  border-color: #EF4444;
+}
+
+[aria-invalid="true"]:focus {
+  outline-color: #EF4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Loading States */
+[aria-busy="true"] {
+  position: relative;
+  color: transparent;
+}
+
+[aria-busy="true"]::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid #7C3AED;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Improved Table Accessibility */
+table {
+  border-collapse: collapse;
+}
+
+th {
+  font-weight: 600;
+  text-align: left;
+}
+
+th[scope="col"] {
+  vertical-align: bottom;
+}
+
+th[scope="row"] {
+  vertical-align: top;
+}
+
+/* Focus Trap for Modals */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap:focus {
+  outline: none;
+}
+
+/* Improved Touch Targets */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+select {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Voice Control Targets */
+[role="button"],
+[role="link"] {
+  cursor: pointer;
+}
+
+/* Print Styles for Accessibility */
+@media print {
+  .no-print,
+  .skip-link {
+    display: none !important;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+}
+
+/* Dark Mode Accessibility */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --focus-color: #A78BFA;
+  }
+  
+  *:focus-visible {
+    outline-color: var(--focus-color);
+  }
+}
+
+/* Announcement Region for Screen Readers */
+.sr-announcement {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Visible when containing text */
+[aria-live]:not(:empty) {
+  position: static;
+  left: auto;
+  width: auto;
+  height: auto;
+  overflow: visible;
+}

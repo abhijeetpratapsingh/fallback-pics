@@ -1,0 +1,31 @@
+name = "fallback-pics"
+main = "src/index.ts"
+compatibility_date = "2024-08-01"
+# Remove nodejs_compat for faster cold starts
+# compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm install"
+
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Custom domains (configured via dashboard)
+# Production URL: https://fallback.pics/api/v1
+# Fallback URL: https://fallback-pics.billing-04f.workers.dev
+
+# Environment configuration
+[env.production]
+name = "fallback-pics-production"
+# Custom domain configured in Cloudflare Dashboard:
+# - https://fallback.pics/api/v1
+
+# Routes configuration - configured via dashboard
+# routes = [
+#   { pattern = "https://fallback.pics/api/v1/*", zone_name = "fallback.pics" }
+# ]
+
+# CORS headers for production
+[env.production.vars]
+ALLOWED_ORIGIN = "https://fallback.pics"

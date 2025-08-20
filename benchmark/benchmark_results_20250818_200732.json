@@ -1,0 +1,577 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-18T14:37:32Z",
+    "platform": "Darwin",
+    "iterations": 5,
+    "timeout": 10
+  },
+  "services": {
+    "fallback.pics": {
+      "name": "fallback.pics",
+      "base_url": "https://fallback.pics/api/v1",
+      "dns_lookup_ms": 79,
+      "network_latency_ms": 133.510,
+      "endpoints": [
+        {
+          "endpoint": "/400x300",
+          "url": "https://fallback.pics/api/v1/400x300",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.490,
+          "min_response_time": 0.441107,
+          "max_response_time": 0.565463,
+          "avg_size_bytes": 261,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.png",
+          "url": "https://fallback.pics/api/v1/400x300.png",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.418,
+          "min_response_time": 0.404877,
+          "max_response_time": 0.449838,
+          "avg_size_bytes": 500,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.jpg",
+          "url": "https://fallback.pics/api/v1/400x300.jpg",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.403361,
+          "max_response_time": 0.416356,
+          "avg_size_bytes": 500,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.webp",
+          "url": "https://fallback.pics/api/v1/400x300.webp",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.412,
+          "min_response_time": 0.393049,
+          "max_response_time": 0.430151,
+          "avg_size_bytes": 500,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/7C3AED/FFFFFF",
+          "url": "https://fallback.pics/api/v1/400x300/7C3AED/FFFFFF",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.467,
+          "min_response_time": 0.444794,
+          "max_response_time": 0.491343,
+          "avg_size_bytes": 261,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300?text=Test+Image",
+          "url": "https://fallback.pics/api/v1/400x300?text=Test+Image",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.456,
+          "min_response_time": 0.434846,
+          "max_response_time": 0.479115,
+          "avg_size_bytes": 261,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/square/400",
+          "url": "https://fallback.pics/api/v1/square/400",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.446,
+          "min_response_time": 0.430324,
+          "max_response_time": 0.458668,
+          "avg_size_bytes": 261,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/avatar/200",
+          "url": "https://fallback.pics/api/v1/avatar/200",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.448,
+          "min_response_time": 0.438303,
+          "max_response_time": 0.457177,
+          "avg_size_bytes": 253,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/banner/1200x400",
+          "url": "https://fallback.pics/api/v1/banner/1200x400",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.439,
+          "min_response_time": 0.426164,
+          "max_response_time": 0.449847,
+          "avg_size_bytes": 446,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/gradient",
+          "url": "https://fallback.pics/api/v1/400x300/gradient",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.444,
+          "min_response_time": 0.410423,
+          "max_response_time": 0.493706,
+          "avg_size_bytes": 444,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/ai/400x300?context=e-commerce",
+          "url": "https://fallback.pics/api/v1/ai/400x300?context=e-commerce",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.474,
+          "min_response_time": 0.435541,
+          "max_response_time": 0.546808,
+          "avg_size_bytes": 264,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/skeleton",
+          "url": "https://fallback.pics/api/v1/400x300/skeleton",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.457,
+          "min_response_time": 0.427760,
+          "max_response_time": 0.505263,
+          "avg_size_bytes": 487,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/chart/bar/400x300",
+          "url": "https://fallback.pics/api/v1/chart/bar/400x300",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.443,
+          "min_response_time": 0.433286,
+          "max_response_time": 0.455880,
+          "avg_size_bytes": 758,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        }
+      ],
+      "summary": {
+        "overall_success_rate": 100.00,
+        "overall_avg_response_time": 0.446,
+        "total_successful_requests": 65,
+        "total_failed_requests": 0,
+        "tested_at": "2025-08-18T14:38:14Z"
+      },
+      "features": {
+        "formats": [
+          "svg",
+          "png",
+          "jpg",
+          "webp",
+          "avif",
+          "gif"
+        ],
+        "customColors": true,
+        "customText": true,
+        "ai": true,
+        "animations": true,
+        "charts": true,
+        "presets": true
+      }
+    },
+    "placehold.co": {
+      "name": "placehold.co",
+      "base_url": "https://placehold.co",
+      "dns_lookup_ms": 17,
+      "network_latency_ms": 125.645,
+      "endpoints": [
+        {
+          "endpoint": "/400x300",
+          "url": "https://placehold.co/400x300",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.391202,
+          "max_response_time": 0.427570,
+          "avg_size_bytes": 3451,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.png",
+          "url": "https://placehold.co/400x300.png",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.403,
+          "min_response_time": 0.400819,
+          "max_response_time": 0.411155,
+          "avg_size_bytes": 4610,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.jpg",
+          "url": "https://placehold.co/400x300.jpg",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.415,
+          "min_response_time": 0.402266,
+          "max_response_time": 0.431709,
+          "avg_size_bytes": 3262,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.webp",
+          "url": "https://placehold.co/400x300.webp",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.412,
+          "min_response_time": 0.402077,
+          "max_response_time": 0.424758,
+          "avg_size_bytes": 1290,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF",
+          "url": "https://placehold.co/400x300/3B82F6/FFFFFF",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.416,
+          "min_response_time": 0.406859,
+          "max_response_time": 0.434010,
+          "avg_size_bytes": 3451,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF?text=Test+Image",
+          "url": "https://placehold.co/400x300/3B82F6/FFFFFF?text=Test+Image",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.410,
+          "min_response_time": 0.398473,
+          "max_response_time": 0.431394,
+          "avg_size_bytes": 4634,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300@2x.png",
+          "url": "https://placehold.co/400x300@2x.png",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.419,
+          "min_response_time": 0.407049,
+          "max_response_time": 0.432690,
+          "avg_size_bytes": 10871,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF?font=roboto",
+          "url": "https://placehold.co/400x300/3B82F6/FFFFFF?font=roboto",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.394811,
+          "max_response_time": 0.425128,
+          "avg_size_bytes": 2156,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        }
+      ],
+      "summary": {
+        "overall_success_rate": 100.00,
+        "overall_avg_response_time": 0.411,
+        "total_successful_requests": 40,
+        "total_failed_requests": 0,
+        "tested_at": "2025-08-18T14:38:39Z"
+      },
+      "features": {
+        "formats": [
+          "svg",
+          "png",
+          "jpg",
+          "gif",
+          "webp",
+          "avif"
+        ],
+        "customColors": true,
+        "customText": true,
+        "customFonts": true,
+        "retina": true,
+        "ai": false,
+        "animations": false,
+        "charts": false
+      }
+    },
+    "dummyimage.com": {
+      "name": "dummyimage.com",
+      "base_url": "https://dummyimage.com",
+      "dns_lookup_ms": 21,
+      "network_latency_ms": 126.304,
+      "endpoints": [
+        {
+          "endpoint": "/400x300",
+          "url": "https://dummyimage.com/400x300",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.396672,
+          "max_response_time": 0.441771,
+          "avg_size_bytes": 1119,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.png",
+          "url": "https://dummyimage.com/400x300.png",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.412,
+          "min_response_time": 0.406180,
+          "max_response_time": 0.421175,
+          "avg_size_bytes": 1119,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.jpg",
+          "url": "https://dummyimage.com/400x300.jpg",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.402305,
+          "max_response_time": 0.417001,
+          "avg_size_bytes": 4804,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300.gif",
+          "url": "https://dummyimage.com/400x300.gif",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.420,
+          "min_response_time": 0.411339,
+          "max_response_time": 0.426996,
+          "avg_size_bytes": 1720,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF",
+          "url": "https://dummyimage.com/400x300/3B82F6/FFFFFF",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.406,
+          "min_response_time": 0.397428,
+          "max_response_time": 0.415236,
+          "avg_size_bytes": 1119,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF&text=Test+Image",
+          "url": "https://dummyimage.com/400x300/3B82F6/FFFFFF&text=Test+Image",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.408,
+          "min_response_time": 0.400193,
+          "max_response_time": 0.426145,
+          "avg_size_bytes": 1566,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        },
+        {
+          "endpoint": "/400x300/3B82F6/FFFFFF.png&text=Test",
+          "url": "https://dummyimage.com/400x300/3B82F6/FFFFFF.png&text=Test",
+          "successful_requests": 5,
+          "failed_requests": 0,
+          "avg_response_time": 0.407,
+          "min_response_time": 0.402286,
+          "max_response_time": 0.418266,
+          "avg_size_bytes": 1692,
+          "status_codes": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ]
+        }
+      ],
+      "summary": {
+        "overall_success_rate": 100.00,
+        "overall_avg_response_time": 0.409,
+        "total_successful_requests": 35,
+        "total_failed_requests": 0,
+        "tested_at": "2025-08-18T14:39:02Z"
+      },
+      "features": {
+        "formats": [
+          "png",
+          "jpg",
+          "gif"
+        ],
+        "customColors": true,
+        "customText": true,
+        "standardSizes": true,
+        "ai": false,
+        "animations": false,
+        "charts": false
+      }
+    }
+  }
+}

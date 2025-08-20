@@ -1,0 +1,418 @@
+---
+import DocsLayout from '../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Features">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold text-gray-900 mb-4">Powerful Features</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Everything you need for placeholder images, from basic shapes to AI-powered generation and animated charts.
+      </p>
+    </div>
+
+    <!-- Feature Comparison -->
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl p-8 mb-12 border border-gray-100">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Why Choose Fallback.pics?</h2>
+        <p class="text-gray-600">See how we compare to other placeholder services</p>
+      </div>
+      
+      <div class="overflow-x-auto rounded-xl">
+        <table class="min-w-full">
+          <thead>
+            <tr class="border-b-2 border-gray-200">
+              <th class="px-6 py-4 text-left">
+                <span class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Features</span>
+              </th>
+              <th class="px-6 py-4 text-center">
+                <div class="inline-flex items-center justify-center">
+                  <span class="text-sm font-bold text-purple-600 uppercase tracking-wider bg-purple-50 px-4 py-2 rounded-full">Fallback.pics</span>
+                </div>
+              </th>
+              <th class="px-6 py-4 text-center">
+                <span class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Others</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <!-- Standard Features -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-900">Size Range</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  10×10 to 4000×4000
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                  10×10 to 4000×4000
+                </span>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-900">Image Formats</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <div class="flex flex-wrap gap-1 justify-center">
+                  {['SVG', 'PNG', 'JPEG', 'WebP'].map(format => (
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                      {format}
+                    </span>
+                  ))}
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <div class="flex flex-wrap gap-1 justify-center">
+                  {['SVG', 'PNG', 'JPEG'].map(format => (
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                      {format}
+                    </span>
+                  ))}
+                </div>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-900">Custom Colors</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-green-600 font-medium">✓</span>
+                <span class="text-xs text-gray-500 ml-2">Hex & CSS</span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-green-600 font-medium">✓</span>
+                <span class="text-xs text-gray-500 ml-2">Hex only</span>
+              </td>
+            </tr>
+
+            <!-- Exclusive Features Section -->
+            <tr class="bg-gradient-to-r from-purple-50 to-blue-50">
+              <td colspan="3" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                  <svg class="h-5 w-5 text-purple-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span class="text-sm font-bold text-purple-600 uppercase tracking-wider">Exclusive Features</span>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 hover:from-green-100 hover:via-emerald-100 hover:to-teal-100 transition-all">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">AI Generation</span>
+                  <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">NEW</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+                  ✓ Advanced AI
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">✗</span>
+              </td>
+            </tr>
+
+            <tr class="bg-gradient-to-r from-purple-50 via-pink-50 to-indigo-50 hover:from-purple-100 hover:via-pink-100 hover:to-indigo-100 transition-all">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">Animated Placeholders</span>
+                  <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">HOT</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-500 text-white">
+                  6 Types
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">✗</span>
+              </td>
+            </tr>
+
+            <tr class="bg-gradient-to-r from-blue-50 via-cyan-50 to-sky-50 hover:from-blue-100 hover:via-cyan-100 hover:to-sky-100 transition-all">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">Chart Mockups</span>
+                  <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">PRO</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
+                  8 Charts
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">✗</span>
+              </td>
+            </tr>
+
+            <!-- Performance Section -->
+            <tr class="bg-gradient-to-r from-orange-50 to-yellow-50">
+              <td colspan="3" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                  <svg class="h-5 w-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span class="text-sm font-bold text-orange-600 uppercase tracking-wider">Performance & Infrastructure</span>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-yellow-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-yellow-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">Global CDN</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-400 text-yellow-900">
+                  200+ Locations
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">?</span>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-orange-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-orange-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">Response Time</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-500 text-white">
+                  &lt; 50ms
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">Not specified</span>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span class="text-sm font-bold text-gray-900">Privacy Focus</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-700 text-white">
+                  Zero Tracking
+                </span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-gray-400 font-medium">Unknown</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 text-white text-center">
+          <div class="text-3xl font-bold mb-1">13+</div>
+          <div class="text-purple-100 text-sm">Unique Features</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 text-white text-center">
+          <div class="text-3xl font-bold mb-1">100%</div>
+          <div class="text-green-100 text-sm">Privacy Focused</div>
+        </div>
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white text-center">
+          <div class="text-3xl font-bold mb-1">&lt;50ms</div>
+          <div class="text-blue-100 text-sm">Response Time</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      
+      <!-- Performance Card -->
+      <div class="bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl p-8 text-white">
+        <div class="mb-4">
+          <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">Lightning Fast</h3>
+        <p class="text-purple-100 mb-4">Images generated at the edge in under 50ms</p>
+        <ul class="space-y-2 text-purple-100">
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Edge computing
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            200+ CDN locations
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Aggressive caching
+          </li>
+        </ul>
+      </div>
+
+      <!-- AI Generation Card -->
+      <div class="bg-gradient-to-br from-green-500 to-teal-500 rounded-xl p-8 text-white">
+        <div class="mb-4">
+          <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">AI-Powered</h3>
+        <p class="text-green-100 mb-4">Context-aware placeholders for any industry</p>
+        <ul class="space-y-2 text-green-100">
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            8 industry contexts
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            8 mood variations
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Smart patterns
+          </li>
+        </ul>
+      </div>
+
+      <!-- Privacy Card -->
+      <div class="bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl p-8 text-white">
+        <div class="mb-4">
+          <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">Privacy First</h3>
+        <p class="text-gray-300 mb-4">Zero tracking, zero cookies, zero BS</p>
+        <ul class="space-y-2 text-gray-300">
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            No analytics
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            GDPR compliant
+          </li>
+          <li class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            No data collection
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Unique Features Section -->
+    <div class="mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Unique Features</h2>
+      
+      <!-- Animated Placeholders -->
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">✨ Animated Placeholders</h3>
+        <p class="text-gray-600 mb-6">CSS-only animations for modern loading states</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {['skeleton', 'pulse', 'wave', 'shimmer', 'gradient', 'dots'].map(type => (
+            <div class="text-center">
+              <img src={`https://fallback.pics/api/v1/animated/${type}/150x100`} alt={type} class="rounded shadow-sm mb-2" />
+              <span class="text-sm text-gray-600 capitalize">{type}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Chart Mockups -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">📊 Data Visualization Mockups</h3>
+        <p class="text-gray-600 mb-6">Professional chart placeholders for dashboards</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {['bar', 'pie', 'line', 'area', 'donut', 'scatter', 'radar', 'heatmap'].map(type => (
+            <div class="text-center">
+              <img src={`https://fallback.pics/api/v1/chart/${type}/200x150`} alt={type} class="rounded shadow-sm mb-2" />
+              <span class="text-sm text-gray-600 capitalize">{type} Chart</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-gradient-to-r from-purple-600 to-blue-500 rounded-xl p-12 text-center text-white">
+      <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+      <p class="text-xl mb-8 text-purple-100">No signup required. Just use our URLs directly in your projects.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/docs" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-purple-50 transition">
+          View Documentation
+        </a>
+        <a href="/#playground" class="bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-800 transition">
+          Try Playground
+        </a>
+      </div>
+    </div>
+
+  </div>
+</DocsLayout>

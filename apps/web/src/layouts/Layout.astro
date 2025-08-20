@@ -1,0 +1,92 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  keywords?: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const { 
+  title, 
+  description = "Lightning-fast placeholder images for developers. Simple URLs, instant results, zero configuration.",
+  keywords = "placeholder images, image placeholder api, dummy images, developer tools, web development, mockup images, fallback images, svg placeholder, png placeholder",
+  canonical,
+  ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics"
+} = Astro.props;
+
+const fullTitle = title.includes('fallback.pics') ? title : `${title} - fallback.pics`;
+const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ABHIJEET PRATAP SINGH" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={currentUrl} />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Generator -->
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={currentUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="fallback.pics" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@fallbackpics" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#7C3AED" />
+    <meta name="application-name" content="fallback.pics" />
+    <meta name="msapplication-TileColor" content="#7C3AED" />
+    
+    <title>{fullTitle}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Accessibility Styles -->
+    <link rel="stylesheet" href="/src/styles/accessibility.css" />
+  </head>
+  <body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-purple-600 text-white px-4 py-2 rounded-md z-50">
+      Skip to main content
+    </a>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  code {
+    font-family: 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, Lucida Console, Liberation Mono, monospace;
+  }
+</style>

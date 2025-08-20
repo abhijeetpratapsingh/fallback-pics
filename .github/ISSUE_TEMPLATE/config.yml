@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Community
+    url: https://discord.gg/hwGJNnN3
+    about: Please ask and answer questions here
+  - name: Documentation
+    url: https://docs.fallback.pics
+    about: Check our documentation for usage guides

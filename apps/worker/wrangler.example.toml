@@ -1,0 +1,41 @@
+name = "fallback-pics-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Update with your Cloudflare account ID
+account_id = "YOUR_ACCOUNT_ID"
+
+# Workers configuration
+workers_dev = true
+
+# For custom domain deployment
+# routes = [
+#   { pattern = "your-domain.com/*", zone_name = "your-domain.com" }
+# ]
+
+# Environment-specific configurations
+[env.staging]
+name = "fallback-pics-staging"
+vars = { ENVIRONMENT = "staging" }
+
+[env.production]
+name = "fallback-pics-production"
+vars = { ENVIRONMENT = "production" }
+# routes = [
+#   { pattern = "fallback.pics/*", zone_name = "fallback.pics" }
+# ]
+
+# Optional: KV namespace for caching
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# Optional: Durable Objects for analytics
+# [[durable_objects.bindings]]
+# name = "ANALYTICS"
+# class_name = "Analytics"
+
+# Optional: R2 bucket for storing custom images
+# [[r2_buckets]]
+# binding = "IMAGES"
+# bucket_name = "fallback-pics-images"

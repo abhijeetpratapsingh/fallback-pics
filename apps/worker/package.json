@@ -1,0 +1,22 @@
+{
+  "name": "@fallback-pics/worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240806.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.0",
+    "wrangler": "^3.70.0",
+    "eslint": "^8.56.0"
+  }
+}

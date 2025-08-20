@@ -1,0 +1,93 @@
+{
+  "services": [
+    {
+      "name": "fallback.pics",
+      "baseUrl": "https://fallback.pics/api/v1",
+      "endpoints": [
+        "/400x300",
+        "/400x300.png",
+        "/400x300.jpg",
+        "/400x300.webp",
+        "/400x300/7C3AED/FFFFFF",
+        "/400x300?text=Test+Image",
+        "/square/400",
+        "/avatar/200",
+        "/banner/1200x400",
+        "/400x300/gradient",
+        "/ai/400x300?context=e-commerce",
+        "/400x300/skeleton",
+        "/chart/bar/400x300"
+      ],
+      "features": {
+        "formats": ["svg", "png", "jpg", "webp", "avif", "gif"],
+        "customColors": true,
+        "customText": true,
+        "ai": true,
+        "animations": true,
+        "charts": true,
+        "presets": true
+      },
+      "claims": {
+        "responseTime": "<50ms",
+        "cdnLocations": 200,
+        "uptime": "99.9%",
+        "privacy": "no tracking"
+      }
+    },
+    {
+      "name": "placehold.co",
+      "baseUrl": "https://placehold.co",
+      "endpoints": [
+        "/400x300",
+        "/400x300.png",
+        "/400x300.jpg",
+        "/400x300.webp",
+        "/400x300/3B82F6/FFFFFF",
+        "/400x300/3B82F6/FFFFFF?text=Test+Image",
+        "/400x300@2x.png",
+        "/400x300/3B82F6/FFFFFF?font=roboto"
+      ],
+      "features": {
+        "formats": ["svg", "png", "jpg", "gif", "webp", "avif"],
+        "customColors": true,
+        "customText": true,
+        "customFonts": true,
+        "retina": true,
+        "ai": false,
+        "animations": false,
+        "charts": false
+      },
+      "claims": {
+        "responseTime": "fast",
+        "maxSize": "4000x4000",
+        "minSize": "10x10"
+      }
+    },    
+    {
+      "name": "dummyimage.com",
+      "baseUrl": "https://dummyimage.com",
+      "endpoints": [
+        "/400x300",
+        "/400x300.png",
+        "/400x300.jpg",
+        "/400x300.gif",
+        "/400x300/3B82F6/FFFFFF",
+        "/400x300/3B82F6/FFFFFF&text=Test+Image",
+        "/400x300/3B82F6/FFFFFF.png&text=Test"
+      ],
+      "features": {
+        "formats": ["png", "jpg", "gif"],
+        "customColors": true,
+        "customText": true,
+        "standardSizes": true,
+        "ai": false,
+        "animations": false,
+        "charts": false
+      },
+      "claims": {
+        "responseTime": "unspecified",
+        "openSource": true
+      }
+    }
+  ]
+}
