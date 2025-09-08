@@ -73,4 +73,54 @@
     </image:image>
   </url>
 
+  <!-- Blog -->
+  <url>
+    <loc>https://fallback.pics/blog</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog</image:loc>
+      <image:title>fallback.pics Blog - Image Placeholder Guides and Best Practices</image:title>
+      <image:caption>Learn about image placeholders, fallback strategies, and web development best practices</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://fallback.pics/blog/complete-guide-to-image-placeholders-in-web-development</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/1200x400/7C3AED/FFFFFF?text=Image+Placeholders+Guide</image:loc>
+      <image:title>Complete Guide to Image Placeholders in Web Development</image:title>
+      <image:caption>Learn everything about image placeholders - from basic implementation to advanced techniques</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/why-every-developer-needs-fallback-images-case-studies</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/1200x400/3B82F6/FFFFFF?text=Case+Studies+%26+Real+World+Data</image:loc>
+      <image:title>Why Every Developer Needs Fallback Images - Case Studies and Real Data</image:title>
+      <image:caption>Real-world case studies showing how fallback images improve user experience and business metrics</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/image-loading-best-practices-for-better-ux</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/1200x400/10B981/FFFFFF?text=Performance+%26+UX+Guide</image:loc>
+      <image:title>Image Loading Best Practices for Better UX</image:title>
+      <image:caption>Performance-focused guide covering Core Web Vitals, lazy loading, and progressive loading techniques</image:caption>
+    </image:image>
+  </url>
+
 </urlset>

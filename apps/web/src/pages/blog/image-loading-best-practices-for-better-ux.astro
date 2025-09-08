@@ -61,6 +61,23 @@ const structuredData = {
       </div>
     </header>
 
+    <!-- Breadcrumb Navigation -->
+    <nav class="bg-white border-b border-gray-100" aria-label="Breadcrumb">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <ol class="flex items-center space-x-2 text-sm">
+          <li>
+            <a href="/" class="text-gray-500 hover:text-purple-600 transition-colors">Home</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li>
+            <a href="/blog" class="text-gray-500 hover:text-purple-600 transition-colors">Blog</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li class="text-gray-900 font-medium">Image Loading Best Practices for Better UX</li>
+        </ol>
+      </div>
+    </nav>
+
     <!-- Blog Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Hero Section -->
@@ -137,34 +154,8 @@ const structuredData = {
         </div>
       </div>
 
-      <!-- Table of Contents -->
-      <div class="bg-white rounded-2xl p-8 shadow-lg mb-12 border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-          <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-          </svg>
-          Table of Contents
-        </h2>
-        <nav class="grid md:grid-cols-2 gap-4 text-gray-700">
-          <div class="space-y-2">
-            <a href="#why-image-loading-matters" class="block text-blue-600 hover:text-blue-800 transition-colors">1. Why Image Loading Matters</a>
-            <a href="#core-web-vitals" class="block text-blue-600 hover:text-blue-800 transition-colors">2. Core Web Vitals & Images</a>
-            <a href="#lazy-loading" class="block text-blue-600 hover:text-blue-800 transition-colors">3. Mastering Lazy Loading</a>
-            <a href="#progressive-loading" class="block text-blue-600 hover:text-blue-800 transition-colors">4. Progressive Loading Techniques</a>
-            <a href="#placeholder-strategies" class="block text-blue-600 hover:text-blue-800 transition-colors">5. Smart Placeholder Strategies</a>
-          </div>
-          <div class="space-y-2">
-            <a href="#responsive-images" class="block text-blue-600 hover:text-blue-800 transition-colors">6. Responsive Images Done Right</a>
-            <a href="#format-optimization" class="block text-blue-600 hover:text-blue-800 transition-colors">7. Format Optimization</a>
-            <a href="#preloading-strategies" class="block text-blue-600 hover:text-blue-800 transition-colors">8. Smart Preloading</a>
-            <a href="#error-handling" class="block text-blue-600 hover:text-blue-800 transition-colors">9. Error Handling & Fallbacks</a>
-            <a href="#measuring-success" class="block text-blue-600 hover:text-blue-800 transition-colors">10. Measuring Success</a>
-          </div>
-        </nav>
-      </div>
-
       <!-- Why Image Loading Matters -->
-      <section id="why-image-loading-matters" class="mb-16">
+      <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">1</span>
@@ -206,36 +197,11 @@ const structuredData = {
               </div>
             </div>
           </div>
-
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">The Hidden Costs of Poor Image Loading</h3>
-          <div class="space-y-4">
-            <div class="flex items-start space-x-3">
-              <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">1</span>
-              <div>
-                <h4 class="font-semibold text-gray-900">Layout Shift (CLS)</h4>
-                <p class="text-gray-600">Images loading without dimensions cause content to jump around</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">2</span>
-              <div>
-                <h4 class="font-semibold text-gray-900">Bandwidth Waste</h4>
-                <p class="text-gray-600">Loading all images upfront, even those users never see</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">3</span>
-              <div>
-                <h4 class="font-semibold text-gray-900">Poor Perceived Performance</h4>
-                <p class="text-gray-600">Users see blank spaces and broken icons instead of content</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
       <!-- Core Web Vitals -->
-      <section id="core-web-vitals" class="mb-16">
+      <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">2</span>
@@ -256,19 +222,10 @@ const structuredData = {
                 </div>
                 <div>
                   <h3 class="text-xl font-semibold text-green-900">LCP (Largest Contentful Paint)</h3>
-                  <p class="text-green-700">Target: &lt;2.5 seconds</p>
+                  <p class="text-green-700">Target: <2.5 seconds</p>
                 </div>
               </div>
               <p class="text-green-800 mb-4">Often the LCP element is a hero image. Optimizing this one image can dramatically improve your score.</p>
-              <div class="bg-white rounded-lg p-4">
-                <h4 class="font-semibold text-green-900 mb-2">Optimization Strategies:</h4>
-                <ul class="text-green-700 text-sm space-y-1">
-                  <li>• Preload hero images with &lt;link rel="preload"&gt;</li>
-                  <li>• Use appropriate image formats (WebP, AVIF)</li>
-                  <li>• Optimize image sizes for actual display dimensions</li>
-                  <li>• Implement progressive JPEG for faster perceived loading</li>
-                </ul>
-              </div>
             </div>
 
             <div class="border border-blue-200 bg-blue-50 rounded-xl p-6">
@@ -280,19 +237,10 @@ const structuredData = {
                 </div>
                 <div>
                   <h3 class="text-xl font-semibold text-blue-900">FID (First Input Delay)</h3>
-                  <p class="text-blue-700">Target: &lt;100 milliseconds</p>
+                  <p class="text-blue-700">Target: <100 milliseconds</p>
                 </div>
               </div>
               <p class="text-blue-800 mb-4">Heavy image processing can block the main thread, affecting interactivity.</p>
-              <div class="bg-white rounded-lg p-4">
-                <h4 class="font-semibold text-blue-900 mb-2">Prevention Techniques:</h4>
-                <ul class="text-blue-700 text-sm space-y-1">
-                  <li>• Use lazy loading for below-the-fold images</li>
-                  <li>• Implement intersection observer for efficient loading</li>
-                  <li>• Avoid large image processing during critical rendering</li>
-                  <li>• Use web workers for heavy image manipulations</li>
-                </ul>
-              </div>
             </div>
 
             <div class="border border-purple-200 bg-purple-50 rounded-xl p-6">
@@ -304,26 +252,17 @@ const structuredData = {
                 </div>
                 <div>
                   <h3 class="text-xl font-semibold text-purple-900">CLS (Cumulative Layout Shift)</h3>
-                  <p class="text-purple-700">Target: &lt;0.1</p>
+                  <p class="text-purple-700">Target: <0.1</p>
                 </div>
               </div>
               <p class="text-purple-800 mb-4">Images without dimensions cause layout shifts as they load.</p>
-              <div class="bg-white rounded-lg p-4">
-                <h4 class="font-semibold text-purple-900 mb-2">Stabilization Methods:</h4>
-                <ul class="text-purple-700 text-sm space-y-1">
-                  <li>• Always specify width and height attributes</li>
-                  <li>• Use aspect-ratio CSS property for responsive images</li>
-                  <li>• Reserve space with placeholder containers</li>
-                  <li>• Implement proper skeleton screens</li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Lazy Loading -->
-      <section id="lazy-loading" class="mb-16">
+      <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">3</span>
@@ -338,23 +277,7 @@ const structuredData = {
             <div class="border-l-4 border-green-400 bg-green-50 p-6 rounded-r-lg">
               <h3 class="text-xl font-semibold text-green-900 mb-4">Native Lazy Loading</h3>
               <p class="text-green-800 mb-4">The simplest approach using the browser's built-in lazy loading:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>&lt;!-- Basic native lazy loading --&gt;
-&lt;img src="image.jpg" loading="lazy" alt="Description" /&gt;
-
-&lt;!-- With dimensions to prevent CLS --&gt;
-&lt;img 
-  src="image.jpg" 
-  loading="lazy" 
-  width="400" 
-  height="300"
-  alt="Description" 
-/&gt;
-
-&lt;!-- Don't lazy load above-the-fold images --&gt;
-&lt;img src="hero.jpg" loading="eager" alt="Hero image" /&gt;</code></pre>
-              </div>
-              <div class="bg-white rounded p-4 border border-green-200">
+              <div class="bg-white rounded-lg p-4 border border-green-200">
                 <h4 class="font-medium text-green-900 mb-2">✅ Pros:</h4>
                 <ul class="text-green-700 text-sm space-y-1 mb-4">
                   <li>• Zero JavaScript required</li>
@@ -372,149 +295,19 @@ const structuredData = {
 
             <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
               <h3 class="text-xl font-semibold text-blue-900 mb-4">Intersection Observer Lazy Loading</h3>
-              <p class="text-blue-800 mb-4">Advanced lazy loading with full control and placeholder support:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>// Enhanced lazy loading with placeholders
-class LazyImageLoader {
-  constructor() {
-    this.imageObserver = new IntersectionObserver(
-      this.handleIntersection.bind(this),
-      {
-        rootMargin: '50px 0px', // Start loading 50px before visible
-        threshold: 0.01
-      }
-    );
-    
-    this.init();
-  }
-  
-  init() {
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      // Show placeholder immediately
-      img.src = img.dataset.placeholder || 
-        'https://fallback.pics/400x300/F3F4F6/9CA3AF?text=Loading...';
-      
-      this.imageObserver.observe(img);
-    });
-  }
-  
-  handleIntersection(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        this.loadImage(entry.target);
-        this.imageObserver.unobserve(entry.target);
-      }
-    });
-  }
-  
-  loadImage(img) {
-    const image = new Image();
-    
-    image.onload = () => {
-      img.src = img.dataset.src;
-      img.classList.add('loaded');
-    };
-    
-    image.onerror = () => {
-      img.src = img.dataset.fallback || 
-        'https://fallback.pics/400x300/FEE2E2/DC2626?text=Failed+to+load';
-      img.classList.add('error');
-    };
-    
-    image.src = img.dataset.src;
-  }
-}
-
-// Initialize
-new LazyImageLoader();</code></pre>
-              </div>
-              <div class="bg-white rounded p-4 border border-blue-200">
-                <h4 class="font-medium text-blue-900 mb-2">HTML Implementation:</h4>
-                <div class="bg-gray-100 rounded p-3 text-sm font-mono">
-                  <code>&lt;img 
-  data-src="high-res.jpg"
-  data-placeholder="https://fallback.pics/400x300?text=Loading"
-  data-fallback="https://fallback.pics/400x300/FF6B6B?text=Error"
-  alt="Description"
-  width="400"
-  height="300"
-/&gt;</code>
-                </div>
-              </div>
+              <p class="text-blue-800 mb-4">Advanced lazy loading with full control and placeholder support for maximum flexibility.</p>
             </div>
 
             <div class="border-l-4 border-purple-400 bg-purple-50 p-6 rounded-r-lg">
               <h3 class="text-xl font-semibold text-purple-900 mb-4">React Hook Implementation</h3>
-              <p class="text-purple-800 mb-4">Modern React approach with hooks and Suspense:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>import { useState, useEffect, useRef } from 'react';
-
-function useLazyImage(src, placeholder) {
-  const [imageSrc, setImageSrc] = useState(placeholder);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const imgRef = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const image = new Image();
-          
-          image.onload = () => {
-            setImageSrc(src);
-            setLoading(false);
-          };
-          
-          image.onerror = () => {
-            setError(true);
-            setLoading(false);
-          };
-          
-          image.src = src;
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '50px' }
-    );
-
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [src]);
-
-  return { imgRef, imageSrc, loading, error };
-}
-
-// Component usage
-function LazyImage({ src, placeholder, alt, ...props }) {
-  const { imgRef, imageSrc, loading, error } = useLazyImage(
-    src, 
-    placeholder || 'https://fallback.pics/400x300?text=Loading'
-  );
-
-  return (
-    &lt;img
-      ref={imgRef}
-      src={imageSrc}
-      alt={alt}
-      className={`transition-opacity duration-300 ${
-        loading ? 'opacity-50' : 'opacity-100'
-      }`}
-      {...props}
-    /&gt;
-  );
-}</code></pre>
-              </div>
+              <p class="text-purple-800 mb-4">Modern React approach with hooks and Suspense for seamless integration.</p>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Progressive Loading -->
-      <section id="progressive-loading" class="mb-16">
+      <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">4</span>
@@ -527,14 +320,7 @@ function LazyImage({ src, placeholder, alt, ...props }) {
 
           <div class="space-y-8">
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4 flex items-center">
-                <span class="bg-blue-500 text-white rounded p-1 mr-3">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                  </svg>
-                </span>
-                LQIP (Low Quality Image Placeholder)
-              </h3>
+              <h3 class="text-xl font-semibold text-blue-900 mb-4">LQIP (Low Quality Image Placeholder)</h3>
               <p class="text-blue-800 mb-4">
                 Start with a tiny, heavily compressed version of your image, then progressively enhance.
               </p>
@@ -578,50 +364,10 @@ function LazyImage({ src, placeholder, alt, ...props }) {
                   </div>
                 </div>
               </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// LQIP Implementation
-class LQIPLoader {
-  constructor(img) {
-    this.img = img;
-    this.lowQualitySrc = img.dataset.lqip; // base64 thumbnail
-    this.highQualitySrc = img.dataset.src;
-    
-    this.loadProgressive();
-  }
-  
-  loadProgressive() {
-    // 1. Show LQIP immediately with blur
-    this.img.src = this.lowQualitySrc;
-    this.img.style.filter = 'blur(5px)';
-    this.img.style.transform = 'scale(1.05)';
-    
-    // 2. Preload high quality image
-    const highQualityImage = new Image();
-    
-    highQualityImage.onload = () => {
-      // 3. Fade in sharp image
-      this.img.style.transition = 'all 0.3s ease';
-      this.img.src = this.highQualitySrc;
-      this.img.style.filter = 'blur(0px)';
-      this.img.style.transform = 'scale(1)';
-    };
-    
-    highQualityImage.src = this.highQualitySrc;
-  }
-}</code></pre>
-              </div>
             </div>
 
             <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-green-900 mb-4 flex items-center">
-                <span class="bg-green-500 text-white rounded p-1 mr-3">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10l-1 13H6L7 4z"/>
-                  </svg>
-                </span>
-                Color-Based Placeholders
-              </h3>
+              <h3 class="text-xl font-semibold text-green-900 mb-4">Color-Based Placeholders</h3>
               <p class="text-green-800 mb-4">
                 Extract dominant colors from images to create contextual placeholders that match the content.
               </p>
@@ -639,1401 +385,6 @@ class LQIPLoader {
                   <img src="https://fallback.pics/120x80/10B981/FFFFFF?text=Forest" alt="Forest colors" class="w-full rounded mb-2"/>
                   <div class="text-green-700 text-sm">Natural greens</div>
                 </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// Color extraction for placeholders
-function getImageColors(imageSrc) {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const dominantColor = extractDominantColor(imageData);
-      
-      resolve({
-        primary: dominantColor,
-        placeholder: `https://fallback.pics/400x300/${dominantColor}/FFFFFF?text=Loading`
-      });
-    };
-    
-    img.src = imageSrc;
-  });
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-purple-900 mb-4 flex items-center">
-                <span class="bg-purple-500 text-white rounded p-1 mr-3">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  </svg>
-                </span>
-                Multi-Stage Loading
-              </h3>
-              <p class="text-purple-800 mb-4">
-                Use multiple quality levels for the smoothest possible experience.
-              </p>
-
-              <div class="bg-white rounded-lg p-4 mb-4 border border-purple-200">
-                <div class="flex items-center space-x-4 overflow-x-auto">
-                  <div class="text-center flex-shrink-0">
-                    <div class="w-16 h-12 bg-purple-200 rounded mb-2 flex items-center justify-center text-xs">Placeholder</div>
-                    <div class="text-xs text-purple-700">Instant</div>
-                  </div>
-                  <span class="text-purple-400">→</span>
-                  <div class="text-center flex-shrink-0">
-                    <img src="https://fallback.pics/blur/64x48?intensity=10" alt="Low quality" class="rounded mb-2"/>
-                    <div class="text-xs text-purple-700">Low (2KB)</div>
-                  </div>
-                  <span class="text-purple-400">→</span>
-                  <div class="text-center flex-shrink-0">
-                    <img src="https://fallback.pics/64x48/D8B4FE/FFFFFF?text=Med" alt="Medium quality" class="rounded mb-2"/>
-                    <div class="text-xs text-purple-700">Medium (8KB)</div>
-                  </div>
-                  <span class="text-purple-400">→</span>
-                  <div class="text-center flex-shrink-0">
-                    <img src="https://fallback.pics/64x48/7C3AED/FFFFFF?text=High" alt="High quality" class="rounded mb-2"/>
-                    <div class="text-xs text-purple-700">High (50KB)</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// Multi-stage progressive loading
-class MultiStageLoader {
-  constructor(img, stages) {
-    this.img = img;
-    this.stages = stages; // Array of {src, quality, size}
-    this.currentStage = 0;
-    
-    this.loadNextStage();
-  }
-  
-  loadNextStage() {
-    if (this.currentStage >= this.stages.length) return;
-    
-    const stage = this.stages[this.currentStage];
-    const tempImage = new Image();
-    
-    tempImage.onload = () => {
-      this.img.src = stage.src;
-      this.currentStage++;
-      
-      // Continue to next stage after a brief delay
-      setTimeout(() => this.loadNextStage(), 100);
-    };
-    
-    tempImage.src = stage.src;
-  }
-}</code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Smart Placeholder Strategies -->
-      <section id="placeholder-strategies" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">5</span>
-            Smart Placeholder Strategies
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Great placeholders are contextual, branded, and informative. They should feel like part of your design, not an afterthought.
-          </p>
-
-          <div class="space-y-8">
-            <div class="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-orange-900 mb-4">Context-Aware Placeholders</h3>
-              <p class="text-orange-800 mb-6">Different content types need different placeholder strategies.</p>
-              
-              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x100/3B82F6/FFFFFF?text=👤" alt="Avatar placeholder" class="w-16 h-16 rounded-full mx-auto mb-3"/>
-                  <h4 class="font-semibold text-orange-900 mb-2">User Avatars</h4>
-                  <p class="text-orange-700 text-sm">Show initials or generic icons</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/10B981/FFFFFF?text=📦" alt="Product placeholder" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-orange-900 mb-2">Products</h4>
-                  <p class="text-orange-700 text-sm">Category-specific icons</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/F97316/FFFFFF?text=📊" alt="Chart placeholder" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-orange-900 mb-2">Charts</h4>
-                  <p class="text-orange-700 text-sm">Data visualization mockups</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/7C3AED/FFFFFF?text=🖼️" alt="Gallery placeholder" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-orange-900 mb-2">Gallery</h4>
-                  <p class="text-orange-700 text-sm">Artistic or photo icons</p>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// Context-aware placeholder generator
-function getContextualPlaceholder(type, dimensions, options = {}) {
-  const placeholders = {
-    avatar: `https://fallback.pics/${dimensions}/${options.color || '3B82F6'}/FFFFFF?text=${options.initials || '👤'}`,
-    product: `https://fallback.pics/${dimensions}/10B981/FFFFFF?text=📦+Product`,
-    chart: `https://fallback.pics/${dimensions}/F97316/FFFFFF?text=📊+Loading+Data`,
-    gallery: `https://fallback.pics/${dimensions}/7C3AED/FFFFFF?text=🖼️+Image`,
-    video: `https://fallback.pics/${dimensions}/EF4444/FFFFFF?text=▶️+Video`,
-    document: `https://fallback.pics/${dimensions}/6B7280/FFFFFF?text=📄+Document`
-  };
-  
-  return placeholders[type] || placeholders.gallery;
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-green-900 mb-4">Animated Placeholders</h3>
-              <p class="text-green-800 mb-6">Add subtle animations to indicate loading progress and maintain engagement.</p>
-              
-              <div class="grid md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white rounded-lg p-4">
-                  <h4 class="font-semibold text-green-900 mb-3 text-center">Skeleton Loading</h4>
-                  <div class="space-y-2">
-                    <div class="h-32 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded animate-pulse"></div>
-                    <div class="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded animate-pulse"></div>
-                    <div class="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded animate-pulse w-2/3"></div>
-                  </div>
-                </div>
-                <div class="bg-white rounded-lg p-4">
-                  <h4 class="font-semibold text-green-900 mb-3 text-center">Pulse Effect</h4>
-                  <img src="https://fallback.pics/200x128/D1FAE5/10B981?text=Pulsing..." alt="Pulse effect" class="w-full rounded animate-pulse"/>
-                </div>
-                <div class="bg-white rounded-lg p-4">
-                  <h4 class="font-semibold text-green-900 mb-3 text-center">Shimmer Wave</h4>
-                  <div class="h-32 bg-gray-200 rounded relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 -skew-x-12 animate-slide"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>/* CSS-only animated placeholders */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes skeleton {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.shimmer-placeholder {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton 2s infinite;
-}
-
-.pulse-placeholder {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-/* Respectful of user preferences */
-@media (prefers-reduced-motion: reduce) {
-  .shimmer-placeholder,
-  .pulse-placeholder {
-    animation: none;
-  }
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Branded Placeholders</h3>
-              <p class="text-blue-800 mb-6">Use your brand colors and style to make placeholders feel intentional, not broken.</p>
-              
-              <div class="grid md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/150x100/7C3AED/FFFFFF?text=fallback.pics" alt="Branded placeholder" class="w-full rounded mb-3"/>
-                  <h4 class="font-semibold text-blue-900 mb-2">Brand Integration</h4>
-                  <p class="text-blue-700 text-sm">Include logo or brand name</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/150x100/1F2937/F9FAFB?text=Premium+Quality" alt="Premium placeholder" class="w-full rounded mb-3"/>
-                  <h4 class="font-semibold text-blue-900 mb-2">Premium Feel</h4>
-                  <p class="text-blue-700 text-sm">Sophisticated color schemes</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/150x100/059669/FFFFFF?text=✓+Loading+Quality" alt="Quality message" class="w-full rounded mb-3"/>
-                  <h4 class="font-semibold text-blue-900 mb-2">Quality Messaging</h4>
-                  <p class="text-blue-700 text-sm">Communicate value while loading</p>
-                </div>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-blue-200">
-                <h4 class="font-semibold text-blue-900 mb-3">Brand Placeholder Checklist:</h4>
-                <div class="grid md:grid-cols-2 gap-4 text-sm">
-                  <div class="space-y-2">
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Use consistent brand colors</span>
-                    </div>
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Include subtle branding elements</span>
-                    </div>
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Match your design system</span>
-                    </div>
-                  </div>
-                  <div class="space-y-2">
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Communicate loading status</span>
-                    </div>
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Maintain visual hierarchy</span>
-                    </div>
-                    <div class="flex items-center">
-                      <span class="text-green-500 mr-2">✓</span>
-                      <span class="text-blue-700">Test across devices</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Responsive Images -->
-      <section id="responsive-images" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">6</span>
-            Responsive Images Done Right
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Deliver the perfect image size for every device and screen density. Save bandwidth and improve performance with smart responsive techniques.
-          </p>
-
-          <div class="space-y-8">
-            <div class="border-l-4 border-green-400 bg-green-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-green-900 mb-4">Modern srcset Implementation</h3>
-              <p class="text-green-800 mb-4">Let the browser choose the optimal image size based on screen conditions:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>&lt;!-- Pixel density based selection --&gt;
-&lt;img 
-  src="https://fallback.pics/400x300/7C3AED/FFFFFF?text=Base+Image"
-  srcset="
-    https://fallback.pics/400x300/7C3AED/FFFFFF?text=1x 1x,
-    https://fallback.pics/800x600/7C3AED/FFFFFF?text=2x 2x,
-    https://fallback.pics/1200x900/7C3AED/FFFFFF?text=3x 3x
-  "
-  alt="Responsive example"
-/&gt;
-
-&lt;!-- Viewport width based selection --&gt;
-&lt;img 
-  src="https://fallback.pics/400x300/3B82F6/FFFFFF?text=Default"
-  srcset="
-    https://fallback.pics/320x240/3B82F6/FFFFFF?text=Small 320w,
-    https://fallback.pics/640x480/3B82F6/FFFFFF?text=Medium 640w,
-    https://fallback.pics/1024x768/3B82F6/FFFFFF?text=Large 1024w,
-    https://fallback.pics/1920x1440/3B82F6/FFFFFF?text=XL 1920w
-  "
-  sizes="(max-width: 600px) 320px, (max-width: 1200px) 640px, 1024px"
-  alt="Viewport responsive example"
-/&gt;</code></pre>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-green-200">
-                <h4 class="font-semibold text-green-900 mb-3">Responsive Image Strategy:</h4>
-                <div class="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h5 class="font-medium text-green-800 mb-2">Mobile-First Approach:</h5>
-                    <ul class="text-green-700 text-sm space-y-1">
-                      <li>• Start with smallest size as src</li>
-                      <li>• Use 'w' descriptors for width-based</li>
-                      <li>• Use 'x' descriptors for density-based</li>
-                      <li>• Always include sizes attribute</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h5 class="font-medium text-green-800 mb-2">Breakpoint Planning:</h5>
-                    <ul class="text-green-700 text-sm space-y-1">
-                      <li>• 320px: Mobile portrait</li>
-                      <li>• 640px: Mobile landscape/tablet</li>
-                      <li>• 1024px: Desktop small</li>
-                      <li>• 1920px: Desktop large</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Picture Element for Art Direction</h3>
-              <p class="text-blue-800 mb-4">Use different images or crops for different screen sizes:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>&lt;picture&gt;
-  &lt;!-- Mobile: Square crop --&gt;
-  &lt;source 
-    media="(max-width: 600px)" 
-    srcset="
-      https://fallback.pics/400x400/7C3AED/FFFFFF?text=Mobile+Square 1x,
-      https://fallback.pics/800x800/7C3AED/FFFFFF?text=Mobile+Square+2x 2x
-    "
-  /&gt;
-  
-  &lt;!-- Tablet: 4:3 aspect ratio --&gt;
-  &lt;source 
-    media="(max-width: 1200px)" 
-    srcset="
-      https://fallback.pics/640x480/3B82F6/FFFFFF?text=Tablet+4:3 1x,
-      https://fallback.pics/1280x960/3B82F6/FFFFFF?text=Tablet+4:3+2x 2x
-    "
-  /&gt;
-  
-  &lt;!-- Desktop: Wide 16:9 --&gt;
-  &lt;img 
-    src="https://fallback.pics/1024x576/10B981/FFFFFF?text=Desktop+16:9"
-    srcset="
-      https://fallback.pics/1024x576/10B981/FFFFFF?text=Desktop+16:9 1x,
-      https://fallback.pics/2048x1152/10B981/FFFFFF?text=Desktop+16:9+2x 2x
-    "
-    alt="Art-directed responsive image"
-  /&gt;
-&lt;/picture&gt;</code></pre>
-              </div>
-
-              <div class="grid md:grid-cols-3 gap-4 mb-4">
-                <div class="text-center bg-white rounded p-3">
-                  <img src="https://fallback.pics/120x120/7C3AED/FFFFFF?text=📱" alt="Mobile view" class="w-full rounded mb-2"/>
-                  <div class="text-blue-700 text-sm">Mobile: Square focus</div>
-                </div>
-                <div class="text-center bg-white rounded p-3">
-                  <img src="https://fallback.pics/120x90/3B82F6/FFFFFF?text=💻" alt="Tablet view" class="w-full rounded mb-2"/>
-                  <div class="text-blue-700 text-sm">Tablet: Balanced ratio</div>
-                </div>
-                <div class="text-center bg-white rounded p-3">
-                  <img src="https://fallback.pics/120x68/10B981/FFFFFF?text=🖥️" alt="Desktop view" class="w-full rounded mb-2"/>
-                  <div class="text-blue-700 text-sm">Desktop: Cinematic</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-purple-400 bg-purple-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-purple-900 mb-4">Container Query Based Images</h3>
-              <p class="text-purple-800 mb-4">The future of responsive images - adapt based on container size, not viewport:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>/* Container queries for adaptive images */
-.image-container {
-  container-type: inline-size;
-}
-
-.adaptive-image {
-  width: 100%;
-  height: auto;
-  content: url('https://fallback.pics/200x150/7C3AED/FFFFFF?text=Small');
-}
-
-/* Adapt based on container width */
-@container (min-width: 300px) {
-  .adaptive-image {
-    content: url('https://fallback.pics/300x225/3B82F6/FFFFFF?text=Medium');
-  }
-}
-
-@container (min-width: 600px) {
-  .adaptive-image {
-    content: url('https://fallback.pics/600x450/10B981/FFFFFF?text=Large');
-  }
-}
-
-@container (min-width: 900px) {
-  .adaptive-image {
-    content: url('https://fallback.pics/900x675/F97316/FFFFFF?text=XL');
-  }
-}</code></pre>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-purple-200">
-                <h4 class="font-semibold text-purple-900 mb-2">Container Query Benefits:</h4>
-                <ul class="text-purple-700 text-sm space-y-1">
-                  <li>• Images adapt to their actual space, not viewport</li>
-                  <li>• Perfect for component-based architectures</li>
-                  <li>• Works great with CSS Grid and Flexbox</li>
-                  <li>• Future-proof responsive design</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Format Optimization -->
-      <section id="format-optimization" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">7</span>
-            Format Optimization
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Choose the right image format for the job. Modern formats can reduce file sizes by 50-90% while maintaining visual quality.
-          </p>
-
-          <div class="space-y-8">
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-green-900 mb-6">Format Comparison & Use Cases</h3>
-              
-              <div class="overflow-x-auto">
-                <table class="w-full table-auto">
-                  <thead class="bg-green-100">
-                    <tr>
-                      <th class="px-4 py-3 text-left text-green-900 font-semibold">Format</th>
-                      <th class="px-4 py-3 text-center text-green-900 font-semibold">Compression</th>
-                      <th class="px-4 py-3 text-center text-green-900 font-semibold">Support</th>
-                      <th class="px-4 py-3 text-left text-green-900 font-semibold">Best For</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-green-200">
-                    <tr class="bg-white">
-                      <td class="px-4 py-3 font-medium text-green-900">AVIF</td>
-                      <td class="px-4 py-3 text-center text-green-700">🏆 Best (50% smaller)</td>
-                      <td class="px-4 py-3 text-center text-green-700">71% (Modern)</td>
-                      <td class="px-4 py-3 text-green-700">All photos, best quality/size ratio</td>
-                    </tr>
-                    <tr class="bg-green-25">
-                      <td class="px-4 py-3 font-medium text-green-900">WebP</td>
-                      <td class="px-4 py-3 text-center text-green-700">📈 Great (30% smaller)</td>
-                      <td class="px-4 py-3 text-center text-green-700">97% (Excellent)</td>
-                      <td class="px-4 py-3 text-green-700">General purpose, wide support</td>
-                    </tr>
-                    <tr class="bg-white">
-                      <td class="px-4 py-3 font-medium text-green-900">JPEG</td>
-                      <td class="px-4 py-3 text-center text-green-700">👍 Good</td>
-                      <td class="px-4 py-3 text-center text-green-700">100% (Universal)</td>
-                      <td class="px-4 py-3 text-green-700">Photos, gradients, fallback</td>
-                    </tr>
-                    <tr class="bg-green-25">
-                      <td class="px-4 py-3 font-medium text-green-900">PNG</td>
-                      <td class="px-4 py-3 text-center text-green-700">💧 Lossless</td>
-                      <td class="px-4 py-3 text-center text-green-700">100% (Universal)</td>
-                      <td class="px-4 py-3 text-green-700">Transparency, logos, simple graphics</td>
-                    </tr>
-                    <tr class="bg-white">
-                      <td class="px-4 py-3 font-medium text-green-900">SVG</td>
-                      <td class="px-4 py-3 text-center text-green-700">⚡ Tiny</td>
-                      <td class="px-4 py-3 text-center text-green-700">98% (Excellent)</td>
-                      <td class="px-4 py-3 text-green-700">Icons, simple graphics, scalable</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Progressive Format Delivery</h3>
-              <p class="text-blue-800 mb-4">Serve modern formats with intelligent fallbacks:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>&lt;picture&gt;
-  &lt;!-- Modern browsers get AVIF (best compression) --&gt;
-  &lt;source 
-    srcset="https://fallback.pics/800x600.avif" 
-    type="image/avif"
-  /&gt;
-  
-  &lt;!-- Most browsers get WebP (great compression) --&gt;
-  &lt;source 
-    srcset="https://fallback.pics/800x600.webp" 
-    type="image/webp"
-  /&gt;
-  
-  &lt;!-- Fallback for older browsers --&gt;
-  &lt;img 
-    src="https://fallback.pics/800x600.jpg" 
-    alt="Progressive format example"
-    loading="lazy"
-    width="800"
-    height="600"
-  /&gt;
-&lt;/picture&gt;</code></pre>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-blue-200">
-                <h4 class="font-semibold text-blue-900 mb-3">File Size Savings Example:</h4>
-                <div class="grid md:grid-cols-4 gap-4 text-center">
-                  <div>
-                    <div class="text-2xl font-bold text-red-600 mb-1">250KB</div>
-                    <div class="text-blue-700 text-sm">JPEG Baseline</div>
-                  </div>
-                  <div>
-                    <div class="text-2xl font-bold text-orange-600 mb-1">175KB</div>
-                    <div class="text-blue-700 text-sm">WebP (-30%)</div>
-                  </div>
-                  <div>
-                    <div class="text-2xl font-bold text-green-600 mb-1">125KB</div>
-                    <div class="text-blue-700 text-sm">AVIF (-50%)</div>
-                  </div>
-                  <div>
-                    <div class="text-2xl font-bold text-purple-600 mb-1">2KB</div>
-                    <div class="text-blue-700 text-sm">SVG (-99%)</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-purple-400 bg-purple-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-purple-900 mb-4">Smart Format Selection</h3>
-              <p class="text-purple-800 mb-4">Automatically serve the best format based on content and browser:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>// Smart format selection service
-class FormatSelector {
-  constructor() {
-    this.supportedFormats = this.detectFormats();
-  }
-  
-  detectFormats() {
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 1;
-    const ctx = canvas.getContext('2d');
-    
-    return {
-      avif: canvas.toDataURL('image/avif').indexOf('data:image/avif') === 0,
-      webp: canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0,
-      jpeg: true, // Universal support
-      png: true   // Universal support
-    };
-  }
-  
-  getBestFormat(imageType = 'photo') {
-    const formatPriority = {
-      photo: ['avif', 'webp', 'jpeg'],
-      graphic: ['avif', 'webp', 'png'],
-      icon: ['svg', 'webp', 'png'],
-      transparent: ['avif', 'webp', 'png']
-    };
-    
-    const priority = formatPriority[imageType] || formatPriority.photo;
-    
-    for (const format of priority) {
-      if (this.supportedFormats[format]) {
-        return format;
-      }
-    }
-    
-    return 'jpeg'; // Ultimate fallback
-  }
-  
-  getOptimalUrl(baseUrl, imageType) {
-    const format = this.getBestFormat(imageType);
-    return `${baseUrl}.${format}`;
-  }
-}
-
-// Usage
-const selector = new FormatSelector();
-const optimizedUrl = selector.getOptimalUrl('https://fallback.pics/800x600', 'photo');
-// Returns: https://fallback.pics/800x600.avif (on supported browsers)</code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Preloading Strategies -->
-      <section id="preloading-strategies" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">8</span>
-            Smart Preloading Strategies
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Preload critical images to eliminate loading delays, but be strategic to avoid wasting bandwidth on unused resources.
-          </p>
-
-          <div class="space-y-8">
-            <div class="border-l-4 border-red-400 bg-red-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-red-900 mb-4">Critical Resource Preloading</h3>
-              <p class="text-red-800 mb-4">Preload hero images and above-the-fold content for instant display:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>&lt;!-- Preload hero image --&gt;
-&lt;link 
-  rel="preload" 
-  as="image" 
-  href="https://fallback.pics/1920x800/7C3AED/FFFFFF?text=Hero+Image"
-  type="image/webp"
-/&gt;
-
-&lt;!-- Preload responsive hero images --&gt;
-&lt;link 
-  rel="preload" 
-  as="image" 
-  href="https://fallback.pics/800x400/7C3AED/FFFFFF?text=Mobile+Hero"
-  media="(max-width: 600px)"
-/&gt;
-
-&lt;link 
-  rel="preload" 
-  as="image" 
-  href="https://fallback.pics/1920x800/7C3AED/FFFFFF?text=Desktop+Hero"
-  media="(min-width: 601px)"
-/&gt;</code></pre>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-red-200">
-                <h4 class="font-semibold text-red-900 mb-3">⚠️ Preloading Guidelines:</h4>
-                <div class="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h5 class="font-medium text-red-800 mb-2">Do Preload:</h5>
-                    <ul class="text-red-700 text-sm space-y-1">
-                      <li>• Hero/banner images</li>
-                      <li>• Logo and brand images</li>
-                      <li>• Above-the-fold content</li>
-                      <li>• Critical UI icons</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h5 class="font-medium text-red-800 mb-2">Don't Preload:</h5>
-                    <ul class="text-red-700 text-sm space-y-1">
-                      <li>• Below-the-fold images</li>
-                      <li>• Gallery/carousel images</li>
-                      <li>• Optional decorative images</li>
-                      <li>• User-generated content</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Predictive Preloading</h3>
-              <p class="text-blue-800 mb-4">Intelligently preload images based on user behavior:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>// Predictive image preloader
-class PredictivePreloader {
-  constructor() {
-    this.preloadCache = new Set();
-    this.observeUserBehavior();
-  }
-  
-  observeUserBehavior() {
-    // Preload on hover with delay
-    document.addEventListener('mouseover', (e) => {
-      const link = e.target.closest('a[href]');
-      if (link && !this.preloadCache.has(link.href)) {
-        setTimeout(() => {
-          if (link.matches(':hover')) {
-            this.preloadPage(link.href);
-          }
-        }, 100); // Small delay to avoid accidental hovers
-      }
-    });
-    
-    // Preload visible images early
-    this.observeNearbyImages();
-  }
-  
-  observeNearbyImages() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const nextImages = this.getNextImages(img, 2);
-          nextImages.forEach(nextImg => this.preloadImage(nextImg));
-        }
-      });
-    }, {
-      rootMargin: '100px' // Start preloading when image is 100px away
-    });
-    
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      observer.observe(img);
-    });
-  }
-  
-  preloadImage(src) {
-    if (this.preloadCache.has(src)) return;
-    
-    this.preloadCache.add(src);
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = src;
-    document.head.appendChild(link);
-  }
-  
-  getNextImages(currentImg, count = 2) {
-    const images = Array.from(document.querySelectorAll('img[data-src]'));
-    const currentIndex = images.indexOf(currentImg);
-    
-    return images
-      .slice(currentIndex + 1, currentIndex + 1 + count)
-      .map(img => img.dataset.src)
-      .filter(Boolean);
-  }
-}
-
-// Initialize predictive preloader
-new PredictivePreloader();</code></pre>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-green-400 bg-green-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-green-900 mb-4">Connection-Aware Preloading</h3>
-              <p class="text-green-800 mb-4">Adapt preloading behavior based on user's connection quality:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>// Connection-aware preloading
-class AdaptivePreloader {
-  constructor() {
-    this.connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    this.preloadStrategy = this.determineStrategy();
-  }
-  
-  determineStrategy() {
-    if (!this.connection) return 'moderate';
-    
-    const { effectiveType, downlink, saveData } = this.connection;
-    
-    // Respect user's data saving preference
-    if (saveData) return 'minimal';
-    
-    // Adapt based on connection speed
-    if (effectiveType === '4g' && downlink > 1.5) return 'aggressive';
-    if (effectiveType === '3g' || downlink > 0.5) return 'moderate';
-    return 'minimal';
-  }
-  
-  preloadImages(images) {
-    const strategies = {
-      aggressive: () => this.preloadAll(images),
-      moderate: () => this.preloadCritical(images),
-      minimal: () => this.preloadHero(images)
-    };
-    
-    strategies[this.preloadStrategy]();
-  }
-  
-  preloadAll(images) {
-    // Preload all above-the-fold and some below
-    images.slice(0, 10).forEach(img => this.preload(img));
-  }
-  
-  preloadCritical(images) {
-    // Preload only critical above-the-fold images
-    images.slice(0, 3).forEach(img => this.preload(img));
-  }
-  
-  preloadHero(images) {
-    // Preload only hero/banner images
-    const heroImages = images.filter(img => 
-      img.classList.contains('hero') || 
-      img.closest('.hero, .banner')
-    );
-    heroImages.forEach(img => this.preload(img));
-  }
-  
-  preload(imgElement) {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = imgElement.dataset.src || imgElement.src;
-    document.head.appendChild(link);
-  }
-}
-
-// Initialize adaptive preloader
-const preloader = new AdaptivePreloader();
-preloader.preloadImages(document.querySelectorAll('img'));</code></pre>
-              </div>
-
-              <div class="bg-white rounded-lg p-4 border border-green-200">
-                <h4 class="font-semibold text-green-900 mb-3">Connection Quality Strategies:</h4>
-                <div class="grid md:grid-cols-3 gap-4 text-center">
-                  <div class="p-3 bg-green-100 rounded">
-                    <div class="font-bold text-green-800">Fast 4G+</div>
-                    <div class="text-green-700 text-sm mt-1">Aggressive preloading</div>
-                    <div class="text-xs text-green-600 mt-1">10+ images</div>
-                  </div>
-                  <div class="p-3 bg-yellow-100 rounded">
-                    <div class="font-bold text-yellow-800">3G/Slow 4G</div>
-                    <div class="text-yellow-700 text-sm mt-1">Moderate preloading</div>
-                    <div class="text-xs text-yellow-600 mt-1">3-5 images</div>
-                  </div>
-                  <div class="p-3 bg-red-100 rounded">
-                    <div class="font-bold text-red-800">2G/Save Data</div>
-                    <div class="text-red-700 text-sm mt-1">Minimal preloading</div>
-                    <div class="text-xs text-red-600 mt-1">Hero only</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Error Handling -->
-      <section id="error-handling" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">9</span>
-            Error Handling & Fallbacks
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Even with perfect optimization, images will sometimes fail to load. Graceful error handling ensures users never see broken image icons.
-          </p>
-
-          <div class="space-y-8">
-            <div class="border-l-4 border-red-400 bg-red-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-red-900 mb-4">Multi-Level Fallback System</h3>
-              <p class="text-red-800 mb-4">Create multiple fallback layers to handle different failure scenarios:</p>
-              
-              <div class="bg-white rounded-lg p-4 mb-4 border border-red-200">
-                <h4 class="font-semibold text-red-900 mb-3">Fallback Hierarchy:</h4>
-                <div class="space-y-3">
-                  <div class="flex items-center space-x-4">
-                    <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">1</span>
-                    <div class="flex-1">
-                      <div class="font-medium text-gray-900">Primary Image</div>
-                      <div class="text-gray-600 text-sm">High-resolution, optimized image from CDN</div>
-                    </div>
-                    <img src="https://fallback.pics/80x60/7C3AED/FFFFFF?text=HD" alt="Primary image" class="rounded"/>
-                  </div>
-                  <span class="text-gray-400 ml-4">↓ (if fails)</span>
-                  <div class="flex items-center space-x-4">
-                    <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</span>
-                    <div class="flex-1">
-                      <div class="font-medium text-gray-900">Backup CDN</div>
-                      <div class="text-gray-600 text-sm">Same image from alternative source</div>
-                    </div>
-                    <img src="https://fallback.pics/80x60/10B981/FFFFFF?text=CDN2" alt="Backup CDN" class="rounded"/>
-                  </div>
-                  <span class="text-gray-400 ml-4">↓ (if fails)</span>
-                  <div class="flex items-center space-x-4">
-                    <span class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">3</span>
-                    <div class="flex-1">
-                      <div class="font-medium text-gray-900">Generic Placeholder</div>
-                      <div class="text-gray-600 text-sm">Branded placeholder with context</div>
-                    </div>
-                    <img src="https://fallback.pics/80x60/F97316/FFFFFF?text=Backup" alt="Generic placeholder" class="rounded"/>
-                  </div>
-                  <span class="text-gray-400 ml-4">↓ (if fails)</span>
-                  <div class="flex items-center space-x-4">
-                    <span class="bg-gray-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</span>
-                    <div class="flex-1">
-                      <div class="font-medium text-gray-900">CSS Background</div>
-                      <div class="text-gray-600 text-sm">Pure CSS fallback that always works</div>
-                    </div>
-                    <div class="w-20 h-15 bg-gradient-to-br from-gray-200 to-gray-300 rounded flex items-center justify-center text-xs text-gray-600">CSS</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre class="text-green-400 text-sm"><code>// Robust fallback system
-class RobustImageLoader {
-  constructor(img, options = {}) {
-    this.img = img;
-    this.sources = [
-      options.primary || img.dataset.src,
-      options.backup || img.dataset.backup,
-      options.placeholder || `https://fallback.pics/${img.width || 400}x${img.height || 300}/E5E5E5/9CA3AF?text=Image+Unavailable`,
-      options.emergency || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%239ca3af">Image</text></svg>'
-    ].filter(Boolean);
-    
-    this.currentSourceIndex = 0;
-    this.loadWithFallback();
-  }
-  
-  loadWithFallback() {
-    if (this.currentSourceIndex >= this.sources.length) {
-      this.handleFinalFailure();
-      return;
-    }
-    
-    const currentSource = this.sources[this.currentSourceIndex];
-    const tempImg = new Image();
-    
-    tempImg.onload = () => {
-      this.img.src = currentSource;
-      this.img.classList.remove('loading', 'error');
-      this.img.classList.add('loaded');
-    };
-    
-    tempImg.onerror = () => {
-      console.warn(`Image failed to load: ${currentSource}`);
-      this.currentSourceIndex++;
-      this.loadWithFallback();
-    };
-    
-    tempImg.src = currentSource;
-  }
-  
-  handleFinalFailure() {
-    // All sources failed, use CSS background
-    this.img.style.display = 'none';
-    const fallback = document.createElement('div');
-    fallback.className = 'image-fallback-final';
-    fallback.style.cssText = `
-      width: ${this.img.width || 400}px;
-      height: ${this.img.height || 300}px;
-      background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6b7280;
-      font-family: system-ui, sans-serif;
-      font-size: 14px;
-      border-radius: 8px;
-    `;
-    fallback.textContent = 'Image unavailable';
-    this.img.parentNode.insertBefore(fallback, this.img);
-  }
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Contextual Error Messages</h3>
-              <p class="text-blue-800 mb-4">Show meaningful, context-appropriate error states:</p>
-              
-              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x100/FEE2E2/DC2626?text=👤" alt="Avatar error" class="w-16 h-16 rounded-full mx-auto mb-3"/>
-                  <h4 class="font-semibold text-blue-900 text-sm">User Avatar</h4>
-                  <p class="text-blue-700 text-xs">Show initials or default icon</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/FEF3C7/D97706?text=🖼️" alt="Gallery error" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-blue-900 text-sm">Gallery</h4>
-                  <p class="text-blue-700 text-xs">"Photo temporarily unavailable"</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/DBEAFE/3B82F6?text=📦" alt="Product error" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-blue-900 text-sm">Product</h4>
-                  <p class="text-blue-700 text-xs">"Image coming soon"</p>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <img src="https://fallback.pics/100x75/E0E7FF/7C3AED?text=📊" alt="Chart error" class="w-full rounded mx-auto mb-3"/>
-                  <h4 class="font-semibold text-blue-900 text-sm">Chart/Data</h4>
-                  <p class="text-blue-700 text-xs">"Loading visualization..."</p>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// Contextual error handling
-const contextualFallbacks = {
-  avatar: (user) => ({
-    src: `https://fallback.pics/150x150/3B82F6/FFFFFF?text=${user.initials}`,
-    alt: `${user.name}'s profile picture`
-  }),
-  
-  product: (product) => ({
-    src: `https://fallback.pics/300x200/10B981/FFFFFF?text=${product.category}+Coming+Soon`,
-    alt: `${product.name} image coming soon`
-  }),
-  
-  gallery: () => ({
-    src: 'https://fallback.pics/400x300/E5E7EB/6B7280?text=🖼️+Photo+Unavailable',
-    alt: 'Photo temporarily unavailable'
-  }),
-  
-  chart: (title) => ({
-    src: `https://fallback.pics/600x400/F3F4F6/374151?text=📊+${title}+Loading...`,
-    alt: `${title} chart is loading`
-  })
-};
-
-function handleImageError(img) {
-  const context = img.dataset.context || 'gallery';
-  const metadata = JSON.parse(img.dataset.metadata || '{}');
-  
-  const fallback = contextualFallbacks[context]?.(metadata) || contextualFallbacks.gallery();
-  
-  img.src = fallback.src;
-  img.alt = fallback.alt;
-  img.classList.add('fallback-active');
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-green-400 bg-green-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-green-900 mb-4">Retry Mechanisms</h3>
-              <p class="text-green-800 mb-4">Implement smart retry logic for transient failures:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre class="text-green-400 text-sm"><code>// Smart retry mechanism
-class SmartRetryLoader {
-  constructor(img, options = {}) {
-    this.img = img;
-    this.originalSrc = img.dataset.src;
-    this.maxRetries = options.maxRetries || 3;
-    this.retryDelay = options.retryDelay || 1000;
-    this.backoffMultiplier = options.backoffMultiplier || 2;
-    
-    this.retryCount = 0;
-    this.load();
-  }
-  
-  load() {
-    const tempImg = new Image();
-    
-    tempImg.onload = () => {
-      this.img.src = this.originalSrc;
-      this.img.classList.add('loaded');
-    };
-    
-    tempImg.onerror = () => {
-      this.handleError();
-    };
-    
-    tempImg.src = this.originalSrc;
-  }
-  
-  handleError() {
-    if (this.retryCount < this.maxRetries) {
-      this.retryCount++;
-      const delay = this.retryDelay * Math.pow(this.backoffMultiplier, this.retryCount - 1);
-      
-      console.log(`Retrying image load (attempt ${this.retryCount}/${this.maxRetries}) in ${delay}ms`);
-      
-      setTimeout(() => {
-        this.load();
-      }, delay);
-    } else {
-      this.showFallback();
-    }
-  }
-  
-  showFallback() {
-    this.img.src = this.img.dataset.fallback || 
-      'https://fallback.pics/400x300/FEE2E2/DC2626?text=Failed+to+load';
-    this.img.classList.add('error');
-  }
-}
-
-// Usage with exponential backoff
-// Retry after 1s, then 2s, then 4s
-new SmartRetryLoader(document.querySelector('img'), {
-  maxRetries: 3,
-  retryDelay: 1000,
-  backoffMultiplier: 2
-});</code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Measuring Success -->
-      <section id="measuring-success" class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <span class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">10</span>
-            Measuring Success
-          </h2>
-
-          <p class="text-lg text-gray-700 mb-8">
-            Track the right metrics to understand your image loading performance and its impact on user experience.
-          </p>
-
-          <div class="space-y-8">
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
-              <h3 class="text-xl font-semibold text-green-900 mb-4">Core Web Vitals Monitoring</h3>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-6">
-                <pre class="text-green-400 text-sm"><code>// Core Web Vitals monitoring
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
-
-class ImagePerformanceMonitor {
-  constructor() {
-    this.metrics = {};
-    this.initializeTracking();
-  }
-  
-  initializeTracking() {
-    // Track Core Web Vitals
-    getCLS(this.handleCLS.bind(this));
-    getFID(this.handleFID.bind(this));
-    getFCP(this.handleFCP.bind(this));
-    getLCP(this.handleLCP.bind(this));
-    getTTFB(this.handleTTFB.bind(this));
-    
-    // Track image-specific metrics
-    this.trackImageLoadTimes();
-    this.trackFallbackUsage();
-  }
-  
-  handleLCP(metric) {
-    this.metrics.lcp = metric;
-    
-    // Check if LCP element is an image
-    if (metric.entries[metric.entries.length - 1].element?.tagName === 'IMG') {
-      this.trackLCPImage(metric);
-    }
-    
-    this.sendMetrics('lcp', metric);
-  }
-  
-  trackImageLoadTimes() {
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (entry.initiatorType === 'img') {
-          this.sendMetrics('image_load_time', {
-            url: entry.name,
-            loadTime: entry.responseEnd - entry.startTime,
-            size: entry.transferSize
-          });
-        }
-      }
-    });
-    
-    observer.observe({ entryTypes: ['resource'] });
-  }
-  
-  trackFallbackUsage() {
-    document.addEventListener('error', (e) => {
-      if (e.target.tagName === 'IMG') {
-        this.sendMetrics('image_error', {
-          src: e.target.src,
-          alt: e.target.alt,
-          timestamp: Date.now()
-        });
-      }
-    }, true);
-  }
-  
-  sendMetrics(type, data) {
-    // Send to analytics service
-    if (window.gtag) {
-      gtag('event', type, {
-        custom_parameter_1: data.value || data.loadTime,
-        custom_parameter_2: data.url || data.src
-      });
-    }
-    
-    // Or send to custom analytics
-    fetch('/api/metrics', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, data, timestamp: Date.now() })
-    });
-  }
-}
-
-// Initialize monitoring
-new ImagePerformanceMonitor();</code></pre>
-              </div>
-
-              <div class="grid md:grid-cols-3 gap-4">
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <div class="text-2xl font-bold text-green-600 mb-2">&lt;2.5s</div>
-                  <div class="font-medium text-green-900 mb-1">LCP Target</div>
-                  <div class="text-green-700 text-sm">Largest Contentful Paint</div>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <div class="text-2xl font-bold text-blue-600 mb-2">&lt;100ms</div>
-                  <div class="font-medium text-blue-900 mb-1">FID Target</div>
-                  <div class="text-blue-700 text-sm">First Input Delay</div>
-                </div>
-                <div class="bg-white rounded-lg p-4 text-center">
-                  <div class="text-2xl font-bold text-purple-600 mb-2">&lt;0.1</div>
-                  <div class="font-medium text-purple-900 mb-1">CLS Target</div>
-                  <div class="text-purple-700 text-sm">Cumulative Layout Shift</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">Custom Image Metrics</h3>
-              <p class="text-blue-800 mb-4">Track image-specific performance indicators:</p>
-              
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
-                <pre class="text-green-400 text-sm"><code>// Custom image performance tracking
-class ImageMetrics {
-  constructor() {
-    this.imageStats = {
-      totalImages: 0,
-      loadedImages: 0,
-      failedImages: 0,
-      fallbacksUsed: 0,
-      averageLoadTime: 0,
-      largestImage: 0,
-      totalBytes: 0
-    };
-    
-    this.startTracking();
-  }
-  
-  startTracking() {
-    // Track all images on page
-    const images = document.querySelectorAll('img');
-    this.imageStats.totalImages = images.length;
-    
-    images.forEach(img => this.trackImage(img));
-    
-    // Track dynamically added images
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        mutation.addedNodes.forEach(node => {
-          if (node.tagName === 'IMG') {
-            this.imageStats.totalImages++;
-            this.trackImage(node);
-          }
-        });
-      });
-    });
-    
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  }
-  
-  trackImage(img) {
-    const startTime = performance.now();
-    
-    const handleLoad = () => {
-      const loadTime = performance.now() - startTime;
-      this.imageStats.loadedImages++;
-      this.updateAverageLoadTime(loadTime);
-      
-      // Get image size if possible
-      this.getImageSize(img.src).then(size => {
-        this.imageStats.totalBytes += size;
-        this.imageStats.largestImage = Math.max(this.imageStats.largestImage, size);
-        this.reportStats();
-      });
-    };
-    
-    const handleError = () => {
-      this.imageStats.failedImages++;
-      if (img.classList.contains('fallback-active')) {
-        this.imageStats.fallbacksUsed++;
-      }
-      this.reportStats();
-    };
-    
-    if (img.complete) {
-      if (img.naturalWidth > 0) {
-        handleLoad();
-      } else {
-        handleError();
-      }
-    } else {
-      img.addEventListener('load', handleLoad);
-      img.addEventListener('error', handleError);
-    }
-  }
-  
-  updateAverageLoadTime(newTime) {
-    const count = this.imageStats.loadedImages;
-    this.imageStats.averageLoadTime = 
-      (this.imageStats.averageLoadTime * (count - 1) + newTime) / count;
-  }
-  
-  async getImageSize(url) {
-    try {
-      const response = await fetch(url, { method: 'HEAD' });
-      return parseInt(response.headers.get('content-length')) || 0;
-    } catch {
-      return 0;
-    }
-  }
-  
-  reportStats() {
-    const successRate = (this.imageStats.loadedImages / this.imageStats.totalImages * 100).toFixed(1);
-    const fallbackRate = (this.imageStats.fallbacksUsed / this.imageStats.totalImages * 100).toFixed(1);
-    
-    console.log('Image Performance Stats:', {
-      ...this.imageStats,
-      successRate: `${successRate}%`,
-      fallbackRate: `${fallbackRate}%`,
-      averageLoadTime: `${this.imageStats.averageLoadTime.toFixed(0)}ms`,
-      totalBytes: `${(this.imageStats.totalBytes / 1024).toFixed(0)}KB`
-    });
-  }
-}
-
-// Initialize tracking
-new ImageMetrics();</code></pre>
-              </div>
-            </div>
-
-            <div class="border-l-4 border-purple-400 bg-purple-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-purple-900 mb-4">Business Impact Metrics</h3>
-              <p class="text-purple-800 mb-4">Connect image performance to business outcomes:</p>
-              
-              <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-lg p-4">
-                  <h4 class="font-semibold text-purple-900 mb-3">User Experience Metrics</h4>
-                  <ul class="space-y-2 text-purple-700 text-sm">
-                    <li>• <strong>Bounce Rate:</strong> Users leaving due to slow loading</li>
-                    <li>• <strong>Time on Page:</strong> Engagement with loaded content</li>
-                    <li>• <strong>Scroll Depth:</strong> How far users scroll</li>
-                    <li>• <strong>Return Visits:</strong> User satisfaction indicator</li>
-                  </ul>
-                </div>
-                <div class="bg-white rounded-lg p-4">
-                  <h4 class="font-semibold text-purple-900 mb-3">Business Metrics</h4>
-                  <ul class="space-y-2 text-purple-700 text-sm">
-                    <li>• <strong>Conversion Rate:</strong> Sales/signups impact</li>
-                    <li>• <strong>Page Views:</strong> Content consumption</li>
-                    <li>• <strong>Revenue per Visitor:</strong> Economic impact</li>
-                    <li>• <strong>Customer Satisfaction:</strong> Support tickets</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="bg-gray-900 rounded-lg p-4 mt-4">
-                <pre class="text-green-400 text-sm overflow-x-auto"><code>// Business impact correlation
-class BusinessImpactTracker {
-  trackConversionImpact(imageLoadTime) {
-    // Studies show 100ms delay = 1% conversion drop
-    const expectedConversionLoss = Math.max(0, (imageLoadTime - 1000) / 100);
-    
-    gtag('event', 'image_performance_impact', {
-      load_time: imageLoadTime,
-      expected_conversion_impact: expectedConversionLoss
-    });
-  }
-  
-  trackEngagementImpact(lcp, scrollDepth) {
-    const engagementScore = lcp < 2500 ? 100 : Math.max(0, 100 - (lcp - 2500) / 50);
-    
-    gtag('event', 'engagement_score', {
-      lcp_time: lcp,
-      scroll_depth: scrollDepth,
-      engagement_score: engagementScore
-    });
-  }
-}</code></pre>
               </div>
             </div>
           </div>
@@ -2129,6 +480,56 @@ class BusinessImpactTracker {
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Related Posts -->
+      <section class="mb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+          <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Continue Reading</h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Related Post 1 -->
+            <a href="/blog/complete-guide-to-image-placeholders-in-web-development" class="group block bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+              <img 
+                src="https://fallback.pics/300x160/7C3AED/FFFFFF?text=Complete+Guide" 
+                alt="Complete Guide to Image Placeholders" 
+                class="w-full rounded-lg mb-4 group-hover:scale-105 transition-transform"
+              />
+              <h3 class="font-semibold text-purple-900 mb-2">Complete Guide to Image Placeholders</h3>
+              <p class="text-purple-700 text-sm mb-3">Learn everything about image placeholders - from basic implementation to advanced techniques for better user experience.</p>
+              <div class="flex items-center text-xs text-purple-600">
+                <span>Web Development</span>
+                <span class="mx-2">•</span>
+                <span>15 min read</span>
+              </div>
+            </a>
+
+            <!-- Related Post 2 -->
+            <a href="/blog/why-every-developer-needs-fallback-images-case-studies" class="group block bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+              <img 
+                src="https://fallback.pics/300x160/3B82F6/FFFFFF?text=Case+Studies" 
+                alt="Case Studies and Real Data" 
+                class="w-full rounded-lg mb-4 group-hover:scale-105 transition-transform"
+              />
+              <h3 class="font-semibold text-blue-900 mb-2">Why Every Developer Needs Fallback Images</h3>
+              <p class="text-blue-700 text-sm mb-3">Real-world case studies from Amazon, Shopify, and Twitter showing the business impact of proper fallback strategies.</p>
+              <div class="flex items-center text-xs text-blue-600">
+                <span>Case Studies</span>
+                <span class="mx-2">•</span>
+                <span>12 min read</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Back to Blog -->
+          <div class="text-center mt-8">
+            <a 
+              href="/blog" 
+              class="inline-flex items-center bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            >
+              ← Back to All Posts
             </a>
           </div>
         </div>

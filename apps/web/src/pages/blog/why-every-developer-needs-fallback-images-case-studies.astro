@@ -61,6 +61,23 @@ const structuredData = {
       </div>
     </header>
 
+    <!-- Breadcrumb Navigation -->
+    <nav class="bg-white border-b border-gray-100" aria-label="Breadcrumb">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <ol class="flex items-center space-x-2 text-sm">
+          <li>
+            <a href="/" class="text-gray-500 hover:text-purple-600 transition-colors">Home</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li>
+            <a href="/blog" class="text-gray-500 hover:text-purple-600 transition-colors">Blog</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li class="text-gray-900 font-medium">Why Every Developer Needs Fallback Images</li>
+        </ol>
+      </div>
+    </nav>
+
     <!-- Blog Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Hero Section -->
@@ -82,6 +99,15 @@ const structuredData = {
           <span>•</span>
           <span>Case Studies</span>
         </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+        <img 
+          src="https://fallback.pics/1200x400/3B82F6/FFFFFF?text=Case+Studies+%26+Real+World+Data"
+          alt="Why Every Developer Needs Fallback Images - Case Studies and Real World Data"
+          class="w-full h-auto"
+        />
       </div>
 
       <!-- Problem Illustration -->
@@ -140,101 +166,6 @@ const structuredData = {
           </div>
         </div>
       </div>
-
-      <!-- What Are Fallback Images Section -->
-      <section class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <div class="flex items-center mb-6">
-            <span class="text-3xl mr-4">🔍</span>
-            <h2 class="text-3xl font-bold text-gray-900">What Are Fallback Images?</h2>
-          </div>
-          
-          <p class="text-lg text-gray-700 mb-6">
-            A <strong>fallback image</strong> is a default or backup image displayed when the intended image fails to load due to reasons like:
-          </p>
-
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-              <div class="text-2xl mb-2">🔗</div>
-              <h4 class="font-semibold text-red-900 text-sm mb-2">Broken Links</h4>
-              <p class="text-red-700 text-xs">URLs that no longer exist or moved</p>
-            </div>
-            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
-              <div class="text-2xl mb-2">🐌</div>
-              <h4 class="font-semibold text-orange-900 text-sm mb-2">Slow Servers</h4>
-              <p class="text-orange-700 text-xs">Timeouts on overloaded servers</p>
-            </div>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-              <div class="text-2xl mb-2">📱</div>
-              <h4 class="font-semibold text-yellow-900 text-sm mb-2">Format Issues</h4>
-              <p class="text-yellow-700 text-xs">Unsupported formats like WebP</p>
-            </div>
-            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
-              <div class="text-2xl mb-2">🚫</div>
-              <h4 class="font-semibold text-purple-900 text-sm mb-2">Access Issues</h4>
-              <p class="text-purple-700 text-xs">CORS or CDN restrictions</p>
-            </div>
-          </div>
-
-          <div class="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-6">
-            <p class="text-purple-800 font-medium">
-              Instead of showing a broken icon, you display a branded placeholder, logo, or contextual graphic — preserving <strong>visual consistency and professionalism</strong>.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Why Developers Should Use Fallbacks -->
-      <section class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <div class="flex items-center mb-6">
-            <span class="text-3xl mr-4">🚀</span>
-            <h2 class="text-3xl font-bold text-gray-900">Why Developers Should Always Use Fallbacks</h2>
-          </div>
-
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
-              <div class="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-blue-900 mb-2">Improved UX</h3>
-              <p class="text-blue-700 text-sm">Users never see a blank spot or broken icon. Instead, they see a clean placeholder.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
-              <div class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-green-900 mb-2">Performance-Friendly</h3>
-              <p class="text-green-700 text-sm">Lightweight placeholders load instantly, reducing layout shifts.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
-              <div class="bg-purple-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-purple-900 mb-2">Accessibility & SEO</h3>
-              <p class="text-purple-700 text-sm">Combined with descriptive alt text, fallbacks improve accessibility and SEO rankings.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6">
-              <div class="bg-orange-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-orange-900 mb-2">Brand Perception</h3>
-              <p class="text-orange-700 text-sm">A branded fallback image maintains trust and professionalism.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- Case Study 1: E-Commerce -->
       <section class="mb-16">
@@ -301,88 +232,11 @@ const structuredData = {
         </div>
       </section>
 
-      <!-- Case Study 2: SaaS Dashboards -->
+      <!-- Case Study 2: Social Media -->
       <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <div class="flex items-center mb-6">
-            <span class="bg-green-100 text-green-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">2</span>
-            <div>
-              <h2 class="text-3xl font-bold text-gray-900">Case Study: SaaS Dashboards</h2>
-              <p class="text-gray-600">Stripe, Trello, and Datadog</p>
-            </div>
-          </div>
-
-          <p class="text-lg text-gray-700 mb-8">
-            SaaS platforms rely on complex dashboards with charts and avatars to provide clear user experiences.
-          </p>
-
-          <div class="grid md:grid-cols-2 gap-8 mb-8">
-            <div class="space-y-6">
-              <div class="bg-red-50 border border-red-200 rounded-lg p-6">
-                <h4 class="font-semibold text-red-900 mb-3 flex items-center">
-                  <span class="text-red-500 text-xl mr-3">⚠️</span>
-                  The Problem
-                </h4>
-                <p class="text-red-700 mb-4">Missing charts or profile pictures make dashboards confusing and incomplete.</p>
-                <div class="bg-white rounded p-3">
-                  <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
-                      <span class="text-red-500 text-xs">❌</span>
-                    </div>
-                    <div>
-                      <div class="h-3 bg-red-200 rounded w-20 mb-1"></div>
-                      <div class="h-2 bg-red-100 rounded w-16"></div>
-                    </div>
-                  </div>
-                  <div class="h-20 bg-red-100 rounded flex items-center justify-center">
-                    <span class="text-red-400 text-sm">Chart Failed to Load</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="space-y-6">
-              <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h4 class="font-semibold text-green-900 mb-3 flex items-center">
-                  <span class="text-green-500 text-xl mr-3">✅</span>
-                  The Solution
-                </h4>
-                <p class="text-green-700 mb-4">Fallback avatars (initials or default icons) and placeholder charts ensure context is always available.</p>
-                <div class="bg-white rounded p-3">
-                  <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span class="text-white text-xs font-bold">JD</span>
-                    </div>
-                    <div>
-                      <div class="h-3 bg-gray-200 rounded w-20 mb-1"></div>
-                      <div class="h-2 bg-gray-100 rounded w-16"></div>
-                    </div>
-                  </div>
-                  <img src="https://fallback.pics/280x80/F3F4F6/6B7280?text=Loading+Chart..." alt="Chart placeholder" class="w-full rounded"/>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-blue-50 border-l-4 border-blue-400 p-6">
-            <div class="flex items-start">
-              <svg class="w-6 h-6 text-blue-600 mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <div>
-                <h4 class="font-semibold text-blue-800 mb-2">👉 Key Takeaway</h4>
-                <p class="text-blue-700">Fallback images improve clarity in data-driven products. Users always have context, even before data fully loads.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Case Study 3: Social Media -->
-      <section class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <div class="flex items-center mb-6">
-            <span class="bg-purple-100 text-purple-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">3</span>
+            <span class="bg-purple-100 text-purple-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">2</span>
             <div>
               <h2 class="text-3xl font-bold text-gray-900">Case Study: Social Media</h2>
               <p class="text-gray-600">Twitter, Reddit, and Slack</p>
@@ -431,98 +285,31 @@ const structuredData = {
         </div>
       </section>
 
-      <!-- Implementation Section -->
+      <!-- Statistics Summary -->
       <section class="mb-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <div class="flex items-center mb-6">
-            <span class="text-3xl mr-4">⚙️</span>
-            <h2 class="text-3xl font-bold text-gray-900">How Developers Can Implement Fallback Images</h2>
-          </div>
-
-          <div class="space-y-8">
-            <div class="border-l-4 border-red-400 bg-red-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-red-900 mb-4">1. HTML & CSS</h3>
-              <p class="text-red-800 mb-4">Simple one-liner solution using the onerror event:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre class="text-green-400 text-sm"><code>&lt;img src="profile.jpg" onerror="this.src='fallback.png'" alt="User profile"&gt;</code></pre>
+          <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Key Statistics from Our Case Studies</h3>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+              <div class="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl font-bold text-blue-600">+12%</span>
               </div>
+              <h4 class="font-semibold text-gray-900 mb-2">E-commerce Conversion Rate</h4>
+              <p class="text-gray-600 text-sm">Shopify stores with fallback images saw higher conversions</p>
             </div>
-
-            <div class="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-blue-900 mb-4">2. React/Next.js Component</h3>
-              <p class="text-blue-800 mb-4">Reusable component with state management:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre class="text-green-400 text-sm"><code>import { useState } from "react";
-
-function ImageWithFallback({ src, fallback, alt, ...props }) {
-  const [imgSrc, setImgSrc] = useState(src);
-  return (
-    &lt;img
-      {...props}
-      src={imgSrc}
-      alt={alt}
-      onError={() =&gt; setImgSrc(fallback)}
-    /&gt;
-  );
-}</code></pre>
+            <div class="text-center">
+              <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl font-bold text-green-600">-40%</span>
               </div>
+              <h4 class="font-semibold text-gray-900 mb-2">Bounce Rate Reduction</h4>
+              <p class="text-gray-600 text-sm">Professional appearance keeps users engaged longer</p>
             </div>
-
-            <div class="border-l-4 border-purple-400 bg-purple-50 p-6 rounded-r-lg">
-              <h3 class="text-xl font-semibold text-purple-900 mb-4">3. Placeholder Services</h3>
-              <p class="text-purple-800 mb-4">Use fallback.pics for instant, customizable placeholders:</p>
-              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre class="text-green-400 text-sm"><code>&lt;img src="https://fallback.pics/400x300?text=Loading" alt="Placeholder"&gt;
-
-&lt;!-- With custom colors --&gt;
-&lt;img src="https://fallback.pics/400x300/7C3AED/FFFFFF?text=Your+Brand" alt="Brand placeholder"&gt;</code></pre>
+            <div class="text-center">
+              <div class="bg-purple-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl font-bold text-purple-600">100%</span>
               </div>
-              <div class="mt-4 flex items-center justify-between bg-white rounded-lg p-4">
-                <img src="https://fallback.pics/150x100?text=Loading" alt="Loading placeholder example" class="rounded"/>
-                <img src="https://fallback.pics/150x100/7C3AED/FFFFFF?text=Your+Brand" alt="Brand placeholder example" class="rounded"/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SEO Benefits -->
-      <section class="mb-16">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <div class="flex items-center mb-6">
-            <span class="text-3xl mr-4">🌍</span>
-            <h2 class="text-3xl font-bold text-gray-900">SEO Benefits of Fallback Images</h2>
-          </div>
-
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
-              <div class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-green-900 mb-2">Better Engagement Signals</h3>
-              <p class="text-green-700 text-sm">Lower bounce rates when pages don't look "broken" improve your search rankings.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
-              <div class="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-blue-900 mb-2">Rich Snippets</h3>
-              <p class="text-blue-700 text-sm">With proper alt tags, even fallback images can be indexed by Google Images.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
-              <div class="bg-purple-500 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-purple-900 mb-2">Accessibility Ranking</h3>
-              <p class="text-purple-700 text-sm">Google rewards inclusive design that works for users with disabilities.</p>
+              <h4 class="font-semibold text-gray-900 mb-2">Brand Consistency</h4>
+              <p class="text-gray-600 text-sm">Maintain professional appearance even when images fail</p>
             </div>
           </div>
         </div>
@@ -553,16 +340,6 @@ function ImageWithFallback({ src, fallback, alt, ...props }) {
           </div>
 
           <div class="text-center">
-            <div class="bg-white bg-opacity-20 rounded-lg p-6 mb-6">
-              <div class="flex items-center justify-center mb-4">
-                <span class="text-4xl">✨</span>
-              </div>
-              <h4 class="text-xl font-semibold mb-2">Pro Tip</h4>
-              <p class="text-purple-100">
-                Check out free tools like <strong>fallback.pics</strong> to generate instant placeholders with custom designs, animations, and branding.
-              </p>
-            </div>
-
             <a 
               href="/" 
               class="inline-flex items-center bg-white text-purple-600 font-semibold px-8 py-4 rounded-lg hover:bg-purple-50 transition-colors"
@@ -576,32 +353,52 @@ function ImageWithFallback({ src, fallback, alt, ...props }) {
         </div>
       </section>
 
-      <!-- Statistics Summary -->
-      <section class="mb-16">
+      <!-- Related Posts -->
+      <section class="mb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-          <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Key Statistics from Our Case Studies</h3>
-          <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center">
-              <div class="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <span class="text-3xl font-bold text-blue-600">+12%</span>
+          <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Continue Reading</h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Related Post 1 -->
+            <a href="/blog/complete-guide-to-image-placeholders-in-web-development" class="group block bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+              <img 
+                src="https://fallback.pics/300x160/7C3AED/FFFFFF?text=Complete+Guide" 
+                alt="Complete Guide to Image Placeholders" 
+                class="w-full rounded-lg mb-4 group-hover:scale-105 transition-transform"
+              />
+              <h3 class="font-semibold text-purple-900 mb-2">Complete Guide to Image Placeholders</h3>
+              <p class="text-purple-700 text-sm mb-3">Learn everything about image placeholders - from basic implementation to advanced techniques for better user experience.</p>
+              <div class="flex items-center text-xs text-purple-600">
+                <span>Web Development</span>
+                <span class="mx-2">•</span>
+                <span>15 min read</span>
               </div>
-              <h4 class="font-semibold text-gray-900 mb-2">E-commerce Conversion Rate</h4>
-              <p class="text-gray-600 text-sm">Shopify stores with fallback images saw higher conversions</p>
-            </div>
-            <div class="text-center">
-              <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <span class="text-3xl font-bold text-green-600">-40%</span>
+            </a>
+
+            <!-- Related Post 2 -->
+            <a href="/blog/image-loading-best-practices-for-better-ux" class="group block bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+              <img 
+                src="https://fallback.pics/300x160/10B981/FFFFFF?text=Performance+Guide" 
+                alt="Performance and UX Guide" 
+                class="w-full rounded-lg mb-4 group-hover:scale-105 transition-transform"
+              />
+              <h3 class="font-semibold text-green-900 mb-2">Image Loading Best Practices</h3>
+              <p class="text-green-700 text-sm mb-3">Performance-focused techniques including Core Web Vitals optimization, lazy loading, and progressive enhancement.</p>
+              <div class="flex items-center text-xs text-green-600">
+                <span>Performance</span>
+                <span class="mx-2">•</span>
+                <span>10 min read</span>
               </div>
-              <h4 class="font-semibold text-gray-900 mb-2">Bounce Rate Reduction</h4>
-              <p class="text-gray-600 text-sm">Professional appearance keeps users engaged longer</p>
-            </div>
-            <div class="text-center">
-              <div class="bg-purple-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <span class="text-3xl font-bold text-purple-600">100%</span>
-              </div>
-              <h4 class="font-semibold text-gray-900 mb-2">Brand Consistency</h4>
-              <p class="text-gray-600 text-sm">Maintain professional appearance even when images fail</p>
-            </div>
+            </a>
+          </div>
+
+          <!-- Back to Blog -->
+          <div class="text-center mt-8">
+            <a 
+              href="/blog" 
+              class="inline-flex items-center bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            >
+              ← Back to All Posts
+            </a>
           </div>
         </div>
       </section>
