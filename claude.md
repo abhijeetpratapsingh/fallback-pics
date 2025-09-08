@@ -367,7 +367,7 @@ headers: {
 
 ```bash
 # Clone and setup
-git clone https://github.com/abhijeetpratapsingh/fallback-pics
+git clone https://github.com/nosignupdev/fallbackpics
 cd fallback.pics
 pnpm install
 
