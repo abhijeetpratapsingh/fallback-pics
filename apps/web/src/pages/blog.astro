@@ -6,7 +6,7 @@ const blogPosts = [
     title: "Complete Guide to Image Placeholders in Web Development",
     description: "Learn everything about image placeholders - from basic implementation to advanced techniques that improve user experience and prevent broken image disasters.",
     slug: "complete-guide-to-image-placeholders-in-web-development",
-    image: "https://fallback.pics/400x200/7C3AED/FFFFFF?text=Complete+Guide+to+Image+Placeholders",
+    image: "https://fallback.pics/api/v1/400x200/7C3AED/FFFFFF?text=Complete+Guide+to+Image+Placeholders",
     date: "2025-01-15",
     readTime: "15 min read",
     category: "Web Development",
@@ -16,7 +16,7 @@ const blogPosts = [
     title: "Why Every Developer Needs Fallback Images (Case Studies)",
     description: "Discover how fallback images improve user experience, boost conversions, and maintain brand trust. Real case studies from Amazon, Shopify, Twitter, and more.",
     slug: "why-every-developer-needs-fallback-images-case-studies",
-    image: "https://fallback.pics/400x200/3B82F6/FFFFFF?text=Case+Studies+%26+Real+Data",
+    image: "https://fallback.pics/api/v1/400x200/3B82F6/FFFFFF?text=Case+Studies+%26+Real+Data",
     date: "2025-01-15",
     readTime: "12 min read",
     category: "Case Studies",
@@ -26,7 +26,7 @@ const blogPosts = [
     title: "Image Loading Best Practices for Better UX",
     description: "Master modern image loading techniques: lazy loading, progressive loading, placeholders, and performance optimization for exceptional user experiences.",
     slug: "image-loading-best-practices-for-better-ux",
-    image: "https://fallback.pics/400x200/10B981/FFFFFF?text=Performance+%26+UX+Guide",
+    image: "https://fallback.pics/api/v1/400x200/10B981/FFFFFF?text=Performance+%26+UX+Guide",
     date: "2025-01-15",
     readTime: "18 min read",
     category: "Performance",
@@ -39,20 +39,20 @@ const structuredData = {
   "@type": "Blog",
   "name": "fallback.pics Blog",
   "description": "Expert guides on image optimization, placeholders, and web performance from the fallback.pics team.",
-  "url": "https://fallback.pics/blog",
+  "url": "https://fallback.pics/api/v1/blog",
   "publisher": {
     "@type": "Organization",
     "name": "fallback.pics",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://fallback.pics/logo.png"
+      "url": "https://fallback.pics/api/v1/logo.png"
     }
   },
   "blogPost": blogPosts.map(post => ({
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.description,
-    "url": `https://fallback.pics/blog/${post.slug}`,
+    "url": `https://fallback.pics/api/v1/blog/${post.slug}`,
     "datePublished": post.date,
     "image": post.image,
     "author": {
@@ -67,7 +67,7 @@ const structuredData = {
   title="Blog - Web Performance & Image Optimization Guides | fallback.pics" 
   description="Expert guides on image optimization, placeholders, lazy loading, and web performance. Learn from real case studies and best practices."
   keywords="web performance blog, image optimization guides, lazy loading tutorials, placeholder best practices, core web vitals, web development"
-  ogImage="https://fallback.pics/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog"
+  ogImage="https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog"
 >
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
