@@ -38,20 +38,20 @@ const structuredData = {
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-  <article class="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50">
+  <article class="blog-article min-h-screen bg-gray-50 text-gray-950">
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/90">
+    <header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <nav class="flex items-center justify-between">
+        <nav class="flex flex-wrap items-center justify-between gap-3">
           <a href="/" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 transition-colors">
             <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
               <path d="M2 17L12 22L22 17"/>
               <path d="M2 12L12 17L22 12"/>
             </svg>
-            <span class="font-bold text-xl">fallback.pics</span>
+            <span class="font-bold text-lg">fallback.pics</span>
           </a>
-          <div class="flex items-center space-x-6">
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium">
             <a href="/docs" class="text-gray-600 hover:text-purple-600 transition-colors">Docs</a>
             <a href="/api" class="text-gray-600 hover:text-purple-600 transition-colors">API</a>
             <a href="/features" class="text-gray-600 hover:text-purple-600 transition-colors">Features</a>
@@ -82,16 +82,16 @@ const structuredData = {
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Hero Section -->
       <div class="text-center mb-16">
-        <div class="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-6">
-          📚 Web Development Guide
+        <div class="inline-flex items-center rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-xs font-semibold uppercase text-purple-700">
+          Web Development Guide
         </div>
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+        <h1 class="mt-5 text-4xl font-bold leading-tight text-gray-950 md:text-5xl">
           Complete Guide to Image Placeholders in Web Development
         </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        <p class="mx-auto mb-8 max-w-3xl text-lg leading-8 text-gray-600">
           Learn everything about image placeholders - from basic implementation to advanced techniques that improve user experience and prevent broken image disasters.
         </p>
-        <div class="flex items-center justify-center space-x-4 text-sm text-gray-500">
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-500">
           <time datetime="2025-01-15">January 15, 2025</time>
           <span>•</span>
           <span>15 min read</span>
@@ -101,7 +101,7 @@ const structuredData = {
       </div>
 
       <!-- Featured Image -->
-      <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="mb-12 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         <img 
           src="https://fallback.pics/api/v1/1200x400/7C3AED/FFFFFF?text=Image+Placeholders+Guide"
           alt="Complete Guide to Image Placeholders in Web Development"
@@ -336,3 +336,61 @@ const structuredData = {
     </footer>
   </article>
 </Layout>
+
+<style is:global>
+  .blog-article :where(main) {
+    max-width: 980px;
+  }
+
+  .blog-article :where(.prose > section > div, main > section > div) {
+    border-radius: 0.75rem;
+    border: 1px solid rgb(229 231 235);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+  }
+
+  .blog-article :where(.prose h2, main h2) {
+    color: rgb(17 24 39);
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .blog-article :where(.prose p, main p) {
+    line-height: 1.75;
+  }
+
+  .blog-article :where(img) {
+    height: auto;
+  }
+
+  .blog-article :where(.rounded-2xl) {
+    border-radius: 0.75rem;
+  }
+
+  .blog-article :where(.shadow-lg, .shadow-xl, .shadow-2xl) {
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .blog-article :where([class*="bg-gradient-to-br"], [class*="bg-gradient-to-r"]) {
+    background-image: none;
+  }
+
+  .blog-article :where(.text-3xl) {
+    font-size: clamp(1.375rem, 2vw, 1.875rem);
+  }
+
+  @media (max-width: 640px) {
+    .blog-article :where(main) {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .blog-article :where(.p-8) {
+      padding: 1.25rem;
+    }
+
+    .blog-article :where(.space-x-6 > :not([hidden]) ~ :not([hidden])) {
+      margin-left: 1rem;
+    }
+  }
+</style>

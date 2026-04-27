@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 
 // Syntax highlighting theme colors
@@ -65,7 +65,6 @@ const highlightCode = (code: string, language: string) => {
 const examples = {
   html: {
     label: 'HTML',
-    icon: '🌐',
     code: `<!-- Basic usage -->
 <img src="${API_URL}/400x300" alt="Placeholder">
 
@@ -88,7 +87,6 @@ const examples = {
   
   react: {
     label: 'React',
-    icon: '⚛️',
     code: `// React component with TypeScript
 interface PlaceholderProps {
   width?: number;
@@ -126,7 +124,6 @@ function PlaceholderImage({
   
   vue: {
     label: 'Vue',
-    icon: '💚',
     code: `<!-- Vue 3 Component -->
 <template>
   <img 
@@ -161,7 +158,6 @@ const placeholderUrl = computed(() => {
   
   css: {
     label: 'CSS',
-    icon: '🎨',
     code: `/* CSS fallback image */
 .hero-placeholder {
   background-image: url('${API_URL}/1920x1080');
@@ -208,7 +204,6 @@ const placeholderUrl = computed(() => {
   
   javascript: {
     label: 'JavaScript',
-    icon: '🚀',
     code: `// Dynamic placeholder generator class
 class PlaceholderGenerator {
   constructor(baseUrl = '${API_URL}') {
@@ -291,7 +286,6 @@ generator.preloadImages([
   
   curl: {
     label: 'cURL',
-    icon: '⚡',
     code: `# Basic placeholder
 curl -O ${API_URL}/400x300.png
 
@@ -333,38 +327,42 @@ export default function CodeExamplesEnhanced() {
   const activeExample = examples[activeTab as keyof typeof examples];
   
   return (
-    <section className="py-20 px-4 bg-gray-900">
+    <section className="bg-gray-950">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Integration in <span className="gradient-text">Seconds</span>
+        <div className="mb-10 max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple-300">Implementation examples</p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-5xl">
+            Integration in seconds
           </h2>
-          <p className="text-xl text-gray-400">
+          <p className="mt-4 text-lg leading-8 text-gray-400">
             Works with any framework, any language, anywhere.
           </p>
         </div>
         
-        <div className="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
+        <div className="overflow-hidden rounded-xl border border-white/10 bg-gray-900 shadow-2xl">
           {/* Tab Navigation */}
-          <div className="flex overflow-x-auto bg-gray-900 border-b border-gray-700 scrollbar-hide">
+          <div className="flex overflow-x-auto border-b border-white/10 bg-black/30 scrollbar-hide" role="tablist" aria-label="Code examples">
             {Object.entries(examples).map(([key, example]) => (
               <button
                 key={key}
+                id={`example-tab-${key}`}
+                type="button"
                 onClick={() => setActiveTab(key)}
+                role="tab"
+                aria-selected={activeTab === key}
+                aria-controls={`example-panel-${key}`}
                 className={`
-                  px-6 py-4 font-semibold transition-all duration-200
-                  whitespace-nowrap flex items-center gap-2
-                  hover:bg-gray-800 relative group
+                  relative whitespace-nowrap px-5 py-4 text-sm font-semibold transition
+                  hover:bg-white/5
                   ${activeTab === key 
-                    ? 'text-white bg-gray-800' 
+                    ? 'bg-white/5 text-white' 
                     : 'text-gray-400 hover:text-white'}
                 `}
                 aria-label={`View ${example.label} example`}
               >
-                <span className="text-lg">{example.icon}</span>
                 <span>{example.label}</span>
                 {activeTab === key && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-blue-500" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400" />
                 )}
               </button>
             ))}
@@ -374,36 +372,31 @@ export default function CodeExamplesEnhanced() {
           <div className="relative">
             {/* Language Badge */}
             <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-              <span className="code-lang bg-gray-700 text-gray-300">
+              <span className="code-lang bg-white/10 text-gray-300">
                 {activeExample.label}
               </span>
               <button
+                type="button"
                 onClick={copyToClipboard}
                 className={`
-                  px-3 py-1.5 rounded-lg font-medium text-sm
-                  transition-all duration-200 transform
+                  rounded-md px-3 py-1.5 text-sm font-semibold transition
                   ${copied 
-                    ? 'bg-green-500 text-white scale-105' 
-                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white'}
+                    ? 'bg-emerald-500 text-white' 
+                    : 'bg-white text-gray-950 hover:bg-gray-100'}
                 `}
                 aria-label="Copy code to clipboard"
               >
-                {copied ? (
-                  <>
-                    <span className="inline-block mr-1">✓</span>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <span className="inline-block mr-1">📋</span>
-                    Copy
-                  </>
-                )}
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
             
             {/* Code Block */}
-            <div className="p-6 overflow-x-auto">
+            <div
+              id={`example-panel-${activeTab}`}
+              role="tabpanel"
+              aria-labelledby={`example-tab-${activeTab}`}
+              className="overflow-x-auto p-6"
+            >
               <pre className="text-gray-100 font-mono text-sm leading-relaxed">
                 <code 
                   dangerouslySetInnerHTML={{ 
@@ -416,15 +409,14 @@ export default function CodeExamplesEnhanced() {
             </div>
             
             {/* Bottom Gradient */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 opacity-50" />
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500 opacity-80" />
           </div>
         </div>
         
         {/* Quick Reference Cards */}
         <div className="mt-12 grid md:grid-cols-2 gap-6">
-          <div className="glass-card p-6 rounded-xl border border-gray-700">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <span className="text-2xl">🎯</span>
+          <div className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
+            <h3 className="mb-4 text-lg font-semibold text-white">
               URL Patterns
             </h3>
             <div className="space-y-2">
@@ -436,7 +428,7 @@ export default function CodeExamplesEnhanced() {
                 { pattern: '/animated/skeleton/400x300', desc: 'Animated loader' },
                 { pattern: '/ai/800x600', desc: 'AI generated' }
               ].map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between group">
+                <div key={idx} className="flex items-center justify-between gap-4">
                   <code className="bg-gray-800 px-3 py-1.5 rounded text-green-400 text-sm font-mono">
                     {item.pattern}
                   </code>
@@ -446,9 +438,8 @@ export default function CodeExamplesEnhanced() {
             </div>
           </div>
           
-          <div className="glass-card p-6 rounded-xl border border-gray-700">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <span className="text-2xl">⚙️</span>
+          <div className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
+            <h3 className="mb-4 text-lg font-semibold text-white">
               Parameters
             </h3>
             <div className="space-y-2">
@@ -460,7 +451,7 @@ export default function CodeExamplesEnhanced() {
                 { param: '?mood=minimal', desc: 'AI style' },
                 { param: '?format=webp', desc: 'Image format' }
               ].map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between group">
+                <div key={idx} className="flex items-center justify-between gap-4">
                   <code className="bg-gray-800 px-3 py-1.5 rounded text-blue-400 text-sm font-mono">
                     {item.param}
                   </code>
@@ -473,27 +464,6 @@ export default function CodeExamplesEnhanced() {
       </div>
       
       <style>{`
-        .gradient-text {
-          background: linear-gradient(90deg, #7C3AED, #3B82F6, #10B981);
-          background-clip: text;
-          -webkit-background-clip: text;
-          color: transparent;
-          animation: gradient-shift 3s ease infinite;
-          background-size: 200% 200%;
-        }
-        
-        @keyframes gradient-shift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        .glass-card {
-          background: rgba(31, 41, 55, 0.5);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-        
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;

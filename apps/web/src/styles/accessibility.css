@@ -1,48 +1,23 @@
 /* Accessibility Improvements for fallback.pics */
 
-/* Screen Reader Only Class */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-/* Make sr-only visible on focus */
-.sr-only:focus,
-.focus\:not-sr-only:focus {
-  position: absolute;
-  width: auto;
-  height: auto;
-  padding: 0.5rem 1rem;
-  margin: 0;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-  z-index: 9999;
-}
-
 /* Skip Links */
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 0;
+  top: 1rem;
+  left: 1rem;
+  transform: translateY(calc(-100% - 1rem));
   background: #7C3AED;
   color: white;
   padding: 0.75rem 1.5rem;
-  z-index: 100;
+  z-index: 9999;
   text-decoration: none;
-  border-radius: 0 0 0.5rem 0;
+  border-radius: 0.5rem;
   font-weight: 600;
+  transition: transform 150ms ease;
 }
 
 .skip-link:focus {
-  top: 0;
+  transform: translateY(0);
 }
 
 /* Enhanced Focus Indicators */
@@ -108,15 +83,6 @@ select:focus-visible {
   .animate-bounce {
     animation: none;
   }
-}
-
-/* Color Contrast Improvements */
-.text-gray-600 {
-  color: #4B5563; /* Improved contrast ratio */
-}
-
-.text-gray-400 {
-  color: #6B7280; /* Better contrast on dark backgrounds */
 }
 
 /* Link Underlines for Better Visibility */

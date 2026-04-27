@@ -1,33 +1,38 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { API_URL } from '../config';
 
-// Preset configurations with thumbnails
 const presets = [
-  { id: 'standard', label: 'Standard', icon: '🖼️', color: 'from-purple-500 to-blue-500' },
-  { id: 'square', label: 'Square', icon: '⬜', color: 'from-blue-500 to-cyan-500' },
-  { id: 'avatar', label: 'Avatar', icon: '👤', color: 'from-green-500 to-emerald-500' },
-  { id: 'banner', label: 'Banner', icon: '🎯', color: 'from-orange-500 to-red-500' },
-  { id: 'animated', label: 'Animated', icon: '✨', color: 'from-pink-500 to-purple-500' },
-  { id: 'ai', label: 'AI Generated', icon: '🤖', color: 'from-indigo-500 to-purple-500' },
+  { id: 'standard', label: 'Standard', description: 'Dimension-based SVG' },
+  { id: 'square', label: 'Square', description: 'Equal width and height' },
+  { id: 'avatar', label: 'Avatar', description: 'Initials and profiles' },
+  { id: 'banner', label: 'Banner', description: 'Wide responsive media' },
+  { id: 'animated', label: 'Animated', description: 'Loading placeholders' },
+  { id: 'ai', label: 'Pattern', description: 'Contextual SVG pattern' },
 ];
 
 const animationTypes = [
-  { id: 'skeleton', label: 'Skeleton Shimmer', preview: '░░░' },
-  { id: 'pulse', label: 'Pulse', preview: '◉' },
-  { id: 'wave', label: 'Wave', preview: '〰️' },
-  { id: 'shimmer', label: 'Shimmer Line', preview: '✨' },
-  { id: 'gradient', label: 'Rotating Gradient', preview: '🌈' },
-  { id: 'dots', label: 'Loading Dots', preview: '•••' },
+  { id: 'skeleton', label: 'Skeleton shimmer' },
+  { id: 'pulse', label: 'Pulse' },
+  { id: 'wave', label: 'Wave' },
+  { id: 'shimmer', label: 'Shimmer line' },
+  { id: 'gradient', label: 'Rotating gradient' },
+  { id: 'dots', label: 'Loading dots' },
 ];
 
 const colorPresets = [
-  { bg: '7C3AED', fg: 'FFFFFF', label: 'Purple' },
-  { bg: '3B82F6', fg: 'FFFFFF', label: 'Blue' },
-  { bg: '10B981', fg: 'FFFFFF', label: 'Green' },
-  { bg: 'F97316', fg: 'FFFFFF', label: 'Orange' },
-  { bg: 'EC4899', fg: 'FFFFFF', label: 'Pink' },
-  { bg: '1F2937', fg: 'FFFFFF', label: 'Dark' },
+  { bg: '7C3AED', fg: 'FFFFFF', label: 'Brand' },
+  { bg: '2563EB', fg: 'FFFFFF', label: 'Blue' },
+  { bg: '059669', fg: 'FFFFFF', label: 'Success' },
+  { bg: '111827', fg: 'FFFFFF', label: 'Dark' },
+  { bg: 'F3F4F6', fg: '111827', label: 'Neutral' },
+  { bg: 'EEF2FF', fg: '4338CA', label: 'Soft' },
 ];
+
+const clampDimension = (value: number) => Math.min(4000, Math.max(10, Number.isFinite(value) ? value : 400));
+const sanitizeHex = (value: string, fallback: string) => {
+  const normalized = value.replace('#', '').replace(/[^0-9a-fA-F]/g, '').slice(0, 6).toUpperCase();
+  return normalized.length === 6 ? normalized : fallback;
+};
 
 export default function LiveDemoEnhanced() {
   const [width, setWidth] = useState(400);
@@ -39,450 +44,349 @@ export default function LiveDemoEnhanced() {
   const [aiContext, setAiContext] = useState('');
   const [aiMood, setAiMood] = useState('');
   const [animationType, setAnimationType] = useState('skeleton');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(`${API_URL}/400x300`);
   const [copied, setCopied] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [recentUrls, setRecentUrls] = useState<string[]>([]);
-  
-  // Generate URL based on current settings
+
   const generateUrl = useCallback(() => {
+    const safeWidth = clampDimension(width);
+    const safeHeight = clampDimension(height);
+    const safeBg = sanitizeHex(bgColor, '7C3AED');
+    const safeText = sanitizeHex(textColor, 'FFFFFF');
     let url = `${API_URL}/`;
-    
+
     if (preset === 'standard') {
-      url += `${width}x${height}`;
-      if (bgColor !== '7C3AED' || textColor !== 'FFFFFF') {
-        url += `/${bgColor}/${textColor}`;
+      url += `${safeWidth}x${safeHeight}`;
+      if (safeBg !== '7C3AED' || safeText !== 'FFFFFF') {
+        url += `/${safeBg}/${safeText}`;
       }
     } else if (preset === 'square' || preset === 'avatar') {
-      url += `${preset}/${width}`;
+      url += `${preset}/${safeWidth}`;
     } else if (preset === 'banner') {
-      url += `banner/${width}x${height}`;
+      url += `banner/${safeWidth}x${safeHeight}`;
     } else if (preset === 'animated') {
-      url += `animated/${animationType}/${width}x${height}`;
+      url += `animated/${animationType}/${safeWidth}x${safeHeight}`;
     } else if (preset === 'ai') {
-      url += `ai/${width}x${height}`;
+      url += `ai/${safeWidth}x${safeHeight}`;
     } else {
-      url += `${preset}/${width}x${height}`;
+      url += `${preset}/${safeWidth}x${safeHeight}`;
     }
-    
+
     const params = [];
-    if (text) {
-      params.push(`text=${encodeURIComponent(text)}`);
-    }
+    if (text) params.push(`text=${encodeURIComponent(text)}`);
     if (preset === 'ai') {
-      if (aiContext) {
-        params.push(`context=${encodeURIComponent(aiContext)}`);
-      }
-      if (aiMood) {
-        params.push(`mood=${encodeURIComponent(aiMood)}`);
-      }
+      if (aiContext) params.push(`context=${encodeURIComponent(aiContext)}`);
+      if (aiMood) params.push(`mood=${encodeURIComponent(aiMood)}`);
     }
-    if (params.length > 0) {
-      url += '?' + params.join('&');
-    }
-    
-    return url;
+
+    return params.length > 0 ? `${url}?${params.join('&')}` : url;
   }, [width, height, bgColor, textColor, text, preset, aiContext, aiMood, animationType]);
-  
-  // Update URL with debouncing for smooth UX
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      const newUrl = generateUrl();
-      setImageUrl(newUrl);
+      setImageUrl(generateUrl());
       setImageLoading(true);
-    }, 300);
-    
+    }, 180);
+
     return () => clearTimeout(timer);
   }, [generateUrl]);
-  
-  // Copy URL to clipboard
+
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(imageUrl);
     setCopied(true);
-    
-    // Add to recent URLs
-    setRecentUrls(prev => {
-      const updated = [imageUrl, ...prev.filter(url => url !== imageUrl)].slice(0, 3);
-      return updated;
-    });
-    
+    setRecentUrls((previous) => [imageUrl, ...previous.filter((url) => url !== imageUrl)].slice(0, 3));
     setTimeout(() => setCopied(false), 2000);
   };
-  
-  // Apply color preset
+
   const applyColorPreset = (bg: string, fg: string) => {
     setBgColor(bg);
     setTextColor(fg);
   };
-  
+
   return (
-    <section id="playground" className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-4">
-            Try It <span className="gradient-text">Right Now</span>
-          </h2>
-          <p className="text-xl text-gray-600">
-            No signup. No API key. Just works.
-          </p>
+    <div className="mx-auto max-w-7xl">
+      <div className="mb-10 max-w-3xl">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple-700">Interactive generator</p>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 md:text-5xl">
+          Build a fallback URL in seconds.
+        </h2>
+        <p className="mt-4 text-lg leading-8 text-gray-600">
+          Tune dimensions, presets, colors, and text while the generated image updates in place.
+        </p>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1fr)]">
+        <div className="space-y-4">
+          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Preset</h3>
+              <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                {presets.find((item) => item.id === preset)?.label}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Placeholder preset">
+              {presets.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setPreset(item.id)}
+                  role="radio"
+                  aria-checked={preset === item.id}
+                  className={`rounded-lg border p-3 text-left transition ${
+                    preset === item.id
+                      ? 'border-purple-500 bg-purple-50 text-purple-950 shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="block text-sm font-semibold">{item.label}</span>
+                  <span className="mt-1 block text-xs leading-5 text-gray-500">{item.description}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">Dimensions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="block text-sm font-medium text-gray-700">
+                Width
+                <input
+                  type="number"
+                  value={width}
+                  onChange={(event) => setWidth(clampDimension(Number(event.target.value)))}
+                  min="10"
+                  max="4000"
+                  disabled={preset === 'square' || preset === 'avatar'}
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
+                />
+              </label>
+              <label className="block text-sm font-medium text-gray-700">
+                Height
+                <input
+                  type="number"
+                  value={height}
+                  onChange={(event) => setHeight(clampDimension(Number(event.target.value)))}
+                  min="10"
+                  max="4000"
+                  disabled={preset === 'square' || preset === 'avatar'}
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
+                />
+              </label>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {[
+                { w: 400, h: 300, label: '400x300' },
+                { w: 800, h: 600, label: '800x600' },
+                { w: 1200, h: 630, label: 'OG image' },
+                { w: 1920, h: 1080, label: 'HD' },
+              ].map((size) => (
+                <button
+                  key={size.label}
+                  type="button"
+                  onClick={() => {
+                    setWidth(size.w);
+                    setHeight(size.h);
+                  }}
+                  disabled={preset === 'square' || preset === 'avatar'}
+                  className="rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {size.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">Colors</h3>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {colorPresets.map((color) => (
+                <button
+                  key={color.label}
+                  type="button"
+                  onClick={() => applyColorPreset(color.bg, color.fg)}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition ${
+                    bgColor === color.bg
+                      ? 'border-purple-500 bg-purple-50 text-purple-800'
+                      : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="h-4 w-4 rounded-full border border-black/10" style={{ backgroundColor: `#${color.bg}` }} />
+                  {color.label}
+                </button>
+              ))}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Background
+                <div className="mt-2 flex gap-2">
+                  <input
+                    type="color"
+                    value={`#${sanitizeHex(bgColor, '7C3AED')}`}
+                    onChange={(event) => setBgColor(sanitizeHex(event.target.value, '7C3AED'))}
+                    className="h-11 w-14 rounded border border-gray-300 bg-white"
+                    aria-label="Choose background color"
+                  />
+                  <input
+                    type="text"
+                    value={`#${bgColor}`}
+                    onChange={(event) => setBgColor(event.target.value.replace('#', '').toUpperCase())}
+                    onBlur={() => setBgColor(sanitizeHex(bgColor, '7C3AED'))}
+                    className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                  />
+                </div>
+              </label>
+              <label className="block text-sm font-medium text-gray-700">
+                Text
+                <div className="mt-2 flex gap-2">
+                  <input
+                    type="color"
+                    value={`#${sanitizeHex(textColor, 'FFFFFF')}`}
+                    onChange={(event) => setTextColor(sanitizeHex(event.target.value, 'FFFFFF'))}
+                    className="h-11 w-14 rounded border border-gray-300 bg-white"
+                    aria-label="Choose text color"
+                  />
+                  <input
+                    type="text"
+                    value={`#${textColor}`}
+                    onChange={(event) => setTextColor(event.target.value.replace('#', '').toUpperCase())}
+                    onBlur={() => setTextColor(sanitizeHex(textColor, 'FFFFFF'))}
+                    className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                  />
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <label htmlFor="custom-text" className="block text-sm font-semibold uppercase tracking-wide text-gray-700">
+              Custom text
+            </label>
+            <input
+              id="custom-text"
+              type="text"
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              className="mt-3 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+              placeholder="Leave empty for dimensions"
+            />
+          </section>
+
+          {preset === 'animated' && (
+            <section className="rounded-lg border border-purple-200 bg-purple-50 p-5">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-purple-900">Animation style</h3>
+              <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Animation style">
+                {animationTypes.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={animationType === item.id}
+                    onClick={() => setAnimationType(item.id)}
+                    className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                      animationType === item.id
+                        ? 'border-purple-500 bg-white font-semibold text-purple-900 shadow-sm'
+                        : 'border-purple-100 bg-white/60 text-purple-800 hover:bg-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {preset === 'ai' && (
+            <section className="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-indigo-900">Pattern context</h3>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block text-sm font-medium text-indigo-950">
+                  Context
+                  <input
+                    type="text"
+                    value={aiContext}
+                    onChange={(event) => setAiContext(event.target.value)}
+                    className="mt-2 w-full rounded-lg border border-indigo-200 px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
+                    placeholder="e-commerce, healthcare, tech"
+                  />
+                </label>
+                <label className="block text-sm font-medium text-indigo-950">
+                  Mood
+                  <input
+                    type="text"
+                    value={aiMood}
+                    onChange={(event) => setAiMood(event.target.value)}
+                    className="mt-2 w-full rounded-lg border border-indigo-200 px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
+                    placeholder="minimal, calm, professional"
+                  />
+                </label>
+              </div>
+            </section>
+          )}
         </div>
-        
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Controls Panel */}
-          <div className="space-y-6">
-            {/* Preset Selection - Visual Grid */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <label className="block text-sm font-bold text-gray-700 mb-4">
-                Choose Preset
-              </label>
-              <div className="grid grid-cols-3 gap-3">
-                {presets.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => setPreset(p.id)}
-                    className={`
-                      relative p-4 rounded-xl transition-all duration-200
-                      ${preset === p.id 
-                        ? 'bg-gradient-to-br ' + p.color + ' text-white shadow-lg scale-105' 
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}
-                    `}
-                    aria-label={`Select ${p.label} preset`}
-                  >
-                    <div className="text-2xl mb-1">{p.icon}</div>
-                    <div className="text-xs font-semibold">{p.label}</div>
-                    {preset === p.id && (
-                      <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full animate-pulse" />
-                    )}
-                  </button>
-                ))}
+
+        <aside className="space-y-4 lg:sticky lg:top-8 lg:self-start">
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div className="border-b border-gray-200 bg-gray-50 px-5 py-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-900">Live preview</h3>
+                <span className="font-mono text-xs text-gray-500">{clampDimension(width)}x{clampDimension(height)}</span>
               </div>
             </div>
-            
-            {/* Dimensions */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <label className="block text-sm font-bold text-gray-700 mb-4">
-                Dimensions
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="width" className="block text-xs text-gray-500 mb-1">
-                    Width (px)
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="width"
-                      type="number"
-                      value={width}
-                      onChange={(e) => setWidth(Number(e.target.value))}
-                      className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-purple-500 transition-colors font-mono"
-                      min="1"
-                      max="5000"
-                      disabled={preset === 'square' || preset === 'avatar'}
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
-                      px
-                    </span>
-                  </div>
+            <div className="relative flex min-h-[360px] items-center justify-center bg-[radial-gradient(circle_at_1px_1px,#d1d5db_1px,transparent_0)] p-8 [background-size:24px_24px]">
+              {imageLoading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/75">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-purple-600" />
                 </div>
-                <div>
-                  <label htmlFor="height" className="block text-xs text-gray-500 mb-1">
-                    Height (px)
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="height"
-                      type="number"
-                      value={height}
-                      onChange={(e) => setHeight(Number(e.target.value))}
-                      className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-purple-500 transition-colors font-mono"
-                      min="1"
-                      max="5000"
-                      disabled={preset === 'square' || preset === 'avatar'}
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
-                      px
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Quick Size Buttons */}
-              <div className="flex gap-2 mt-3">
-                {[
-                  { w: 400, h: 300, label: 'Small' },
-                  { w: 800, h: 600, label: 'Medium' },
-                  { w: 1920, h: 1080, label: 'HD' },
-                ].map((size) => (
-                  <button
-                    key={size.label}
-                    onClick={() => {
-                      setWidth(size.w);
-                      setHeight(size.h);
-                    }}
-                    className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                    disabled={preset === 'square' || preset === 'avatar'}
-                  >
-                    {size.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Colors */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <label className="block text-sm font-bold text-gray-700 mb-4">
-                Colors
-              </label>
-              
-              {/* Color Presets */}
-              <div className="flex gap-2 mb-4">
-                {colorPresets.map((cp) => (
-                  <button
-                    key={cp.label}
-                    onClick={() => applyColorPreset(cp.bg, cp.fg)}
-                    className="group relative"
-                    aria-label={`Apply ${cp.label} color preset`}
-                  >
-                    <div
-                      className="w-10 h-10 rounded-lg shadow-md transition-transform group-hover:scale-110"
-                      style={{ backgroundColor: `#${cp.bg}` }}
-                    />
-                    {bgColor === cp.bg && (
-                      <div className="absolute inset-0 rounded-lg border-2 border-purple-500" />
-                    )}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Background
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      value={`#${bgColor}`}
-                      onChange={(e) => setBgColor(e.target.value.replace('#', ''))}
-                      className="h-12 w-20 border-2 rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={`#${bgColor}`}
-                      onChange={(e) => setBgColor(e.target.value.replace('#', ''))}
-                      className="flex-1 px-3 py-2 border-2 rounded-lg font-mono text-sm"
-                      maxLength={7}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Text Color
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      value={`#${textColor}`}
-                      onChange={(e) => setTextColor(e.target.value.replace('#', ''))}
-                      className="h-12 w-20 border-2 rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={`#${textColor}`}
-                      onChange={(e) => setTextColor(e.target.value.replace('#', ''))}
-                      className="flex-1 px-3 py-2 border-2 rounded-lg font-mono text-sm"
-                      maxLength={7}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Custom Text */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <label htmlFor="custom-text" className="block text-sm font-bold text-gray-700 mb-4">
-                Custom Text
-              </label>
-              <input
-                id="custom-text"
-                type="text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
-                placeholder="Leave empty for dimensions..."
+              )}
+              <img
+                src={imageUrl}
+                alt={`Generated placeholder${text ? ` with text: ${text}` : ''}`}
+                className="max-h-[420px] max-w-full rounded-lg border border-gray-200 bg-white shadow-xl transition-opacity duration-200"
+                onLoad={() => setImageLoading(false)}
+                style={{ opacity: imageLoading ? 0.55 : 1 }}
               />
             </div>
-            
-            {/* Animation Options */}
-            {preset === 'animated' && (
-              <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 shadow-lg border-2 border-purple-200">
-                <label className="block text-sm font-bold text-gray-700 mb-4">
-                  Animation Style
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {animationTypes.map((anim) => (
-                    <button
-                      key={anim.id}
-                      onClick={() => setAnimationType(anim.id)}
-                      className={`
-                        p-3 rounded-lg transition-all duration-200 flex items-center gap-2
-                        ${animationType === anim.id 
-                          ? 'bg-purple-500 text-white shadow-md' 
-                          : 'bg-white hover:bg-gray-50'}
-                      `}
-                    >
-                      <span className="text-lg">{anim.preview}</span>
-                      <span className="text-sm font-medium">{anim.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* AI Options */}
-            {preset === 'ai' && (
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-lg border-2 border-indigo-200">
-                <label className="block text-sm font-bold text-gray-700 mb-4">
-                  AI Generation Options
-                </label>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                      Context (Industry/Type)
-                    </label>
-                    <input
-                      type="text"
-                      value={aiContext}
-                      onChange={(e) => setAiContext(e.target.value)}
-                      className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-indigo-500"
-                      placeholder="e.g., e-commerce, healthcare, tech"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                      Mood/Style
-                    </label>
-                    <input
-                      type="text"
-                      value={aiMood}
-                      onChange={(e) => setAiMood(e.target.value)}
-                      className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-indigo-500"
-                      placeholder="e.g., minimal, vibrant, professional"
-                    />
-                  </div>
-                  <div className="bg-white/70 rounded-lg p-3">
-                    <p className="text-xs text-gray-600 font-medium mb-2">
-                      ✨ Try these combinations:
-                    </p>
-                    <div className="space-y-1 text-xs text-gray-500">
-                      <div>• "e-commerce product" + "minimal"</div>
-                      <div>• "healthcare" + "calm"</div>
-                      <div>• "tech startup" + "vibrant"</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-          
-          {/* Preview Panel */}
-          <div className="lg:sticky lg:top-8 space-y-6">
-            {/* Live Preview */}
-            <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 min-h-[400px] flex items-center justify-center relative overflow-hidden">
-              {/* Animated Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 60 0 L 0 0 0 60' fill='none' stroke='black' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E")`
-                }} />
-              </div>
-              
-              {/* Image Preview */}
-              <div className="relative">
-                {imageLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-lg">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500" />
-                  </div>
-                )}
-                <img
-                  src={imageUrl}
-                  alt={`Generated placeholder${text ? ` with text: ${text}` : ``}`}
-                  className="max-w-full h-auto rounded-lg shadow-2xl transition-opacity duration-300"
-                  onLoad={() => setImageLoading(false)}
-                  style={{ opacity: imageLoading ? 0.5 : 1 }}
-                />
+
+          <div className="rounded-xl border border-gray-200 bg-gray-950 p-5 shadow-sm">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h3 className="text-sm font-semibold text-white">Generated URL</h3>
+              <button
+                type="button"
+                onClick={copyToClipboard}
+                className={`rounded-md px-3 py-2 text-sm font-semibold transition ${
+                  copied ? 'bg-emerald-500 text-white' : 'bg-white text-gray-950 hover:bg-gray-100'
+                }`}
+              >
+                {copied ? 'Copied' : 'Copy URL'}
+              </button>
+            </div>
+            <code className="block break-all rounded-lg bg-black px-4 py-3 font-mono text-sm leading-6 text-emerald-300" aria-live="polite">
+              {imageUrl}
+            </code>
+          </div>
+
+          {recentUrls.length > 0 && (
+            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h3 className="mb-3 text-sm font-semibold text-gray-900">Recent URLs</h3>
+              <div className="space-y-2">
+                {recentUrls.map((url) => (
+                  <button
+                    key={url}
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText(url)}
+                    className="block w-full truncate rounded-lg bg-gray-50 px-3 py-2 text-left font-mono text-xs text-gray-600 transition hover:bg-gray-100"
+                    title="Click to copy"
+                  >
+                    {url}
+                  </button>
+                ))}
               </div>
             </div>
-            
-            {/* Generated URL */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-bold text-gray-700">
-                  Generated URL
-                </label>
-                <button
-                  onClick={copyToClipboard}
-                  className={`
-                    px-4 py-2 rounded-lg font-semibold text-sm
-                    transition-all duration-200 transform
-                    ${copied 
-                      ? 'bg-green-500 text-white scale-105 shadow-lg' 
-                      : 'bg-purple-500 hover:bg-purple-600 text-white hover:shadow-lg hover:scale-105'}
-                  `}
-                >
-                  {copied ? (
-                    <>✓ Copied!</>
-                  ) : (
-                    <>📋 Copy URL</>
-                  )}
-                </button>
-              </div>
-              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <code className="text-green-400 font-mono text-sm break-all">
-                  {imageUrl}
-                </code>
-              </div>
-            </div>
-            
-            {/* Recent URLs */}
-            {recentUrls.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <h3 className="text-sm font-bold text-gray-700 mb-3">
-                  Recent URLs
-                </h3>
-                <div className="space-y-2">
-                  {recentUrls.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-gray-50 rounded-lg p-3 text-xs font-mono text-gray-600 truncate hover:bg-gray-100 cursor-pointer transition-colors"
-                      onClick={() => navigator.clipboard.writeText(url)}
-                      title="Click to copy"
-                    >
-                      {url}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+          )}
+        </aside>
       </div>
-      
-      <style>{`
-        .gradient-text {
-          background: linear-gradient(90deg, #7C3AED, #3B82F6, #10B981);
-          background-clip: text;
-          -webkit-background-clip: text;
-          color: transparent;
-          animation: gradient-shift 3s ease infinite;
-          background-size: 200% 200%;
-        }
-        
-        @keyframes gradient-shift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
-    </section>
+    </div>
   );
 }
