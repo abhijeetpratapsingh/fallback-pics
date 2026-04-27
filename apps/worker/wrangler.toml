@@ -1,6 +1,7 @@
 name = "fallback-pics"
 main = "src/index.ts"
 compatibility_date = "2024-08-01"
+account_id = "04f1fbe6c8a63cd40173f5958866906d"
 # Remove nodejs_compat for faster cold starts
 # compatibility_flags = ["nodejs_compat"]
 
@@ -29,3 +30,5 @@ name = "fallback-pics-production"
 # CORS headers for production
 [env.production.vars]
 ALLOWED_ORIGIN = "https://fallback.pics"
+NEW_RELIC_APP_NAME = "fallback-pics"
+NEW_RELIC_ENABLED = "true"

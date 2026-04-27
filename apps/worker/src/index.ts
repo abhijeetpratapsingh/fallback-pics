@@ -4,9 +4,13 @@
  */
 
 import { generateAISVG } from './ai-generator';
+import { NewRelicTelemetry, extractRoute, extractDimensions, getUserAgentCategory } from './telemetry';
 
 export interface Env {
   ALLOWED_ORIGIN?: string;
+  NEW_RELIC_LICENSE_KEY?: string;
+  NEW_RELIC_APP_NAME?: string;
+  NEW_RELIC_ENABLED?: string;
 }
 
 // Pre-computed constants
@@ -168,7 +172,10 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const startTime = Date.now();
+    const telemetry = new NewRelicTelemetry(env);
+
     // Handle OPTIONS
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
@@ -176,6 +183,18 @@ export default {
 
     // Only GET requests
     if (request.method !== 'GET') {
+      const responseTime = Date.now() - startTime;
+
+      // Track error
+      ctx.waitUntil(telemetry.sendMetrics([
+        telemetry.trackError('Method not allowed', 'unknown', 405, {
+          method: request.method,
+          responseTime,
+          country: request.cf?.country as string | undefined,
+          userAgentCategory: getUserAgentCategory(request.headers.get('user-agent'))
+        })
+      ]));
+
       return new Response('Method not allowed', { status: 405, headers: CORS_HEADERS });
     }
 
@@ -194,6 +213,16 @@ export default {
 
     // Empty path
     if (!pathname) {
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(telemetry.sendMetrics([
+        telemetry.trackError('Empty pathname', 'unknown', 400, {
+          responseTime,
+          country: request.cf?.country as string | undefined,
+          userAgentCategory: getUserAgentCategory(request.headers.get('user-agent'))
+        })
+      ]));
+
       return new Response('Invalid dimensions', { status: 400, headers: CORS_HEADERS });
     }
 
@@ -212,6 +241,29 @@ export default {
         const textColor = normalizeColor(segments[3]) || DEFAULT_TEXT;
         
         const svg = AVATAR_TEMPLATE(size, bg, textColor, escapeXml(text));
+
+        // Track avatar request
+        const responseTime = Date.now() - startTime;
+        ctx.waitUntil(telemetry.sendMetrics([
+          telemetry.trackRequest({
+            route: 'avatar',
+            method: request.method,
+            statusCode: 200,
+            responseTime,
+            country: request.cf?.country as string | undefined,
+            userAgent: request.headers.get('user-agent'),
+            imageWidth: size,
+            imageHeight: size,
+            imageFormat: 'svg',
+            customText: !!text && text !== 'A',
+          }),
+          telemetry.trackBusinessMetric('avatar_generated', 1, {
+            size,
+            hasCustomText: !!text && text !== 'A',
+            country: request.cf?.country as string | undefined,
+          })
+        ]));
+
         return new Response(svg, { headers: SVG_HEADERS });
       }
     }
@@ -371,6 +423,17 @@ export default {
     const match = DIMENSION_REGEX.exec(dimensionStr);
     
     if (!match) {
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(telemetry.sendMetrics([
+        telemetry.trackError('Invalid dimensions format', extractRoute(pathname), 400, {
+          pathname: firstSegment,
+          responseTime,
+          country: request.cf?.country as string | undefined,
+          userAgentCategory: getUserAgentCategory(request.headers.get('user-agent'))
+        })
+      ]));
+
       return new Response('Invalid dimensions format', { status: 400, headers: CORS_HEADERS });
     }
 
@@ -379,6 +442,18 @@ export default {
 
     // Validate dimensions
     if ((width | height) <= 0 || width > 5000 || height > 5000) {
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(telemetry.sendMetrics([
+        telemetry.trackError('Invalid dimensions range', extractRoute(pathname), 400, {
+          width,
+          height,
+          responseTime,
+          country: request.cf?.country as string | undefined,
+          userAgentCategory: getUserAgentCategory(request.headers.get('user-agent'))
+        })
+      ]));
+
       return new Response('Invalid dimensions (max 5000x5000)', { status: 400, headers: CORS_HEADERS });
     }
 
@@ -399,8 +474,36 @@ export default {
     const bg = normalizeColor(segments[1]) || DEFAULT_BG;
     const textColor = normalizeColor(segments[2]) || DEFAULT_TEXT;
     const customText = url.searchParams.get('text') || `${width} × ${height}`;
-    
+
     const svg = SVG_TEMPLATE(width, height, bg, textColor, escapeXml(customText));
+
+    // Track successful request
+    const responseTime = Date.now() - startTime;
+    const route = extractRoute(pathname);
+    const dimensions = extractDimensions(pathname);
+
+    ctx.waitUntil(telemetry.sendMetrics([
+      telemetry.trackRequest({
+        route,
+        method: request.method,
+        statusCode: 200,
+        responseTime,
+        country: request.cf?.country as string | undefined,
+        userAgent: request.headers.get('user-agent'),
+        imageWidth: dimensions.width,
+        imageHeight: dimensions.height,
+        imageFormat: 'svg',
+        customText: !!url.searchParams.get('text'),
+      }),
+      telemetry.trackBusinessMetric('image_generated', 1, {
+        route,
+        width: dimensions.width,
+        height: dimensions.height,
+        hasCustomText: !!url.searchParams.get('text'),
+        country: request.cf?.country as string | undefined,
+      })
+    ]));
+
     return new Response(svg, { headers: SVG_HEADERS });
   }
 };
