@@ -12,7 +12,7 @@
 2. **Website**
    - Production URL: `https://fallback.pics`
    - Pages URL: `https://fallback-pics-web.pages.dev`
-   - Latest deployment: `b659687c`
+   - Deployment approach: migrate to Cloudflare Pages Git integration with GitHub
 
 ## Configuration Files Updated
 
@@ -69,21 +69,30 @@ Or use CNAME:
 - Worker runs on: `http://localhost:8787`
 - Website runs on: `http://localhost:4321`
 
+## Website Deployment Approach
+
+The website should deploy through Cloudflare Pages Git integration:
+
+| Setting | Value |
+| --- | --- |
+| Git repository | `abhijeetpratapsingh/fallback-pics` |
+| Production branch | `main` |
+| Root directory | `/` |
+| Build command | `pnpm web:build` |
+| Build output directory | `apps/web/dist` |
+| Node version | `20` |
+| pnpm version | `8.12.0` |
+
+If the current `fallback-pics-web` Pages project was created with Wrangler Direct Upload, create a new Git-connected Pages project and then move the `fallback.pics` custom domain to it after verification.
+
 ## Deployment Commands
 
 ```bash
-# Deploy Worker
-cd apps/worker
-npm run deploy
-
-# Deploy Website
-cd apps/web
-npm run build
-npx wrangler pages deploy dist --project-name=fallback-pics-web
-
-# Or from root with pnpm
+# Worker deploy still uses Wrangler
 pnpm worker:deploy
-pnpm web:build && pnpm web:deploy
+
+# Local website build check before pushing
+pnpm web:build
 ```
 
 ## Testing Production

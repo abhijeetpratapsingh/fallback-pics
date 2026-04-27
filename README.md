@@ -1,6 +1,6 @@
 # Fallback.pics - Open Source Placeholder Image Service
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/nosignupdev/fallbackpics)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/abhijeetpratapsingh/fallback-pics)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -37,13 +37,13 @@ Simply use our hosted service at `https://fallback.pics`:
 
 #### Option 1: One-Click Deploy to Cloudflare
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/nosignupdev/fallbackpics)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/abhijeetpratapsingh/fallback-pics)
 
 #### Option 2: Manual Deployment
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/nosignupdev/fallbackpics.git
+git clone https://github.com/abhijeetpratapsingh/fallback-pics.git
 cd fallback-pics
 ```
 
@@ -219,7 +219,7 @@ We love contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for 
 
 - 📧 **Email**: support@fallback.pics
 - 💬 **Discord**: [Join our community](https://discord.gg/hwGJNnN3)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/nosignupdev/fallbackpics/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/abhijeetpratapsingh/fallback-pics/issues)
 - 📖 **Docs**: [Documentation](https://docs.fallback.pics)
 
 ## License

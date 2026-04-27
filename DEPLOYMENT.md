@@ -1,288 +1,123 @@
-# 🚀 Deployment Guide for Fallback.pics
+# Deployment Guide
 
-## ⚡ Quick Deploy Commands
+Fallback.pics uses two Cloudflare services:
 
-```bash
-# Deploy everything to production
-pnpm deploy
-# OR
-./deploy.sh --production
+- Cloudflare Pages for the Astro website in `apps/web`
+- Cloudflare Workers for the image API in `apps/worker`
 
-# Deploy to preview environment
-pnpm deploy:preview
+The preferred website deployment flow is now Cloudflare Pages Git integration with GitHub. Pushes to `main` deploy production, and pull requests/branches create preview deployments.
 
-# Deploy only the worker (API)
-pnpm deploy:worker
+## Important Cloudflare Pages Note
 
-# Deploy only the website
-pnpm deploy:web
+If the existing `fallback-pics-web` Pages project was created with Wrangler Direct Upload, Cloudflare does not let you convert that same Pages project to Git integration later.
+
+Use this migration path:
+
+1. Create a new Pages project using Git integration.
+2. Deploy and verify the new project.
+3. Move the `fallback.pics` custom domain from the old Pages project to the new one.
+4. Keep or delete the old Direct Upload project after the domain is moved.
+
+## GitHub-Connected Pages Setup
+
+In Cloudflare Dashboard:
+
+1. Go to Workers & Pages.
+2. Select Create application.
+3. Select Pages.
+4. Select Connect to Git.
+5. Authorize GitHub if prompted.
+6. Pick the repository:
+
+```text
+abhijeetpratapsingh/fallback-pics
 ```
 
-## Prerequisites
+Use these build settings:
 
-1. **Cloudflare Account**: Sign up at [cloudflare.com](https://cloudflare.com)
-2. **Domain**: Add your domain to Cloudflare (fallback.pics or your custom domain)
-3. **API Token**: Generate at Cloudflare Dashboard > My Profile > API Tokens
+| Setting | Value |
+| --- | --- |
+| Project name | `fallback-pics-web` or a new name if the old Direct Upload project still exists |
+| Production branch | `main` |
+| Root directory | `/` |
+| Build command | `pnpm web:build` |
+| Build output directory | `apps/web/dist` |
+| Framework preset | `Astro` |
 
-## Step 1: Initial Setup
+Recommended environment variables:
 
-### 1.1 Login to Cloudflare CLI
+| Variable | Value |
+| --- | --- |
+| `NODE_VERSION` | `20` |
+| `PNPM_VERSION` | `8.12.0` |
+
+Cloudflare will install dependencies, run the build command, and deploy `apps/web/dist`.
+
+## Production Domain Cutover
+
+After the new Git-connected Pages project builds successfully:
+
+1. Open the old Pages project that currently owns `fallback.pics`.
+2. Remove the `fallback.pics` custom domain from that project.
+3. Open the new Git-connected Pages project.
+4. Add `fallback.pics` under Custom domains.
+5. Wait for Cloudflare to validate the domain and certificate.
+6. Visit `https://fallback.pics` and confirm the site is served from the new project.
+
+Do the cutover only after the new Pages preview URL works.
+
+## Worker API Deployment
+
+The API Worker is still deployed from Wrangler:
 
 ```bash
-# Login to Cloudflare
-npx wrangler login
-
-# Or use API token
-export CLOUDFLARE_API_TOKEN="your-token-here"
-```
-
-### 1.2 Add Your Domain to Cloudflare
-
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Click "Add a Site"
-3. Enter your domain (e.g., fallback.pics)
-4. Update your domain's nameservers to Cloudflare's
-
-## Step 2: Deploy the Worker (API)
-
-```bash
-# Navigate to worker directory
-cd apps/worker
-
-# Deploy to production
-npm run deploy
-
-# Or with pnpm from root
 pnpm worker:deploy
 ```
 
-After deployment, you'll get a URL like: `https://fallback-pics.YOUR-SUBDOMAIN.workers.dev`
+Current Worker config lives in:
 
-### 2.1 Configure Custom Domain
-
-Option A: Via Dashboard
-1. Go to Workers & Pages > Your Worker
-2. Click "Custom Domains" tab
-3. Add your domain (e.g., fallback.pics or https://fallback.pics/api/v1)
-
-Option B: Via CLI
-```bash
-npx wrangler domains add fallback.pics
+```text
+apps/worker/wrangler.toml
 ```
 
-## Step 3: Deploy the Website (Documentation)
+The Worker account ID configured locally is:
 
-### 3.1 Build the Website
+```text
+04f1fbe6c8a63cd40173f5958866906d
+```
+
+If you later want the Worker to deploy from GitHub too, set up Cloudflare Workers Builds or a GitHub Action with a scoped Cloudflare API token.
+
+## Local Build Check
+
+Before pushing:
 
 ```bash
-# Navigate to web directory
-cd apps/web
-
-# Build for production
-npm run build
-
-# Or from root
+pnpm install
 pnpm web:build
 ```
 
-### 3.2 Deploy to Cloudflare Pages
+GitHub also runs `.github/workflows/pages-build-check.yml` on pushes and pull requests to catch website build failures before you rely on the Cloudflare deployment logs.
 
-Option A: Via Dashboard
-1. Go to [Cloudflare Pages](https://pages.cloudflare.com)
-2. Create a new project
-3. Connect your GitHub repository OR upload the `dist` folder
-4. Set build settings:
-   - Build command: `pnpm web:build`
-   - Build output directory: `apps/web/dist`
-   - Root directory: `/`
+## Manual Fallback Deploy
 
-Option B: Via CLI (Direct Upload)
-```bash
-# Install Wrangler Pages
-npm install -g wrangler
-
-# Deploy directly
-npx wrangler pages deploy apps/web/dist \
-  --project-name=fallback-pics-web \
-  --branch=main
-```
-
-### 3.3 Configure Custom Domain for Pages
-
-1. Go to Workers & Pages > Your Pages Project
-2. Custom domains > Add domain
-3. Add: `www.fallback.pics` or just `fallback.pics` for the website
-
-## Step 4: DNS Configuration
-
-Your DNS should look like this:
-
-| Type | Name | Content | Proxy |
-|------|------|---------|-------|
-| A | @ | 192.0.2.1 | ✅ Proxied |
-| AAAA | @ | 100:: | ✅ Proxied |
-| CNAME | www | fallback-pics-web.pages.dev | ✅ Proxied |
-| CNAME | api | fallback-pics.workers.dev | ✅ Proxied |
-
-## Step 5: Environment Variables (If Needed)
+Manual deployment is still available for emergencies:
 
 ```bash
-# Set secrets for Worker
-npx wrangler secret put API_KEY
+# Website Direct Upload fallback
+cd apps/web
+pnpm build
+npx wrangler pages deploy dist --project-name fallback-pics-web --branch main
 
-# Set environment variables
-npx wrangler vars set NODE_ENV production
+# Full legacy deployment script
+./deploy.sh --production
 ```
 
-## Step 6: Test Production
+Prefer the GitHub-connected Pages project for normal website changes.
 
-```bash
-# Test Worker endpoints
-curl https://fallback.pics/400x300
-curl https://fallback.pics/chart/bar/600x400
-curl https://fallback.pics/animated/pulse/200x200
-curl https://fallback.pics/ai/400x300?context=tech
+## Useful URLs
 
-# Test website
-curl https://fallback.pics
-curl https://www.fallback.pics
-```
-
-## Step 7: Update Configuration
-
-### Update Worker for Production URL
-
-Edit `apps/worker/src/index.ts` if needed to add CORS for your domain:
-
-```typescript
-headers.set('Access-Control-Allow-Origin', 'https://fallback.pics');
-```
-
-### Update Website for Production API
-
-Edit `apps/web/src/config.ts`:
-
-```typescript
-export const API_URL = import.meta.env.DEV 
-  ? 'http://localhost:8787' 
-  : 'https://fallback.pics';
-```
-
-## Monitoring & Analytics
-
-1. **Worker Analytics**: Workers & Pages > Analytics
-2. **Web Analytics**: Add Cloudflare Web Analytics snippet
-3. **Error Tracking**: Workers & Pages > Logs
-
-## Troubleshooting
-
-### Worker not responding
-- Check Workers & Pages > Your Worker > Logs
-- Verify custom domain is active
-- Check DNS propagation
-
-### CORS issues
-- Ensure Access-Control headers are set in Worker
-- Check domain configuration
-
-### Images not loading
-- Verify Worker is deployed
-- Check browser console for errors
-- Test API endpoints directly
-
-## Continuous Deployment
-
-### GitHub Actions
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to Cloudflare
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      
-      - name: Install dependencies
-        run: pnpm install
-      
-      - name: Deploy Worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: pnpm worker:deploy
-      
-      - name: Build Web
-        run: pnpm web:build
-      
-      - name: Deploy Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: |
-          npx wrangler pages deploy apps/web/dist \
-            --project-name=fallback-pics-web \
-            --branch=main
-```
-
-## Production Checklist
-
-- [ ] Domain added to Cloudflare
-- [ ] Worker deployed
-- [ ] Custom domain configured for Worker
-- [ ] Website built and deployed to Pages
-- [ ] Custom domain configured for Pages
-- [ ] DNS records configured
-- [ ] SSL/TLS mode set to "Full (strict)"
-- [ ] Page Rules configured (if needed)
-- [ ] Caching rules optimized
-- [ ] Analytics enabled
-- [ ] Error tracking configured
-- [ ] GitHub Actions configured (optional)
-
-## Costs
-
-**Free Tier Includes:**
-- 100,000 Worker requests/day
-- Unlimited Pages requests
-- Free SSL certificates
-- Basic analytics
-
-**Paid Plans** (if you exceed limits):
-- Workers: $5/month for 10M requests
-- Additional features available
-
-## Support
-
-- **Cloudflare Docs**: https://developers.cloudflare.com
-- **Worker Examples**: https://developers.cloudflare.com/workers/examples
-- **Pages Docs**: https://developers.cloudflare.com/pages
-
----
-
-## Quick Deploy Commands
-
-```bash
-# From project root
-# 1. Login
-npx wrangler login
-
-# 2. Deploy Worker
-cd apps/worker && npm run deploy
-
-# 3. Build & Deploy Website
-cd ../web && npm run build
-npx wrangler pages deploy dist --project-name=fallback-pics-web
-
-# 4. Add custom domains via dashboard
-```
-
-That's it! Your placeholder service is now live! 🎉
+- Production: `https://fallback.pics`
+- Pages preview domain: `https://fallback-pics-web.pages.dev`
+- Worker fallback URL: `https://fallback-pics.billing-04f.workers.dev`
+- Cloudflare Dashboard: `https://dash.cloudflare.com`
