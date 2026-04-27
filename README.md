@@ -1,42 +1,36 @@
-# Fallback.pics - Placeholder Image API and Fallback Image Service
+<div align="center">
+
+# Fallback.pics
+
+**Never show broken images again.**
+
+Fast, self-hostable placeholder images and production-friendly fallback images from simple URLs.
+
+[Website](https://fallback.pics) · [API Examples](#api-examples) · [Deploy](#deploy-your-own) · [Contributing](#contributing)
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/abhijeetpratapsingh/fallback-pics)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+[![Built with Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**Fallback.pics is a fast placeholder image API and fallback image service for developers.**
+</div>
 
-Generate dummy images, product placeholders, avatar fallbacks, banners, skeleton placeholders, and broken-image fallbacks with simple URLs. Use it in HTML, React, Next.js, ecommerce stores, dashboards, documentation, and prototypes when real images are missing or still loading.
+Fallback.pics is a fast **placeholder image API** and **fallback image service** for developers who do not want broken images showing up in apps, docs, prototypes, dashboards, or ecommerce pages.
+
+Generate dummy images, avatar placeholders, product image placeholders, banners, skeleton placeholder images, and broken image fallbacks with readable URLs. The service is built as a Cloudflare Workers image generator, so placeholders can be generated at the edge and cached aggressively.
 
 Created and maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/).
 
-Website: [https://fallback.pics](https://fallback.pics)
-
-Repository: [https://github.com/abhijeetpratapsingh/fallback-pics](https://github.com/abhijeetpratapsingh/fallback-pics)
-
-## Why Fallback.pics?
-
-- **Placeholder image API** - Generate custom-size placeholder images from a URL.
-- **Broken image fallback** - Replace failed image loads with clean fallback images.
-- **Dummy image generator** - Create test images for mockups, docs, seed data, and UI development.
-- **Avatar placeholder API** - Generate profile placeholders and initials-based avatar images.
-- **Product image placeholders** - Keep product grids and ecommerce cards from breaking.
-- **Skeleton and loading placeholders** - Show visual loading states while content loads.
-- **Serverless and fast** - Built on Cloudflare Workers for edge delivery.
-- **Self-hostable** - Deploy your own placeholder image service with Cloudflare.
-
 ## Quick Start
 
-Use the hosted placeholder image API:
+Use any image URL as a placeholder:
 
 ```html
-<img
-  src="https://fallback.pics/api/v1/400x300"
-  alt="Placeholder image"
-/>
+<img src="https://fallback.pics/api/v1/400x300" alt="Placeholder image" />
 ```
 
-Generate a custom dummy image:
+Add custom text:
 
 ```html
 <img
@@ -45,107 +39,115 @@ Generate a custom dummy image:
 />
 ```
 
-Use Fallback.pics as a broken image fallback:
+Use it as a fallback when an image fails:
 
 ```html
 <img
   src="/images/product.jpg"
-  onerror="this.src='https://fallback.pics/api/v1/400x300?text=Product+Image'"
   alt="Product image"
+  onerror="this.onerror=null;this.src='https://fallback.pics/api/v1/600x400?text=Image+Unavailable'"
 />
 ```
 
-## Placeholder Image API Examples
+## API Examples
 
-| Use case | URL |
+Fallback.pics uses readable URLs, so you can drop placeholders directly into HTML, React, Next.js, Markdown, CMS content, test data, and product catalogs. Start with a size, then add text, colors, or presets when you need more control.
+
+| Need | URL |
 | --- | --- |
-| Basic placeholder image | `https://fallback.pics/api/v1/400x300` |
-| Custom text placeholder | `https://fallback.pics/api/v1/400x300?text=Hello+World` |
+| Basic placeholder | `https://fallback.pics/api/v1/400x300` |
+| Custom text | `https://fallback.pics/api/v1/400x300?text=Hello+World` |
 | Custom colors | `https://fallback.pics/api/v1/400x300/7C3AED/FFFFFF` |
-| Full HD dummy image | `https://fallback.pics/api/v1/1920x1080` |
-| Square placeholder | `https://fallback.pics/api/v1/square/400` |
-| Avatar placeholder | `https://fallback.pics/api/v1/avatar/200?text=JD` |
-| Banner placeholder | `https://fallback.pics/api/v1/banner/1200x400` |
-| Skeleton placeholder | `https://fallback.pics/api/v1/skeleton/400x300` |
+| Full HD image | `https://fallback.pics/api/v1/1920x1080` |
+| Square | `https://fallback.pics/api/v1/square/400` |
+| Avatar initials | `https://fallback.pics/api/v1/avatar/200?text=JD` |
+| Banner | `https://fallback.pics/api/v1/banner/1200x400` |
+| Skeleton loader | `https://fallback.pics/api/v1/skeleton/400x300` |
 | Blur placeholder | `https://fallback.pics/api/v1/blur/400x300` |
 
-## API Documentation
+## Why Use Fallback.pics?
 
-### Basic Image Generation
+| Feature | What it gives you |
+| --- | --- |
+| Simple URL API | Generate placeholders with dimensions, colors, text, and presets. |
+| Fallback-ready | Keep product cards, avatars, dashboards, and docs from showing broken images. |
+| Dummy image generator | Create reliable test images for mockups, seed data, UI states, and documentation. |
+| Avatar placeholders | Generate profile placeholders and initials-based avatar images. |
+| Edge generated | Built for fast responses through Cloudflare Workers. |
+| Self-hostable | Deploy your own instance and customize behavior. |
+| Developer friendly | No SDK required. Works in HTML, React, Next.js, Astro, Markdown, and CMS content. |
+
+## API Reference
+
+### Generate an Image
 
 ```http
 GET /api/v1/{width}x{height}[.{format}]
 ```
 
-| Parameter | Type | Description | Default |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `width` | integer | Image width in pixels | Required |
-| `height` | integer | Image height in pixels | Required |
-| `format` | string | Output format such as `svg`, `png`, `jpg`, or `webp` | `svg` |
-
-Examples:
+| `width` | integer | Yes | Image width in pixels. |
+| `height` | integer | Yes | Image height in pixels. |
+| `format` | string | No | `svg`, `png`, `jpg`, or `webp`. Defaults to `svg`. |
 
 ```text
 https://fallback.pics/api/v1/400x300
 https://fallback.pics/api/v1/1920x1080.jpg
 ```
 
-### Custom Colors
+### Set Colors
 
 ```http
 GET /api/v1/{width}x{height}/{bg_color}/{text_color}
 ```
 
-| Parameter | Type | Description | Default |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `bg_color` | hex | Background color without `#` | `7C3AED` |
-| `text_color` | hex | Text color without `#` | `FFFFFF` |
-
-Example:
+| `bg_color` | hex | No | Background color without `#`. |
+| `text_color` | hex | No | Text color without `#`. |
 
 ```text
 https://fallback.pics/api/v1/400x300/FF5733/FFFFFF
 ```
 
-### Custom Text
+### Add Text
 
 ```http
 GET /api/v1/{width}x{height}?text={custom_text}
 ```
 
-| Parameter | Type | Description | Default |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `text` | string | URL-encoded text to render in the image | `{width} x {height}` |
-
-Example:
+| `text` | string | No | URL-encoded text to render in the image. |
 
 ```text
 https://fallback.pics/api/v1/400x300?text=Loading...
 ```
 
-### Preset Placeholder Images
+### Use Presets
 
 ```http
 GET /api/v1/{preset}/{size}
 ```
 
-Available presets:
+| Preset | Example |
+| --- | --- |
+| Square placeholder | `/api/v1/square/400` |
+| Avatar placeholder | `/api/v1/avatar/200?text=JD` |
+| Banner placeholder | `/api/v1/banner/1200x400` |
+| Skeleton loading placeholder | `/api/v1/skeleton/400x300` |
+| Blurred placeholder | `/api/v1/blur/400x300` |
 
-- `/square/{size}` - Square placeholder image
-- `/avatar/{size}` - Avatar placeholder image
-- `/banner/{width}x{height}` - Banner placeholder image
-- `/skeleton/{width}x{height}` - Skeleton loading placeholder
-- `/blur/{width}x{height}` - Blurred placeholder image
-
-## Broken Image Fallback Examples
+## Broken Image Fallbacks
 
 ### HTML
 
 ```html
 <img
   src="/photo.jpg"
+  alt="Product image"
   onerror="this.onerror=null;this.src='https://fallback.pics/api/v1/600x400?text=Image+Unavailable'"
-  alt="Fallback image example"
 />
 ```
 
@@ -166,18 +168,7 @@ function ProductImage({ src, alt }: { src: string; alt: string }) {
 }
 ```
 
-## Comparison With Other Placeholder Image Services
-
-Fallback.pics is in the same category as services like Placehold.co, DummyImage.com, Lorem Picsum, Fakeimg.pl, and Placeholder.com. The main difference is positioning: Fallback.pics is designed as both a developer placeholder image API and a production-friendly fallback image service.
-
-| Service type | Best for | Fallback.pics angle |
-| --- | --- | --- |
-| Placehold.co-style generated placeholders | Simple dimensions, colors, text, and formats | Similar URL workflow, with stronger focus on broken image fallbacks and production use cases |
-| DummyImage-style generators | Classic dummy image URLs for layouts | Modern Cloudflare Workers implementation and self-hostable TypeScript codebase |
-| Lorem Picsum-style photo placeholders | Random real photos for mockups | Generated placeholders that are predictable, brandable, and safe for fallback states |
-| Animal/photo placeholder sites | Fun prototype images | Professional placeholders for apps, ecommerce, dashboards, and docs |
-
-## Deploy Your Own Placeholder Image Service
+## Deploy Your Own
 
 ### One-Click Deploy to Cloudflare
 
@@ -185,40 +176,21 @@ Fallback.pics is in the same category as services like Placehold.co, DummyImage.
 
 ### Manual Deployment
 
-1. Clone the repository:
-
 ```bash
 git clone https://github.com/abhijeetpratapsingh/fallback-pics.git
 cd fallback-pics
-```
-
-2. Install dependencies:
-
-```bash
 pnpm install
-```
-
-3. Configure Cloudflare:
-
-```bash
 cp apps/worker/wrangler.example.toml apps/worker/wrangler.toml
 ```
 
-Then update `account_id`, routes, and zone settings in `apps/worker/wrangler.toml`.
-
-4. Deploy the Worker:
+Update `account_id`, routes, and zone settings in `apps/worker/wrangler.toml`, then deploy:
 
 ```bash
 pnpm deploy:worker
-```
-
-5. Deploy the Astro documentation site:
-
-```bash
 pnpm deploy:web
 ```
 
-## Development
+## Local Development
 
 ### Prerequisites
 
@@ -227,7 +199,7 @@ pnpm deploy:web
 - Cloudflare account
 - Wrangler CLI
 
-### Local Development
+### Commands
 
 ```bash
 pnpm install
@@ -237,7 +209,7 @@ pnpm lint
 pnpm format
 ```
 
-### Project Structure
+## Project Structure
 
 ```text
 fallback-pics/
@@ -253,26 +225,24 @@ fallback-pics/
 
 ## Tech Stack
 
-- Cloudflare Workers
-- TypeScript
-- Astro
-- React
-- Tailwind CSS
-- pnpm
+| Area | Tools |
+| --- | --- |
+| API runtime | Cloudflare Workers |
+| Language | TypeScript |
+| Website | Astro, React, Tailwind CSS |
+| Package manager | pnpm |
+| Deployment | Cloudflare Workers, Cloudflare Pages |
 
-## Related Search Terms
+## Comparison With Other Placeholder Image Services
 
-Fallback.pics is useful for developers searching for:
+Fallback.pics belongs in the same developer tooling category as Placehold.co, DummyImage.com, Lorem Picsum, Fakeimg.pl, and Placeholder.com. The focus is slightly different: Fallback.pics is designed for both development placeholders and production-friendly image fallback states, with a self-hostable Cloudflare Workers implementation.
 
-- placeholder image API
-- image placeholder service
-- dummy image generator
-- fallback image API
-- broken image fallback
-- avatar placeholder API
-- product image placeholder
-- skeleton placeholder image
-- Cloudflare Workers image generator
+| Service type | Best for | Fallback.pics angle |
+| --- | --- | --- |
+| Placehold.co-style generated placeholders | Simple dimensions, colors, text, and formats | Similar URL workflow, with stronger focus on broken image fallbacks and production use cases. |
+| DummyImage-style generators | Classic dummy image URLs for layouts | Modern Cloudflare Workers implementation and self-hostable TypeScript codebase. |
+| Lorem Picsum-style photo placeholders | Random real photos for mockups | Generated placeholders that are predictable, brandable, and safe for fallback states. |
+| Photo/novelty placeholder sites | Fun prototype images | Professional placeholders for apps, ecommerce, dashboards, and docs. |
 
 ## Contributing
 
@@ -280,7 +250,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Maintainer
 
-Fallback.pics is maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/), a developer building open source tools and fast web products.
+Fallback.pics is created and maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/). The project is open source and lives at [github.com/abhijeetpratapsingh/fallback-pics](https://github.com/abhijeetpratapsingh/fallback-pics).
 
 ## Support
 
@@ -296,7 +266,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 - Built with [Cloudflare Workers](https://workers.cloudflare.com/)
 - Website built with [Astro](https://astro.build/)
-
----
-
-Made by the open source community.
