@@ -70,7 +70,7 @@ export function handleRouteChange(targetId?: string) {
     ? document.getElementById(targetId)
     : document.querySelector('main, [role="main"]');
     
-  if (target) {
+  if (target instanceof HTMLElement) {
     target.setAttribute('tabindex', '-1');
     target.focus();
     

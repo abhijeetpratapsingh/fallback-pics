@@ -467,7 +467,7 @@ export default function LiveDemoEnhanced() {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         .gradient-text {
           background: linear-gradient(90deg, #7C3AED, #3B82F6, #10B981);
           background-clip: text;

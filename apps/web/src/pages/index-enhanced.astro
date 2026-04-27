@@ -1,15 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import LiveDemo from '../components/LiveDemo';
-import CodeExamples from '../components/CodeExamples';
 import InteractivePlayground from '../components/InteractivePlayground';
-import config from '../config';
 
 // Meta tags for SEO
 const metaTags = {
-  title: 'Fallback.pics - Lightning-Fast Placeholder Images API',
-  description: 'Generate instant placeholder images with our simple API. AI-powered, fully customizable, no tracking. Perfect for developers who value speed and privacy.',
-  keywords: 'placeholder images, fallback images, developer API, image placeholder service, dummy images, mockup images',
+  title: 'Fallback.pics - SVG Placeholder Image API',
+  description: 'Generate SVG placeholder images and broken image fallbacks with simple URLs. Built for developers, docs, product images, avatars, and loading states.',
+  keywords: 'placeholder image api, fallback images, developer API, image placeholder service, dummy images, mockup images',
   ogImage: 'https://fallback.pics/api/v1/1200x630?text=Fallback.pics',
 };
 ---
@@ -51,25 +48,25 @@ const metaTags = {
               <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>&lt;50ms Response</span>
+              <span>SVG-First Output</span>
             </div>
             <div class="flex items-center space-x-2 text-gray-300">
               <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>AI-Powered</span>
+              <span>Contextual SVG</span>
             </div>
             <div class="flex items-center space-x-2 text-gray-300">
               <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>Zero Tracking</span>
+              <span>No Client SDK</span>
             </div>
             <div class="flex items-center space-x-2 text-gray-300">
               <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>Free Forever</span>
+              <span>Self-Hostable</span>
             </div>
           </div>
           
@@ -124,7 +121,7 @@ const metaTags = {
             </div>
             
             <p class="text-sm text-gray-400 mt-4 text-center">
-              This image loads in &lt;50ms from 200+ global locations
+              This SVG placeholder is generated from a simple URL
             </p>
           </div>
         </div>
@@ -133,20 +130,20 @@ const metaTags = {
       <!-- Stats -->
       <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8">
         <div class="text-center">
-          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">&lt;50ms</div>
-          <div class="text-gray-400">Response Time</div>
+          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">SVG</div>
+          <div class="text-gray-400">First Output</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">200+</div>
-          <div class="text-gray-400">CDN Locations</div>
+          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">URL</div>
+          <div class="text-gray-400">Based API</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">∞</div>
-          <div class="text-gray-400">Images/Month</div>
+          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">OSS</div>
+          <div class="text-gray-400">Self-Hostable</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">$0</div>
-          <div class="text-gray-400">Forever Free</div>
+          <div class="text-4xl lg:text-5xl font-bold text-white mb-2">API</div>
+          <div class="text-gray-400">No SDK</div>
         </div>
       </div>
     </div>
@@ -168,7 +165,7 @@ const metaTags = {
         <!-- Interactive Examples Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Example cards with live previews -->
-          ${['basic', 'colors', 'text', 'avatar', 'animated', 'chart'].map((type, i) => {
+          ${(['basic', 'colors', 'text', 'avatar', 'animated', 'chart'] as const).map((type) => {
             const examples = {
               basic: {
                 title: 'Basic Placeholder',
@@ -206,7 +203,7 @@ const metaTags = {
                 description: 'Data visualization placeholders',
                 gradient: 'from-cyan-500 to-blue-500',
               },
-            };
+            } as const;
             
             const example = examples[type];
             return `
@@ -297,29 +294,29 @@ const metaTags = {
           <!-- Feature cards with proper icons -->
           ${[
             {
-              title: 'Lightning Fast',
-              description: 'Edge computing with <50ms response time from 200+ CDN locations worldwide.',
+              title: 'Edge-Friendly SVG',
+              description: 'Dependency-light SVG generation designed for cacheable placeholder responses.',
               icon: 'M13 10V3L4 14h7v7l9-11h-7z',
               color: 'text-yellow-500',
               bg: 'bg-yellow-50',
             },
             {
-              title: 'AI-Powered',
+              title: 'Contextual SVG Patterns',
               description: 'Context-aware patterns for e-commerce, tech, healthcare, and more industries.',
               icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
               color: 'text-purple-500',
               bg: 'bg-purple-50',
             },
             {
-              title: 'Privacy First',
-              description: 'Zero tracking, zero cookies, GDPR compliant. Your data stays private.',
+              title: 'No Client SDK',
+              description: 'Use image URLs directly in HTML, React, Next.js, Markdown, CMS data, and tests.',
               icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
               color: 'text-green-500',
               bg: 'bg-green-50',
             },
             {
-              title: 'Fully Customizable',
-              description: 'Colors, text, fonts, formats. Support for SVG, PNG, JPEG, WebP, and more.',
+              title: 'SVG Customization',
+              description: 'Control dimensions, text, colors, fonts, avatars, banners, skeletons, and chart mockups.',
               icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
               color: 'text-blue-500',
               bg: 'bg-blue-50',
@@ -454,28 +451,28 @@ const metaTags = {
         <div class="space-y-6">
           ${[
             {
-              q: 'Are there any rate limits?',
-              a: 'No! Fallback.pics has no rate limits. Generate unlimited images, forever free.',
+              q: 'Do I need an SDK?',
+              a: 'No. fallback.pics works as a direct image URL in img tags, components, docs, CMS data, and fixtures.',
             },
             {
-              q: 'How does AI generation work?',
-              a: 'Our AI analyzes the context parameter (e.g., "e-commerce", "blog") and generates appropriate patterns and colors that match your industry and use case.',
+              q: 'How do contextual SVG patterns work?',
+              a: 'The context parameter selects purpose-built SVG layouts and colors for common product surfaces such as ecommerce, dashboards, and profiles.',
             },
             {
               q: 'What image formats are supported?',
-              a: 'We support SVG, PNG, JPEG, WebP, AVIF, and GIF formats. Just add the extension to your URL (e.g., /400x300.png).',
+              a: 'fallback.pics is currently SVG-first. Format-style URL routes may be accepted, but raster conversion should not be treated as shipped until verified.',
             },
             {
               q: 'How is caching handled?',
-              a: 'Images are cached globally across 200+ CDN locations with a 1-year cache time. This ensures instant loading after the first request.',
+              a: 'Generated SVG placeholders are designed to be cache-friendly and suitable for edge deployment.',
             },
             {
               q: 'Can I use this in production?',
-              a: 'Absolutely! Fallback.pics is built for production use with 99.9% uptime, global CDN, and enterprise-grade performance.',
+              a: 'Yes, fallback.pics is designed for production fallback states such as missing product images, avatars, CMS media, and documentation examples.',
             },
             {
               q: 'Do you track or store any data?',
-              a: 'No. We have zero tracking, zero cookies, and zero data collection. We don\'t even have analytics. Your privacy is guaranteed.',
+              a: 'The service does not require a client SDK or browser-side setup. Review your deployment configuration if you self-host with telemetry or analytics.',
             },
           ].map(faq => `
             <details class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow group">

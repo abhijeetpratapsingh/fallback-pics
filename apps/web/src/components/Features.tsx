@@ -3,18 +3,18 @@ import React from 'react';
 const features = [
   {
     icon: '🤖',
-    title: 'AI-Powered Generation',
+    title: 'Contextual SVG Patterns',
     description: 'Context-aware patterns based on industry and mood'
   },
   {
     icon: '⚡',
-    title: 'Instant Generation',
-    description: 'Images generated at the edge in <50ms'
+    title: 'Edge-Friendly SVG',
+    description: 'Dependency-light placeholders designed for Worker runtimes'
   },
   {
     icon: '🎨',
-    title: 'Fully Customizable',
-    description: 'Colors, text, formats, and sizes'
+    title: 'Customizable SVG',
+    description: 'Colors, text, presets, and sizes'
   },
   {
     icon: '🚀',
@@ -23,13 +23,13 @@ const features = [
   },
   {
     icon: '🌍',
-    title: 'Global CDN',
-    description: 'Served from 200+ locations worldwide'
+    title: 'Self-Hostable',
+    description: 'Deploy your own Cloudflare Worker'
   },
   {
     icon: '🔒',
-    title: 'Privacy First',
-    description: 'No tracking, no cookies, no BS'
+    title: 'No Client SDK',
+    description: 'Use the URL directly in your img tags'
   }
 ];
 
