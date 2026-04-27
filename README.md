@@ -8,6 +8,8 @@
 
 Generate dummy images, product placeholders, avatar fallbacks, banners, skeleton placeholders, and broken-image fallbacks with simple URLs. Use it in HTML, React, Next.js, ecommerce stores, dashboards, documentation, and prototypes when real images are missing or still loading.
 
+Created and maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/).
+
 Website: [https://fallback.pics](https://fallback.pics)
 
 Repository: [https://github.com/abhijeetpratapsingh/fallback-pics](https://github.com/abhijeetpratapsingh/fallback-pics)
@@ -275,6 +277,10 @@ Fallback.pics is useful for developers searching for:
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## Maintainer
+
+Fallback.pics is maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/), a developer building open source tools and fast web products.
 
 ## Support
 
