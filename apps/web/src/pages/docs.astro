@@ -1,417 +1,577 @@
 ---
 import DocsLayout from '../layouts/DocsLayout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+
+const baseUrl = 'https://fallback.pics/api/v1';
+
+const sideNav = [
+  { href: '#quickstart', label: 'Quickstart' },
+  { href: '#url-anatomy', label: 'URL anatomy' },
+  { href: '#parameters', label: 'Parameters' },
+  { href: '#presets', label: 'Presets' },
+  { href: '#frameworks', label: 'Framework examples' },
+  { href: '#production', label: 'Production notes' },
+];
+
+const endpointExamples = [
+  {
+    title: 'Basic fallback',
+    path: '/640x360',
+    description: 'Generate a deterministic image from dimensions alone.',
+    image: `${baseUrl}/640x360`,
+  },
+  {
+    title: 'Brand-safe media',
+    path: '/800x450/18181B/FFFFFF?text=Product+Image',
+    description: 'Control background, foreground, and visible label from the URL.',
+    image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
+  },
+  {
+    title: 'Avatar initials',
+    path: '/avatar/160?text=AP',
+    description: 'Use compact presets for user, team, and organization avatars.',
+    image: `${baseUrl}/avatar/160?text=AP`,
+  },
+];
+
+const parameters = [
+  { name: 'width', type: 'number', detail: '10-4000px. Required for standard routes.' },
+  { name: 'height', type: 'number', detail: '10-4000px. Omitted for avatar and square presets.' },
+  { name: 'bgColor', type: 'hex', detail: 'Optional background color, without the # prefix.' },
+  { name: 'textColor', type: 'hex', detail: 'Optional foreground text color, without the # prefix.' },
+  { name: 'text', type: 'query', detail: 'Optional URL-encoded label rendered into the fallback.' },
+];
+
+const presets = [
+  { name: 'avatar', route: '/avatar/128?text=JD', use: 'Initials, teams, people, organizations' },
+  { name: 'banner', route: '/banner/1200x400?text=Campaign', use: 'Marketing cards, CMS hero images, social previews' },
+  { name: 'skeleton', route: '/animated/skeleton/640x360', use: 'Loading states that preserve layout dimensions' },
+  { name: 'blur', route: '/blur/640x360', use: 'Soft media placeholders before real images load' },
+];
+
+const htmlExample = `<img
+  src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
+  width="800"
+  height="450"
+  alt="Product image fallback"
+/>`;
+
+const reactExample = `export function ProductFallback() {
+  const src = "${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image";
+
+  return <img src={src} width={800} height={450} alt="Product image fallback" />;
+}`;
+
+const nextExample = `import Image from "next/image";
+
+export function ProductFallback() {
+  return (
+    <Image
+      src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
+      width={800}
+      height={450}
+      alt="Product image fallback"
+      unoptimized
+    />
+  );
+}`;
 ---
 
 <DocsLayout
-  title="How to Use fallback.pics"
-  description="Learn how to use fallback.pics for placeholder images, broken image fallbacks, avatar placeholders, product placeholders, and skeleton loaders."
+  title="Documentation | fallback.pics"
+  description="Production documentation for fallback.pics, a URL-based fallback image infrastructure service for production applications."
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-    
-    <!-- Hero Section -->
-    <div class="text-center mb-10">
-      <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-950 mb-4">
-        How to Use fallback.pics
-      </h1>
-      <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-        Practical guides for placeholder images, broken image fallbacks, avatars, product placeholders, and skeleton loaders.
-      </p>
-    </div>
-
-    <!-- Quick Navigation -->
-    <div class="mb-10">
-      <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-md p-5 border border-purple-100">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Navigation</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <a href="#getting-started" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            <span>Getting Started</span>
-          </a>
-          <a href="#examples" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>Examples</span>
-          </a>
-          <a href="#ai" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span>SVG Patterns</span>
-          </a>
-          <a href="#charts" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <span>Charts</span>
-          </a>
-        </div>
+  <div class="docs-page">
+    <section class="docs-hero">
+      <div>
+        <p class="docs-eyebrow">Documentation</p>
+        <h1>Fallback image infrastructure, one URL at a time.</h1>
+        <p>
+          Add deterministic, cacheable fallback images to production applications without an SDK, asset pipeline, or runtime image dependency.
+        </p>
       </div>
-    </div>
-    
-    <div class="space-y-12">
-      
-      <!-- Getting Started Section -->
-      <section id="getting-started" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Getting Started</h2>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm p-5 border border-gray-100">
-          <p class="text-gray-600 mb-5">
-            Fallback.pics is a lightning-fast placeholder image service that requires zero setup. 
-            Simply use our URLs directly in your HTML, and we'll generate images on-demand.
-          </p>
-          
-          <div class="bg-gray-950 rounded-md p-5 mb-5">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-semibold text-green-400 uppercase tracking-wider">HTML</span>
-              <button class="text-gray-400 hover:text-white transition-colors" title="Copy to clipboard">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </button>
-            </div>
-            <code class="text-green-400 font-mono text-sm">
-              &lt;img src="https://fallback.pics/api/v1/400x300" alt="Placeholder"&gt;
-            </code>
-          </div>
-          
-          <div class="bg-gray-50 rounded-md p-4">
-            <p class="text-sm font-semibold text-gray-700 mb-2">Result:</p>
-            <img src="https://fallback.pics/api/v1/400x300" alt="Basic placeholder example" class="rounded-md shadow-md" />
-          </div>
-        </div>
-      </section>
+      <div class="docs-hero__panel">
+        <span>Base URL</span>
+        <code>{baseUrl}</code>
+      </div>
+    </section>
 
-      <!-- Basic Examples Section -->
-      <section id="examples" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Basic Examples</h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
-            <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Basic Rectangle</h3>
-            </div>
-            <div class="p-5">
-              <div class="bg-gray-900 rounded-md p-3 mb-4">
-                <code class="text-blue-400 font-mono text-xs">/600x400</code>
-              </div>
-              <img src="https://fallback.pics/api/v1/600x400" alt="Rectangle" class="rounded-md shadow-sm w-full" />
-            </div>
-          </div>
-          
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
-            <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Custom Colors</h3>
-            </div>
-            <div class="p-5">
-              <div class="bg-gray-900 rounded-md p-3 mb-4">
-                <code class="text-purple-400 font-mono text-xs">/400x300/3B82F6/FFFFFF</code>
-              </div>
-              <img src="https://fallback.pics/api/v1/400x300/3B82F6/FFFFFF" alt="Custom colors" class="rounded-md shadow-sm w-full" />
-            </div>
-          </div>
-          
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
-            <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Custom Text</h3>
-            </div>
-            <div class="p-5">
-              <div class="bg-gray-900 rounded-md p-3 mb-4">
-                <code class="text-green-400 font-mono text-xs">/400x300?text=Product+Image</code>
-              </div>
-              <img src="https://fallback.pics/api/v1/400x300?text=Product+Image" alt="Custom text" class="rounded-md shadow-sm w-full" />
-            </div>
-          </div>
-          
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
-            <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Avatar</h3>
-            </div>
-            <div class="p-5">
-              <div class="bg-gray-900 rounded-md p-3 mb-4">
-                <code class="text-pink-400 font-mono text-xs">/avatar/100?text=JD</code>
-              </div>
-              <div class="flex justify-center">
-                <img src="https://fallback.pics/api/v1/avatar/100?text=JD" alt="Avatar" class="rounded-full shadow-sm" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div class="docs-grid">
+      <aside class="docs-sidebar" aria-label="Documentation navigation">
+        <span>Get started</span>
+        {sideNav.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </aside>
 
-      <!-- Color Options Section -->
-      <section id="color-options" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-            </svg>
+      <article class="docs-content">
+        <section id="quickstart" class="docs-section">
+          <div class="docs-section__header">
+            <p>Quickstart</p>
+            <h2>Replace a missing image with a generated fallback.</h2>
           </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Color Options</h2>
-        </div>
-        
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-purple-500 p-5 mb-5 rounded-r-xl">
-          <div class="flex">
-            <svg class="h-6 w-6 text-purple-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-            </svg>
+          <CodeBlock label="HTML image tag" language="html" code={htmlExample} />
+          <div class="docs-preview-grid">
+            {endpointExamples.map((example) => (
+              <div class="docs-example-card">
+                <div class="docs-example-card__media">
+                  <img src={example.image} alt={`${example.title} generated by fallback.pics`} loading="lazy" />
+                </div>
+                <div>
+                  <h3>{example.title}</h3>
+                  <code>{example.path}</code>
+                  <p>{example.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="url-anatomy" class="docs-section">
+          <div class="docs-section__header">
+            <p>URL anatomy</p>
+            <h2>Every fallback is readable, reviewable, and cacheable.</h2>
+          </div>
+          <CodeBlock
+            label="Standard route"
+            language="text"
+            code={`${baseUrl}/[width]x[height]/[bgColor]/[textColor]?text=[label]`}
+          />
+          <div class="docs-callout">
+            <strong>Production behavior:</strong>
+            Deterministic URLs are designed for long-lived CDN caching. Use stable dimensions and labels in product surfaces where layout shift matters.
+          </div>
+        </section>
+
+        <section id="parameters" class="docs-section">
+          <div class="docs-section__header">
+            <p>Parameters</p>
+            <h2>Small surface area, explicit behavior.</h2>
+          </div>
+          <div class="docs-table-wrap">
+            <table class="docs-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {parameters.map((param) => (
+                  <tr>
+                    <td><code>{param.name}</code></td>
+                    <td>{param.type}</td>
+                    <td>{param.detail}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="presets" class="docs-section">
+          <div class="docs-section__header">
+            <p>Presets</p>
+            <h2>Purpose-built routes for common product states.</h2>
+          </div>
+          <div class="docs-preset-grid">
+            {presets.map((preset) => (
+              <div class="docs-preset-card">
+                <h3>{preset.name}</h3>
+                <code>{preset.route}</code>
+                <p>{preset.use}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="frameworks" class="docs-section">
+          <div class="docs-section__header">
+            <p>Frameworks</p>
+            <h2>Use it anywhere an image URL is accepted.</h2>
+          </div>
+          <div class="docs-code-stack">
+            <CodeBlock label="React component" language="tsx" code={reactExample} />
+            <CodeBlock label="Next.js Image" language="tsx" code={nextExample} />
+          </div>
+        </section>
+
+        <section id="production" class="docs-section">
+          <div class="docs-section__header">
+            <p>Production notes</p>
+            <h2>Operational guidance for production teams.</h2>
+          </div>
+          <div class="docs-note-grid">
             <div>
-              <p class="text-purple-900 font-semibold mb-1">Pro Tip</p>
-              <p class="text-purple-700">
-                Colors can be customized using path segments or query parameters. Hex codes should be provided without the # symbol.
-              </p>
+              <h3>Caching</h3>
+              <p>Prefer deterministic URLs and immutable cache headers for repeated UI states, product grids, emails, and preview surfaces.</p>
+            </div>
+            <div>
+              <h3>Privacy</h3>
+              <p>Text parameters appear in URLs and logs. Do not place secrets, tokens, or regulated customer data in fallback image URLs.</p>
+            </div>
+            <div>
+              <h3>Enterprise</h3>
+              <p>Custom domains, support windows, and SLA commitments can be handled through an enterprise deployment agreement.</p>
             </div>
           </div>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-            <h3 class="font-semibold text-gray-900 mb-4 flex items-center">
-              <span class="bg-purple-100 text-purple-600 rounded-md p-2 mr-3">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-              </span>
-              Path-based Colors
-            </h3>
-            <div class="bg-gray-900 rounded-md p-3 mb-4">
-              <code class="text-orange-400 font-mono text-xs">/400x300/FF6B6B/FFFFFF</code>
+          <div class="docs-final-cta">
+            <div>
+              <h2>Ready to standardize image fallbacks?</h2>
+              <p>Start with one URL, then expand into presets, custom domains, and team-wide conventions.</p>
             </div>
-            <img src="https://fallback.pics/api/v1/400x300/FF6B6B/FFFFFF" alt="Path colors" class="rounded-md shadow-sm w-full mb-3" />
-            <p class="text-sm text-gray-600 bg-gray-50 rounded-md p-3">
-              <strong>Format:</strong> /width×height/bgColor/textColor
-            </p>
+            <a href="/api">View API Reference</a>
           </div>
-          
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-            <h3 class="font-semibold text-gray-900 mb-4 flex items-center">
-              <span class="bg-green-100 text-green-600 rounded-md p-2 mr-3">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                </svg>
-              </span>
-              Query Parameter Colors
-            </h3>
-            <div class="bg-gray-900 rounded-md p-3 mb-4">
-              <code class="text-teal-400 font-mono text-xs">/400x300?bg=4ECDC4&textcolor=000000</code>
-            </div>
-            <img src="https://fallback.pics/api/v1/400x300?bg=4ECDC4&textcolor=000000" alt="Query colors" class="rounded-md shadow-sm w-full mb-3" />
-            <p class="text-sm text-gray-600 bg-gray-50 rounded-md p-3">
-              <strong>Params:</strong> bg, bgcolor, textcolor, text_color
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contextual SVG Pattern Section -->
-      <section id="ai" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Contextual SVG Patterns</h2>
-          <span class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
-            EXCLUSIVE
-          </span>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[
-            { context: 'e-commerce', mood: 'energetic', color: 'from-pink-500 to-rose-500' },
-            { context: 'tech', mood: 'calm', color: 'from-blue-500 to-cyan-500' },
-            { context: 'healthcare', mood: 'professional', color: 'from-green-500 to-emerald-500' },
-            { context: 'fashion', mood: 'vibrant', color: 'from-purple-500 to-pink-500' },
-            { context: 'finance', mood: 'corporate', color: 'from-gray-600 to-gray-800' },
-            { context: 'food', mood: 'warm', color: 'from-orange-500 to-red-500' }
-          ].map(item => (
-            <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-all">
-              <div class="bg-gray-50 border-b border-gray-100 p-4">
-                <h3 class="font-semibold text-gray-900 capitalize">{item.context}</h3>
-                <span class="text-xs text-gray-500">Mood: {item.mood}</span>
-              </div>
-              <div class="p-4">
-                <div class="bg-gray-900 rounded-md p-2 mb-3">
-                  <code class="text-cyan-400 font-mono text-xs">
-                    /ai/400x300?context={item.context}&mood={item.mood}
-                  </code>
-                </div>
-                <img 
-                  src={`https://fallback.pics/api/v1/ai/400x300?context=${item.context}&mood=${item.mood}`} 
-                  alt={`${item.context} AI`} 
-                  class="rounded-md shadow-sm w-full" 
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!-- Animated Placeholders Section -->
-      <section id="animations" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Animated Placeholders</h2>
-          <span class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-            CSS ONLY
-          </span>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-          {['skeleton', 'pulse', 'wave', 'shimmer', 'gradient', 'dots'].map((type, index) => (
-            <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden group hover:shadow-sm transition-all">
-              <div class="bg-gray-50 border-b border-gray-100 p-3">
-                <h3 class="font-semibold text-gray-900 capitalize">{type}</h3>
-              </div>
-              <div class="p-4">
-                <div class="bg-gray-900 rounded-md p-2 mb-3">
-                  <code class="text-pink-400 font-mono text-xs">
-                    /animated/{type}/300x200
-                  </code>
-                </div>
-                <div class="relative overflow-hidden rounded-md">
-                  <img 
-                    src={`https://fallback.pics/api/v1/animated/${type}/300x200`} 
-                    alt={type} 
-                    class="w-full transition-transform duration-300" 
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!-- Chart Mockups Section -->
-      <section id="charts" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">Chart Mockups</h2>
-          <span class="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
-            DATA VIZ
-          </span>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {[
-            { type: 'bar', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-            { type: 'pie', icon: 'M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z' },
-            { type: 'line', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-            { type: 'area', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-            { type: 'donut', icon: 'M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z' },
-            { type: 'scatter', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' }
-          ].map(chart => (
-            <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-sm transition-all">
-              <div class="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
-                <h3 class="font-semibold text-gray-900 capitalize">{chart.type} Chart</h3>
-                <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={chart.icon} />
-                </svg>
-              </div>
-              <div class="p-5">
-                <div class="bg-gray-900 rounded-md p-3 mb-4">
-                  <code class="text-blue-400 font-mono text-xs">
-                    /chart/{chart.type}/600x400
-                  </code>
-                </div>
-                <img 
-                  src={`https://fallback.pics/api/v1/chart/${chart.type}/600x400`} 
-                  alt={`${chart.type} Chart`} 
-                  class="rounded-md shadow-sm w-full" 
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!-- API Reference -->
-      <section id="api-reference" class="scroll-mt-8">
-        <div class="flex items-center mb-5">
-          <div class="bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-md p-3 mr-4">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-semibold text-gray-900">API Reference</h2>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-gray-700 to-gray-900 p-5">
-            <h3 class="text-lg font-semibold text-white mb-2">Base URL</h3>
-            <code class="text-green-400 font-mono">https://fallback.pics/api/v1</code>
-          </div>
-          
-          <div class="p-5 space-y-6">
-            <div class="border-l-4 border-purple-500 pl-6">
-              <h4 class="font-semibold text-gray-900 mb-2">Basic Image</h4>
-              <code class="text-sm text-gray-600 font-mono bg-gray-50 px-2 py-1 rounded">
-                GET /&#123;width&#125;x&#123;height&#125;[.&#123;format&#125;]
-              </code>
-              <div class="mt-3 text-sm text-gray-600">
-                <p><strong>Parameters:</strong></p>
-                <ul class="list-disc list-inside ml-2 mt-2 space-y-1">
-                  <li><code class="bg-gray-100 px-1 rounded">width</code> - Image width (10-4000)</li>
-                  <li><code class="bg-gray-100 px-1 rounded">height</code> - Image height (10-4000)</li>
-                  <li><code class="bg-gray-100 px-1 rounded">format</code> - Optional: svg, png, jpg, webp</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div class="border-l-4 border-blue-500 pl-6">
-              <h4 class="font-semibold text-gray-900 mb-2">Query Parameters</h4>
-              <div class="text-sm text-gray-600">
-                <ul class="list-disc list-inside ml-2 space-y-1">
-                  <li><code class="bg-gray-100 px-1 rounded">text</code> - Custom text to display</li>
-                  <li><code class="bg-gray-100 px-1 rounded">bg/bgcolor</code> - Background color (hex)</li>
-                  <li><code class="bg-gray-100 px-1 rounded">textcolor/text_color</code> - Text color (hex)</li>
-                  <li><code class="bg-gray-100 px-1 rounded">font</code> - Font family</li>
-                  <li><code class="bg-gray-100 px-1 rounded">size</code> - Font size</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div class="border-l-4 border-green-500 pl-6">
-              <h4 class="font-semibold text-gray-900 mb-2">Special Routes</h4>
-              <div class="text-sm text-gray-600 space-y-2">
-                <div><code class="bg-gray-100 px-1 rounded">/avatar/&#123;size&#125;</code> - Circular avatar</div>
-                <div><code class="bg-gray-100 px-1 rounded">/banner/&#123;width&#125;x&#123;height&#125;</code> - Banner preset</div>
-                <div><code class="bg-gray-100 px-1 rounded">/skeleton/&#123;width&#125;x&#123;height&#125;</code> - Skeleton loader</div>
-                <div><code class="bg-gray-100 px-1 rounded">/ai/&#123;width&#125;x&#123;height&#125;</code> - AI-generated</div>
-                <div><code class="bg-gray-100 px-1 rounded">/animated/&#123;type&#125;/&#123;width&#125;x&#123;height&#125;</code> - Animated</div>
-                <div><code class="bg-gray-100 px-1 rounded">/chart/&#123;type&#125;/&#123;width&#125;x&#123;height&#125;</code> - Chart mockup</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+        </section>
+      </article>
     </div>
   </div>
 </DocsLayout>
+
+<style>
+  .docs-page {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+    padding: 4rem 0 6rem;
+  }
+
+  .docs-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #e4e4e7;
+  }
+
+  .docs-eyebrow,
+  .docs-section__header p,
+  .docs-sidebar span {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .docs-hero h1 {
+    max-width: 54rem;
+    margin: 1rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 650;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .docs-hero p:not(.docs-eyebrow) {
+    max-width: 45rem;
+    margin: 1.25rem 0 0;
+    color: #52525b;
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .docs-hero__panel {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .docs-hero__panel span {
+    color: #71717a;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .docs-hero__panel code {
+    display: block;
+    overflow-wrap: anywhere;
+    border-radius: 0.5rem;
+    background: #18181b;
+    color: #86efac;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    padding: 1rem;
+  }
+
+  .docs-grid {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+    padding-top: 3rem;
+  }
+
+  .docs-sidebar {
+    position: sticky;
+    top: 5.5rem;
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 0.75rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .docs-sidebar span {
+    padding: 0.5rem 0.75rem 0.625rem;
+  }
+
+  .docs-sidebar a {
+    border-radius: 0.5rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 650;
+    padding: 0.625rem 0.75rem;
+    text-decoration: none;
+  }
+
+  .docs-sidebar a:hover {
+    background: #f4f4f5;
+    color: #18181b;
+  }
+
+  .docs-content {
+    display: grid;
+    gap: 4rem;
+    min-width: 0;
+  }
+
+  .docs-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .docs-section__header {
+    margin-bottom: 1.5rem;
+  }
+
+  .docs-section__header h2,
+  .docs-final-cta h2 {
+    margin: 0.625rem 0 0;
+    color: #18181b;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .docs-preview-grid,
+  .docs-preset-grid,
+  .docs-note-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .docs-preview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .docs-example-card,
+  .docs-preset-card,
+  .docs-note-grid > div,
+  .docs-final-cta,
+  .docs-callout,
+  .docs-table-wrap {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .docs-example-card {
+    overflow: hidden;
+  }
+
+  .docs-example-card__media {
+    display: grid;
+    min-height: 11rem;
+    place-items: center;
+    border-bottom: 1px solid #e4e4e7;
+    background: #f4f4f5;
+    padding: 1rem;
+  }
+
+  .docs-example-card img {
+    width: 100%;
+    max-height: 10rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    object-fit: contain;
+  }
+
+  .docs-example-card > div:last-child,
+  .docs-preset-card,
+  .docs-note-grid > div,
+  .docs-callout {
+    padding: 1.25rem;
+  }
+
+  .docs-example-card h3,
+  .docs-preset-card h3,
+  .docs-note-grid h3 {
+    margin: 0;
+    color: #18181b;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .docs-example-card p,
+  .docs-preset-card p,
+  .docs-note-grid p,
+  .docs-final-cta p,
+  .docs-callout {
+    color: #52525b;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .docs-example-card code,
+  .docs-preset-card code {
+    display: block;
+    margin: 0.75rem 0;
+    overflow-wrap: anywhere;
+    color: #18181b;
+    font-size: 0.8125rem;
+  }
+
+  .docs-callout {
+    margin-top: 1rem;
+    border-color: #c4b5fd;
+    background: #f5f3ff;
+  }
+
+  .docs-callout strong {
+    color: #4c1d95;
+  }
+
+  .docs-table-wrap {
+    overflow-x: auto;
+  }
+
+  .docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 42rem;
+  }
+
+  .docs-table th,
+  .docs-table td {
+    border-bottom: 1px solid #e4e4e7;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .docs-table th {
+    background: #f4f4f5;
+    color: #52525b;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .docs-table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .docs-table td {
+    color: #52525b;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .docs-table code {
+    color: #18181b;
+    font-weight: 700;
+  }
+
+  .docs-preset-grid,
+  .docs-note-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .docs-code-stack {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .docs-final-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #18181b;
+  }
+
+  .docs-final-cta h2 {
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .docs-final-cta p {
+    margin: 0.75rem 0 0;
+    color: #a1a1aa;
+  }
+
+  .docs-final-cta a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 960px) {
+    .docs-hero,
+    .docs-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .docs-sidebar {
+      position: static;
+    }
+
+    .docs-preview-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .docs-page {
+      padding: 2.5rem 0 4rem;
+    }
+
+    .docs-hero h1 {
+      font-size: 2.75rem;
+    }
+
+    .docs-preset-grid,
+    .docs-note-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .docs-final-cta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+</style>

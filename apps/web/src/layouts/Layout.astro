@@ -1,6 +1,8 @@
 ---
 import '../styles/modern-ui.css';
 import '../styles/accessibility.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 export interface Props {
   title: string;
@@ -8,6 +10,8 @@ export interface Props {
   keywords?: string;
   canonical?: string;
   ogImage?: string;
+  header?: 'default' | 'landing' | 'docs' | false;
+  footer?: boolean;
 }
 
 const { 
@@ -15,7 +19,9 @@ const {
   description = "Lightning-fast placeholder images for developers. Simple URLs, instant results, zero configuration.",
   keywords = "placeholder images, image placeholder api, dummy images, developer tools, web development, mockup images, fallback images, svg placeholder, png placeholder",
   canonical,
-  ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics"
+  ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics",
+  header = 'default',
+  footer = true,
 } = Astro.props;
 
 const fullTitle = title.includes('fallback.pics') ? title : `${title} - fallback.pics`;
@@ -77,13 +83,16 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
     <a href="#main-content" class="skip-link">
       Skip to main content
     </a>
+    {header !== false && <SiteHeader variant={header} />}
     <slot />
+    {footer && <SiteFooter />}
   </body>
 </html>
 
 <style is:global>
   html {
     font-family: 'Inter', system-ui, sans-serif;
+    background: #ffffff;
   }
   
   code {

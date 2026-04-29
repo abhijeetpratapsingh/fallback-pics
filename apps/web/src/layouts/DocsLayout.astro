@@ -1,301 +1,50 @@
 ---
-import '../styles/accessibility.css';
+import Layout from './Layout.astro';
 
 export interface Props {
   title: string;
   description?: string;
+  keywords?: string;
 }
 
-const { title, description = "Comprehensive documentation for fallback.pics placeholder image service" } = Astro.props;
-const navItems = [
-  { href: '/docs', label: 'Documentation' },
-  { href: '/features', label: 'Features' },
-  { href: '/api', label: 'API Reference' },
-];
-
-const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+const {
+  title,
+  description = 'Documentation for fallback.pics fallback image infrastructure.',
+  keywords = 'fallback.pics docs, placeholder image api docs, fallback image api',
+} = Astro.props;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} - fallback.pics Documentation</title>
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-  </head>
-  <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <nav class="docs-nav" aria-label="Primary navigation">
-      <div class="docs-nav__inner">
-        <a href="/" class="docs-nav__brand" aria-label="fallback.pics home">
-          <img src="/favicon.svg" alt="" class="docs-nav__logo" width="32" height="32" />
-          <span>fallback.pics</span>
-        </a>
-
-        <div class="docs-nav__links" aria-label="Main sections">
-          {navItems.map((item) => (
-            <a
-              href={item.href}
-              class:list={['docs-nav__link', { 'docs-nav__link--active': isActive(item.href) }]}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-
-        <div class="docs-nav__actions">
-          <a href="https://github.com/abhijeetpratapsingh/fallback-pics" target="_blank" rel="noopener noreferrer" class="docs-nav__icon-link" aria-label="View fallback.pics on GitHub">
-            <svg class="docs-nav__icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
-
-          <button class="docs-nav__menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
-            <svg class="docs-nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-          </button>
-        </div>
-
-        <div id="mobile-menu" class="docs-nav__mobile" hidden>
-          {navItems.map((item) => (
-            <a
-              href={item.href}
-              class:list={['docs-nav__mobile-link', { 'docs-nav__mobile-link--active': isActive(item.href) }]}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </nav>
-
-    <main id="main-content" class="docs-main">
-      <slot />
-    </main>
-
-    <footer class="docs-footer">
-      <div class="docs-footer__inner">
-        <p>&copy; 2025 ABHIJEET PRATAP SINGH. Never show broken images again.</p>
-        <div class="docs-footer__links" aria-label="Footer links">
-          <a href="/docs">Docs</a>
-          <a href="/api">API</a>
-          <a href="/features">Features</a>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      const menuButton = document.querySelector<HTMLButtonElement>('.docs-nav__menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-
-      menuButton?.addEventListener('click', () => {
-        const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
-        menuButton.setAttribute('aria-expanded', String(!isOpen));
-        menuButton.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
-        if (mobileMenu) {
-          mobileMenu.hidden = isOpen;
-        }
-      });
-    </script>
-  </body>
-</html>
+<Layout title={title} description={description} keywords={keywords} header="docs">
+  <main id="main-content" class="docs-shell">
+    <slot />
+  </main>
+</Layout>
 
 <style>
-  :global(html) {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f8fafc;
-  }
-
-  :global(body) {
-    margin: 0;
-    color: #18181b;
-    background: #f8fafc;
-  }
-
-  .docs-nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  .docs-nav__inner,
-  .docs-footer__inner {
-    width: min(100% - 2rem, 80rem);
-    margin: 0 auto;
-  }
-
-  .docs-nav__inner {
-    position: relative;
-    display: flex;
-    min-height: 4rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .docs-nav__brand,
-  .docs-nav__links,
-  .docs-nav__actions,
-  .docs-footer__links {
-    display: flex;
-    align-items: center;
-  }
-
-  .docs-nav__brand {
-    gap: 0.625rem;
-    min-height: 2.75rem;
-    color: #18181b;
-    font-size: 1rem;
-    font-weight: 750;
-    text-decoration: none;
-  }
-
-  .docs-nav__logo {
-    width: 2rem;
-    height: 2rem;
-    flex: 0 0 auto;
-  }
-
-  .docs-nav__links {
-    gap: 0.25rem;
-  }
-
-  .docs-nav__link,
-  .docs-nav__mobile-link {
-    color: #52525b;
-    font-size: 0.875rem;
-    font-weight: 650;
-    text-decoration: none;
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .docs-nav__link {
-    min-height: 2.5rem;
-    padding: 0.625rem 0.875rem;
-    border-radius: 0.5rem;
-  }
-
-  .docs-nav__link:hover,
-  .docs-nav__link--active,
-  .docs-nav__mobile-link:hover,
-  .docs-nav__mobile-link--active {
-    color: #6d28d9;
-    background: #f5f3ff;
-  }
-
-  .docs-nav__actions {
-    gap: 0.5rem;
-  }
-
-  .docs-nav__icon-link,
-  .docs-nav__menu-button {
-    display: inline-grid;
-    width: 2.75rem;
-    height: 2.75rem;
-    place-items: center;
-    border-radius: 0.5rem;
-    color: #52525b;
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .docs-nav__icon-link:hover,
-  .docs-nav__menu-button:hover {
-    color: #18181b;
-    background: #f4f4f5;
-  }
-
-  .docs-nav__menu-button {
-    display: none;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .docs-nav__icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .docs-nav__mobile {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: 0;
-    display: grid;
-    gap: 0.25rem;
-    padding: 0.75rem 0 1rem;
-    border-top: 1px solid #e4e4e7;
-    background: rgba(255, 255, 255, 0.98);
-  }
-
-  .docs-nav__mobile-link {
-    min-height: 2.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-  }
-
-  .docs-main {
+  .docs-shell {
     min-height: 100vh;
-    background: #f8fafc;
+    overflow-x: clip;
+    background: #fafafa;
+    color: #18181b;
   }
 
-  .docs-footer {
-    margin-top: 5rem;
-    border-top: 1px solid #e4e4e7;
-    background: #ffffff;
+  .docs-shell :global(*) {
+    box-sizing: border-box;
   }
 
-  .docs-footer__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 2rem 0;
-    color: #71717a;
-    font-size: 0.875rem;
+  .docs-shell :global(pre),
+  .docs-shell :global(code),
+  .docs-shell :global(table) {
+    max-width: 100%;
   }
 
-  .docs-footer__links {
-    gap: 1rem;
-  }
-
-  .docs-footer__links a {
-    color: #52525b;
-    font-weight: 650;
-    text-decoration: none;
-  }
-
-  .docs-footer__links a:hover {
-    color: #6d28d9;
+  .docs-shell :global(pre) {
+    overflow-x: auto;
   }
 
   @media (max-width: 640px) {
-    .docs-nav__links {
-      display: none;
-    }
-
-    .docs-nav__menu-button {
-      display: inline-grid;
-    }
-
-    .docs-footer__inner {
-      flex-direction: column;
-      align-items: flex-start;
+    .docs-shell :global(code) {
+      overflow-wrap: anywhere;
     }
   }
 </style>

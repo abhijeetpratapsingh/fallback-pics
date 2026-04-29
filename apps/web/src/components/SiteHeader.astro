@@ -1,0 +1,318 @@
+---
+import SiteBrand from './SiteBrand.astro';
+import { landingNav, primaryNav, type NavItem } from '../navigation';
+
+type HeaderVariant = 'default' | 'landing' | 'docs';
+
+export interface Props {
+  variant?: HeaderVariant;
+}
+
+const { variant = 'default' } = Astro.props;
+const items = variant === 'landing' ? landingNav : primaryNav;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const secondaryAction = variant === 'landing'
+  ? { label: 'Docs', href: '/docs', external: false }
+  : { label: 'GitHub', href: 'https://github.com/abhijeetpratapsingh/fallback-pics', external: true };
+
+function normalize(path: string) {
+  if (!path || path === '/') return '/';
+  return path.replace(/\/$/, '');
+}
+
+function isActive(item: NavItem) {
+  if (item.href.startsWith('#') || item.external) return false;
+  const activeValues = item.active ? (Array.isArray(item.active) ? item.active : [item.active]) : [item.href];
+
+  return activeValues.some((value) => {
+    const normalized = normalize(value);
+    return currentPath === normalized || currentPath.startsWith(`${normalized}/`);
+  });
+}
+
+const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
+---
+
+<header class="site-header" data-site-header data-variant={variant}>
+  <div class="site-header__inner">
+    <a href="/" class="site-header__brand" aria-label="fallback.pics home">
+      <SiteBrand />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary navigation">
+      {items.map((item) => (
+        <a
+          href={item.href}
+          class:list={['site-header__link', { 'site-header__link--active': isActive(item) }]}
+          data-section-link={item.href.startsWith('#') ? item.href.slice(1) : undefined}
+          aria-current={isActive(item) ? 'page' : undefined}
+          target={item.external ? '_blank' : undefined}
+          rel={item.external ? 'noopener noreferrer' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="site-header__actions">
+      <a
+        href={secondaryAction.href}
+        class="site-header__secondary"
+        target={secondaryAction.external ? '_blank' : undefined}
+        rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
+      >
+        {secondaryAction.label}
+      </a>
+      <a href={primaryHref} class="site-header__primary">Start using API</a>
+      <button class="site-header__menu-button" type="button" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Open navigation menu">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="site-mobile-menu" class="site-header__mobile" hidden>
+    <div class="site-header__mobile-inner">
+      {items.map((item) => (
+        <a
+          href={item.href}
+          class:list={['site-header__mobile-link', { 'site-header__mobile-link--active': isActive(item) }]}
+          target={item.external ? '_blank' : undefined}
+          rel={item.external ? 'noopener noreferrer' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a
+        href={secondaryAction.href}
+        class="site-header__mobile-link"
+        target={secondaryAction.external ? '_blank' : undefined}
+        rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
+      >
+        {secondaryAction.label}
+      </a>
+      <a href={primaryHref} class="site-header__mobile-cta">Start using API</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const menuButton = header?.querySelector<HTMLButtonElement>('.site-header__menu-button');
+  const mobileMenu = header?.querySelector<HTMLElement>('#site-mobile-menu');
+  const mobileLinks = mobileMenu?.querySelectorAll<HTMLAnchorElement>('a');
+
+  function setMenu(open: boolean) {
+    if (!menuButton || !mobileMenu) return;
+    menuButton.setAttribute('aria-expanded', String(open));
+    menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    mobileMenu.hidden = !open;
+  }
+
+  menuButton?.addEventListener('click', () => {
+    setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
+  });
+
+  mobileLinks?.forEach((link) => {
+    link.addEventListener('click', () => setMenu(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenu(false);
+  });
+
+  if (header?.dataset.variant === 'landing') {
+    const links = Array.from(header.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.sectionLink || ''))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    const setActiveSection = (id: string) => {
+      links.forEach((link) => {
+        link.toggleAttribute('data-active', link.dataset.sectionLink === id);
+      });
+    };
+
+    if (sections.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+          if (visible?.target instanceof HTMLElement) setActiveSection(visible.target.id);
+        },
+        { rootMargin: '-30% 0px -55% 0px', threshold: [0.12, 0.35, 0.6] },
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid rgba(228, 228, 231, 0.88);
+    background: rgba(255, 255, 255, 0.9);
+    color: #18181b;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.5rem;
+    width: min(100% - 2rem, 80rem);
+    min-height: 4rem;
+    margin: 0 auto;
+  }
+
+  .site-header__brand,
+  .site-header__link,
+  .site-header__secondary,
+  .site-header__primary,
+  .site-header__mobile-link,
+  .site-header__mobile-cta {
+    text-decoration: none;
+  }
+
+  .site-header__brand {
+    color: #18181b;
+  }
+
+  .site-header__nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .site-header__link,
+  .site-header__secondary {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    padding: 0 0.75rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .site-header__link:hover,
+  .site-header__secondary:hover,
+  .site-header__link--active,
+  .site-header__link[data-active] {
+    background: #f4f4f5;
+    color: #18181b;
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .site-header__primary,
+  .site-header__mobile-cta {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: #6d28d9;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0 1rem;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .site-header__primary:hover,
+  .site-header__mobile-cta:hover {
+    background: #5b21b6;
+  }
+
+  .site-header__primary:focus-visible,
+  .site-header__mobile-cta:focus-visible,
+  .site-header__link:focus-visible,
+  .site-header__secondary:focus-visible,
+  .site-header__mobile-link:focus-visible,
+  .site-header__menu-button:focus-visible {
+    outline: 2px solid #7c3aed;
+    outline-offset: 2px;
+  }
+
+  .site-header__menu-button {
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    cursor: pointer;
+  }
+
+  .site-header__menu-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .site-header__mobile {
+    border-top: 1px solid #e4e4e7;
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  .site-header__mobile-inner {
+    display: grid;
+    gap: 0.25rem;
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+    padding: 0.75rem 0 1rem;
+  }
+
+  .site-header__mobile-link {
+    min-height: 2.75rem;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    color: #52525b;
+    font-size: 0.9375rem;
+    font-weight: 650;
+  }
+
+  .site-header__mobile-link:hover,
+  .site-header__mobile-link--active {
+    background: #f4f4f5;
+    color: #18181b;
+  }
+
+  .site-header__mobile-cta {
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .site-header__inner {
+      grid-template-columns: auto auto;
+    }
+
+    .site-header__nav,
+    .site-header__secondary,
+    .site-header__primary {
+      display: none;
+    }
+
+    .site-header__menu-button {
+      display: inline-grid;
+    }
+  }
+</style>

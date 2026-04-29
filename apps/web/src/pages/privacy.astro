@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Privacy | fallback.pics"
+  description="Privacy information for fallback.pics fallback image infrastructure."
+  keywords="fallback.pics privacy, placeholder image privacy, fallback image service"
+>
+  <main id="main-content" class="bg-white px-5 py-20 text-zinc-950 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-semibold tracking-normal">Privacy</h1>
+      <p class="mt-6 text-lg leading-8 text-zinc-600">
+        fallback.pics is designed for privacy-conscious fallback image delivery. Standard image generation uses URL parameters such as dimensions, colors, and optional text. It does not require customer source image uploads or client-side cookies for image delivery.
+      </p>
+      <div class="mt-10 space-y-6 text-sm leading-7 text-zinc-600">
+        <p>
+          Custom text can appear in URLs, browser history, CDN logs, and application logs. Do not place secrets, tokens, regulated data, or private customer information in fallback image URLs.
+        </p>
+        <p>
+          For enterprise privacy, security, or data-processing questions, contact <a href="mailto:support@fallback.pics" class="font-semibold text-violet-700">support@fallback.pics</a>.
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

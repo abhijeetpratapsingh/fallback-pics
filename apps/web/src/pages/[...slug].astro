@@ -39,20 +39,6 @@ const structuredData = {
   ogImage={`https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=${encodeURIComponent(page.eyebrow)}`}
 >
   <main id="main-content" class="seo-page min-h-screen bg-gray-50 text-gray-950">
-    <header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-      <nav class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8" aria-label="Primary">
-        <a href="/" class="flex items-center gap-2 text-gray-950 hover:text-purple-700">
-          <img src="/favicon.svg" alt="fallback.pics" class="h-8 w-8" />
-          <span class="text-lg font-bold">fallback.pics</span>
-        </a>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium text-gray-600">
-          <a href="/docs" class="hover:text-purple-700">Docs</a>
-          <a href="/api" class="hover:text-purple-700">API</a>
-          <a href="/blog" class="hover:text-purple-700">Blog</a>
-        </div>
-      </nav>
-    </header>
-
     <section class="border-b border-gray-200 bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
       <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
@@ -146,9 +132,16 @@ const structuredData = {
 <style>
   .seo-page {
     font-feature-settings: "kern";
+    overflow-x: clip;
   }
 
   .seo-page pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .seo-page :where(.grid, .space-y-8, section, aside, pre, code) {
+    min-width: 0;
     max-width: 100%;
   }
 
@@ -158,6 +151,10 @@ const structuredData = {
     }
 
     .seo-page section {
+      overflow-wrap: anywhere;
+    }
+
+    .seo-page code {
       overflow-wrap: anywhere;
     }
   }

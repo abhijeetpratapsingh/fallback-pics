@@ -1,0 +1,459 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CodeBlock from './CodeBlock.astro';
+import { blogPostsBySlug, type BlogPost } from '../data/blogPosts';
+
+export interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const relatedPosts = post.related.map((slug) => blogPostsBySlug[slug]).filter(Boolean);
+const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.description,
+  image: post.image,
+  author: {
+    '@type': 'Organization',
+    name: 'fallback.pics Team',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'fallback.pics',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://fallback.pics/favicon.svg',
+    },
+  },
+  datePublished: post.date,
+  dateModified: post.date,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `https://fallback.pics/blog/${post.slug}`,
+  },
+  keywords: post.tags,
+};
+---
+
+<Layout
+  title={`${post.title} | fallback.pics`}
+  description={post.description}
+  keywords={post.tags.join(', ')}
+  ogImage={post.image}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <main id="main-content" class="blog-article">
+    <article>
+      <header class="blog-hero">
+        <div class="blog-hero__meta">
+          <a href="/blog">Blog</a>
+          <span>{post.category}</span>
+          <time datetime={post.date}>{formattedDate}</time>
+          <span>{post.readTime}</span>
+        </div>
+        <h1>{post.title}</h1>
+        <p>{post.description}</p>
+        <div class="blog-hero__tags">
+          {post.tags.map((tag) => <span>{tag}</span>)}
+        </div>
+      </header>
+
+      <figure class="blog-cover">
+        <img src={post.image} alt="" loading="eager" />
+      </figure>
+
+      <div class="blog-layout">
+        <aside class="blog-toc" aria-label="Article contents">
+          <span>In this article</span>
+          {post.sections.map((section) => (
+            <a href={`#${section.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}>
+              {section.title}
+            </a>
+          ))}
+        </aside>
+
+        <div class="blog-prose">
+          <section class="blog-summary">
+            {post.summary.map((paragraph) => <p>{paragraph}</p>)}
+          </section>
+
+          {post.sections.map((section) => {
+            const id = section.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            return (
+              <section id={id} class="blog-section">
+                {section.eyebrow && <p class="blog-eyebrow">{section.eyebrow}</p>}
+                <h2>{section.title}</h2>
+                {section.body.map((paragraph) => <p>{paragraph}</p>)}
+                {section.code && <CodeBlock label="Implementation" language="tsx" code={section.code} />}
+                {section.cards && (
+                  <div class="blog-card-grid">
+                    {section.cards.map((card) => (
+                      <div>
+                        <h3>{card.title}</h3>
+                        <p>{card.body}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+
+          <section class="blog-takeaways">
+            <p class="blog-eyebrow">Key takeaways</p>
+            <h2>What to standardize before shipping</h2>
+            <ul>
+              {post.takeaways.map((item) => <li>{item}</li>)}
+            </ul>
+          </section>
+
+          <section class="blog-cta">
+            <div>
+              <p class="blog-eyebrow">Production fallback layer</p>
+              <h2>Use fallback.pics anywhere an image URL is accepted.</h2>
+              <p>Start with one deterministic URL and standardize fallback behavior across your design system.</p>
+            </div>
+            <a href="/docs">Read the docs</a>
+          </section>
+        </div>
+      </div>
+
+      <section class="blog-related" aria-labelledby="related-heading">
+        <div>
+          <p class="blog-eyebrow">Continue reading</p>
+          <h2 id="related-heading">Related articles</h2>
+        </div>
+        <div class="blog-related__grid">
+          {relatedPosts.map((related) => (
+            <a href={`/blog/${related.slug}`}>
+              <span>{related.category}</span>
+              <h3>{related.title}</h3>
+              <p>{related.description}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .blog-article {
+    overflow-x: clip;
+    background: #fafafa;
+    color: #18181b;
+  }
+
+  .blog-hero,
+  .blog-cover,
+  .blog-layout,
+  .blog-related {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+  }
+
+  .blog-hero {
+    padding: 5rem 0 2.5rem;
+  }
+
+  .blog-hero__meta,
+  .blog-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .blog-hero__meta a,
+  .blog-hero__meta span,
+  .blog-hero__meta time,
+  .blog-hero__tags span {
+    border: 1px solid #e4e4e7;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #52525b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    padding: 0.375rem 0.625rem;
+    text-decoration: none;
+  }
+
+  .blog-hero__meta a {
+    color: #6d28d9;
+  }
+
+  .blog-hero h1 {
+    max-width: 58rem;
+    margin: 1.5rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 650;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .blog-hero > p {
+    max-width: 47rem;
+    margin: 1.5rem 0 0;
+    color: #52525b;
+    font-size: 1.1875rem;
+    line-height: 1.75;
+  }
+
+  .blog-hero__tags {
+    margin-top: 1.5rem;
+  }
+
+  .blog-cover {
+    overflow: hidden;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #18181b;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .blog-cover img {
+    display: block;
+    width: 100%;
+    max-height: 28rem;
+    object-fit: cover;
+  }
+
+  .blog-layout {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 46rem);
+    gap: 4rem;
+    align-items: start;
+    padding: 4rem 0;
+  }
+
+  .blog-toc {
+    position: sticky;
+    top: 5.5rem;
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 0.75rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .blog-toc span,
+  .blog-eyebrow {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .blog-toc span {
+    padding: 0.5rem 0.75rem 0.625rem;
+  }
+
+  .blog-toc a {
+    border-radius: 0.5rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 650;
+    line-height: 1.4;
+    padding: 0.625rem 0.75rem;
+    text-decoration: none;
+  }
+
+  .blog-toc a:hover {
+    background: #f4f4f5;
+    color: #18181b;
+  }
+
+  .blog-prose {
+    min-width: 0;
+  }
+
+  .blog-summary,
+  .blog-section,
+  .blog-takeaways,
+  .blog-cta {
+    border-bottom: 1px solid #e4e4e7;
+    padding-bottom: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .blog-summary p,
+  .blog-section p,
+  .blog-takeaways li,
+  .blog-cta p,
+  .blog-related p {
+    color: #52525b;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .blog-summary p:first-child {
+    color: #18181b;
+    font-size: 1.1875rem;
+    line-height: 1.75;
+  }
+
+  .blog-section h2,
+  .blog-takeaways h2,
+  .blog-cta h2,
+  .blog-related h2 {
+    margin: 0.75rem 0 1rem;
+    color: #18181b;
+    font-size: clamp(1.875rem, 3vw, 2.75rem);
+    font-weight: 650;
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  .blog-card-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .blog-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .blog-card-grid > div,
+  .blog-related__grid a {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .blog-card-grid h3,
+  .blog-related h3 {
+    margin: 0;
+    color: #18181b;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .blog-takeaways ul {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    list-style: none;
+  }
+
+  .blog-takeaways li {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 1rem;
+  }
+
+  .blog-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    border: 1px solid #27272a;
+    border-radius: 0.5rem;
+    background: #18181b;
+    padding: 1.5rem;
+  }
+
+  .blog-cta h2,
+  .blog-cta p {
+    color: #ffffff;
+  }
+
+  .blog-cta p:last-child {
+    color: #a1a1aa;
+  }
+
+  .blog-cta a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  .blog-related {
+    border-top: 1px solid #e4e4e7;
+    padding: 4rem 0 6rem;
+  }
+
+  .blog-related__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .blog-related__grid a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .blog-related__grid a:hover {
+    border-color: #c4b5fd;
+    transform: translateY(-1px);
+  }
+
+  .blog-related__grid span {
+    display: inline-flex;
+    margin-bottom: 0.75rem;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 960px) {
+    .blog-layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .blog-toc {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .blog-hero {
+      padding-top: 3rem;
+    }
+
+    .blog-card-grid,
+    .blog-related__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-cta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+</style>

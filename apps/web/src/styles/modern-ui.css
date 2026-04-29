@@ -2,6 +2,24 @@
 
 /* ==================== ROOT VARIABLES ==================== */
 :root {
+  --ds-bg: #ffffff;
+  --ds-bg-subtle: #fafafa;
+  --ds-bg-muted: #f4f4f5;
+  --ds-text: #18181b;
+  --ds-text-muted: #52525b;
+  --ds-text-soft: #71717a;
+  --ds-border: #e4e4e7;
+  --ds-brand: #7c3aed;
+  --ds-brand-hover: #6d28d9;
+  --ds-info: #2563eb;
+  --ds-success: #059669;
+  --ds-warning: #d97706;
+  --ds-danger: #dc2626;
+  --ds-radius: 8px;
+  --ds-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  --ds-container: 80rem;
+  --ds-prose: 48rem;
+
   /* Enhanced Color Palette */
   --primary: #7C3AED;
   --primary-dark: #6D28D9;
@@ -56,20 +74,48 @@ body {
 
 /* Enhanced heading hierarchy */
 h1, .h1 {
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.02;
 }
 
 h2, .h2 {
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.1;
 }
 
 h3, .h3 {
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+}
+
+.ds-container {
+  width: min(100% - 2rem, var(--ds-container));
+  margin-inline: auto;
+}
+
+.ds-card {
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  background: var(--ds-bg);
+  box-shadow: var(--ds-shadow);
+}
+
+.ds-code-block {
+  overflow-x: auto;
+  border: 1px solid #27272a;
+  border-radius: var(--ds-radius);
+  background: #18181b;
+  color: #e4e4e7;
+  font: 0.875rem/1.65 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, monospace;
+}
+
+:not(pre) > code {
+  border-radius: 4px;
+  background: var(--ds-bg-muted);
+  color: var(--ds-text);
+  padding: 0.125rem 0.375rem;
 }
 
 /* Gradient text utility */

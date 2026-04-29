@@ -1,497 +1,542 @@
 ---
 import DocsLayout from '../layouts/DocsLayout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
 
 const baseUrl = 'https://fallback.pics/api/v1';
+
+const navItems = [
+  { href: '#base-url', label: 'Base URL' },
+  { href: '#routes', label: 'Routes' },
+  { href: '#parameters', label: 'Parameters' },
+  { href: '#examples', label: 'Code Examples' },
+  { href: '#headers', label: 'Response Headers' },
+  { href: '#limits', label: 'Usage Limits' },
+];
+
+const routes = [
+  {
+    title: 'Standard fallback',
+    path: '/640x360',
+    description: 'Create a deterministic SVG placeholder from dimensions alone.',
+    image: `${baseUrl}/640x360`,
+  },
+  {
+    title: 'Custom color and label',
+    path: '/800x450/18181B/FFFFFF?text=Product+Image',
+    description: 'Set visible fallback copy and brand-safe colors from the URL.',
+    image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
+  },
+  {
+    title: 'Avatar initials',
+    path: '/avatar/160?text=JD',
+    description: 'Generate compact initials for user, team, or organization avatars.',
+    image: `${baseUrl}/avatar/160?text=JD`,
+  },
+  {
+    title: 'Skeleton state',
+    path: '/animated/skeleton/640x360',
+    description: 'Reserve the final image box while asynchronous media loads.',
+    image: `${baseUrl}/animated/skeleton/640x360`,
+  },
+];
+
+const parameters = [
+  { name: 'width', type: 'number', description: 'Image width in pixels. Standard routes support 1-5000px in the active worker.' },
+  { name: 'height', type: 'number', description: 'Image height in pixels. Omit for square and avatar presets.' },
+  { name: 'bg', type: 'hex', description: 'Optional background color. Path colors and query colors are both supported.' },
+  { name: 'fg', type: 'hex', description: 'Optional foreground/text color.' },
+  { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated SVG.' },
+  { name: 'retina', type: 'number', description: 'Optional size multiplier for higher-density placeholders.' },
+  { name: 'reducedMotion', type: 'boolean', description: 'Disables animated SVG effects where supported.' },
+];
+
+const headers = [
+  { name: 'Content-Type', value: 'image/svg+xml', detail: 'The production worker currently returns SVG for generated images.' },
+  { name: 'Cache-Control', value: 'public, max-age=31536000, immutable', detail: 'Deterministic URLs are designed for long-lived CDN caching.' },
+  { name: 'Access-Control-Allow-Origin', value: '*', detail: 'Generated fallbacks can be used from browser, server, email, and native surfaces.' },
+];
+
+const htmlExample = `<img
+  src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
+  width="800"
+  height="450"
+  alt="Product image fallback"
+/>`;
+
+const cssExample = `.product-card::before {
+  background-image: url("${baseUrl}/600x400/F4F4F5/52525B?text=Loading");
+}`;
+
+const jsExample = `export function fallbackImage(width, height, label) {
+  const params = new URLSearchParams({ text: label });
+  return "${baseUrl}/" + width + "x" + height + "?" + params;
+}`;
+
+const reactExample = `export function ProductImageFallback() {
+  return (
+    <img
+      src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
+      width={800}
+      height={450}
+      alt="Product image fallback"
+    />
+  );
+}`;
 ---
 
 <DocsLayout
-  title="Placeholder Image API Reference"
-  description="API docs for generating SVG placeholder images with dimensions, colors, text, avatars, banners, skeletons, blur effects, and chart placeholders."
+  title="API Reference | fallback.pics"
+  description="Production API reference for fallback.pics SVG fallback image infrastructure, including URL routes, parameters, headers, and framework examples."
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-    
-    <!-- Hero Section -->
-    <div class="text-center mb-10">
-      <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-950 mb-4">
-        Placeholder Image API Reference
-      </h1>
-      <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-        Complete documentation for integrating SVG placeholder images, product fallbacks, avatars, and skeleton states into your applications.
-      </p>
-    </div>
-
-    <!-- Base URL Section -->
-    <div class="bg-white rounded-md shadow-sm p-5 mb-10 border border-gray-100">
-      <div class="flex items-center mb-4">
-        <svg class="h-8 w-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-        </svg>
-        <h2 class="text-xl font-semibold text-gray-900">Base URL</h2>
+  <div class="api-page">
+    <section class="api-hero" id="base-url">
+      <div>
+        <p class="api-eyebrow">API Reference</p>
+        <h1>Fallback images generated from predictable URLs.</h1>
+        <p>
+          Use one cacheable endpoint for product images, avatars, loading states, charts, and broken-image recovery. No SDK or authentication required for public routes.
+        </p>
       </div>
-      <div class="bg-gray-950 rounded-md p-4 mb-4">
-        <code class="text-2xl font-mono text-white/95 block">{baseUrl}</code>
-      </div>
-      <p class="text-gray-600">All API endpoints are relative to this base URL. No authentication required!</p>
-    </div>
-
-    <!-- Quick Start Examples -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">Quick Start</h2>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden group hover:shadow-sm transition-all">
-          <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Basic Image</h3>
-          </div>
-          <div class="p-4">
-            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300</code>
-            <img src="https://fallback.pics/api/v1/400x300" alt="Basic" class="rounded-md w-full" />
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden group hover:shadow-sm transition-all">
-          <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">Custom Colors</h3>
-          </div>
-          <div class="p-4">
-            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300/FF6B6B/FFFFFF</code>
-            <img src="https://fallback.pics/api/v1/400x300/FF6B6B/FFFFFF" alt="Colors" class="rounded-md w-full" />
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden group hover:shadow-sm transition-all">
-          <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">With Text</h3>
-          </div>
-          <div class="p-4">
-            <code class="text-xs bg-gray-900 text-green-400 p-2 rounded block mb-3 font-mono">/400x300?text=Hello</code>
-            <img src="https://fallback.pics/api/v1/400x300?text=Hello" alt="Text" class="rounded-md w-full" />
-          </div>
-        </div>
+      <div class="api-hero__panel">
+        <span>Base URL</span>
+        <code>{baseUrl}</code>
       </div>
     </section>
 
-    <!-- URL Structure -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">URL Structure</h2>
-      </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <span class="bg-indigo-100 text-indigo-600 rounded-md p-2 mr-3">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-              </svg>
-            </span>
-            Standard Format
-          </h3>
-          <div class="bg-gray-950 rounded-md p-4 mb-4">
-            <code class="text-emerald-400 text-sm font-mono block">
-              /[width]x[height][.format][/bgColor][/textColor][?params]
-            </code>
-          </div>
-          
-          <div class="space-y-3">
-            <h4 class="font-semibold text-gray-700">Components:</h4>
-            <div class="space-y-2 text-sm">
-              <div class="flex items-start">
-                <span class="text-indigo-500 mr-2">•</span>
-                <div>
-                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">width</code>
-                  <span class="text-gray-600 ml-2">10-4000 pixels</span>
-                </div>
-              </div>
-              <div class="flex items-start">
-                <span class="text-indigo-500 mr-2">•</span>
-                <div>
-                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">height</code>
-                  <span class="text-gray-600 ml-2">10-4000 pixels</span>
-                </div>
-              </div>
-              <div class="flex items-start">
-                <span class="text-indigo-500 mr-2">•</span>
-                <div>
-                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">format</code>
-                  <span class="text-gray-600 ml-2">svg, png, jpg, webp</span>
-                </div>
-              </div>
-              <div class="flex items-start">
-                <span class="text-indigo-500 mr-2">•</span>
-                <div>
-                  <code class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">colors</code>
-                  <span class="text-gray-600 ml-2">Hex without #</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <span class="bg-purple-100 text-purple-600 rounded-md p-2 mr-3">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-              </svg>
-            </span>
-            Preset Format
-          </h3>
-          <div class="bg-gray-950 rounded-md p-4 mb-4">
-            <code class="text-purple-400 text-sm font-mono block">
-              /[preset]/[...parameters]
-            </code>
-          </div>
-          
-          <div class="space-y-3">
-            <h4 class="font-semibold text-gray-700">Available Presets:</h4>
-            <div class="grid grid-cols-2 gap-2 text-sm">
-              {['square', 'avatar', 'banner', 'skeleton', 'blur', 'ai', 'animated', 'chart'].map(preset => (
-                <div class="flex items-center">
-                  <span class="text-purple-500 mr-2">•</span>
-                  <code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">{preset}</code>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Query Parameters -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">Query Parameters</h2>
-      </div>
-      
-      <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-5 border-b border-green-100">
-          <p class="text-green-800 font-medium">Customize your images with these optional parameters</p>
-        </div>
-        
-        <div class="overflow-x-auto">
-          <table class="min-w-full">
-            <thead class="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Parameter</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Example</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              {[
-                { param: 'bg / bgColor', type: 'string', desc: 'Background color (hex or CSS)', example: '?bg=FF0000' },
-                { param: 'fg / textColor', type: 'string', desc: 'Text/foreground color', example: '?fg=FFFFFF' },
-                { param: 'text / label', type: 'string', desc: 'Custom text (+ for spaces)', example: '?text=Hello+World' },
-                { param: 'font', type: 'string', desc: 'Font family name', example: '?font=roboto' },
-                { param: 'fontSize', type: 'number', desc: 'Font size in pixels', example: '?fontSize=24' },
-                { param: 'retina', type: 'number', desc: 'Retina multiplier (2 or 3)', example: '?retina=2' },
-                { param: 'context', type: 'string', desc: 'AI context (with /ai preset)', example: '?context=tech' },
-                { param: 'mood', type: 'string', desc: 'AI mood (with /ai preset)', example: '?mood=minimal' },
-                { param: 'reducedMotion', type: 'boolean', desc: 'Disable animations', example: '?reducedMotion=true' }
-              ].map((item, index) => (
-                <tr class={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td class="px-4 py-3">
-                    <code class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded font-mono">
-                      {item.param}
-                    </code>
-                  </td>
-                  <td class="px-4 py-3">
-                    <span class="text-sm text-gray-600">{item.type}</span>
-                  </td>
-                  <td class="px-4 py-3">
-                    <span class="text-sm text-gray-700">{item.desc}</span>
-                  </td>
-                  <td class="px-4 py-3">
-                    <code class="text-xs bg-gray-100 px-2 py-1 rounded font-mono text-gray-700">
-                      {item.example}
-                    </code>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Interactive Examples -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">Interactive Examples</h2>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {[
-          { 
-            title: 'Product Card', 
-            url: '/600x400/gradient?text=Product+Image',
-            color: 'from-blue-500 to-purple-500'
-          },
-          { 
-            title: 'User Avatar', 
-            url: '/avatar/200?text=JD',
-            color: 'from-green-500 to-teal-500'
-          },
-          { 
-            title: 'Loading State', 
-            url: '/animated/skeleton/400x300',
-            color: 'from-purple-500 to-pink-500'
-          },
-          { 
-            title: 'Dashboard Chart', 
-            url: '/chart/bar/600x400',
-            color: 'from-orange-500 to-red-500'
-          }
-        ].map(example => (
-          <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gray-50 border-b border-gray-100 p-4">
-            <h3 class="font-semibold text-gray-900">{example.title}</h3>
-            </div>
-            <div class="p-5">
-              <div class="bg-gray-900 rounded-md p-3 mb-4">
-                <code class="text-cyan-400 font-mono text-xs">{example.url}</code>
-              </div>
-              <img 
-                src={`${baseUrl}${example.url}`} 
-                alt={example.title} 
-                class="rounded-md shadow-sm w-full"
-              />
-              <div class="mt-4 text-center">
-                <a 
-                  href={`${baseUrl}${example.url}`} 
-                  target="_blank"
-                  class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  Open in new tab
-                  <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
+    <div class="api-grid">
+      <aside class="api-sidebar" aria-label="API navigation">
+        <span>Reference</span>
+        {navItems.map((item) => (
+          <a href={item.href}>{item.label}</a>
         ))}
-      </div>
-    </section>
+      </aside>
 
-    <!-- Code Examples -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">Code Examples</h2>
-      </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- HTML Example -->
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
-            <h3 class="font-semibold text-gray-900">HTML</h3>
-            <button class="text-gray-500 hover:text-gray-900 transition-colors" title="Copy">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
+      <article class="api-content">
+        <section id="routes" class="api-section">
+          <div class="api-section__header">
+            <p>Routes</p>
+            <h2>Purpose-built endpoints for common image states.</h2>
           </div>
-          <div class="bg-gray-900 p-4 overflow-x-auto">
-            <pre class="text-sm"><code class="text-green-400 font-mono">&lt;!-- Basic --&gt;
-&lt;img src="{baseUrl}/400x300"&gt;
+          <div class="api-route-grid">
+            {routes.map((route) => (
+              <a href={`${baseUrl}${route.path}`} target="_blank" rel="noreferrer" class="api-route-card">
+                <div class="api-route-card__media">
+                  <img src={route.image} alt={`${route.title} preview`} loading="lazy" />
+                </div>
+                <div>
+                  <h3>{route.title}</h3>
+                  <code>{route.path}</code>
+                  <p>{route.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
 
-&lt;!-- Custom --&gt;
-&lt;img src="{baseUrl}/600x400/3B82F6/FFFFFF?text=Product"&gt;
+        <section id="parameters" class="api-section">
+          <div class="api-section__header">
+            <p>Parameters</p>
+            <h2>Small surface area, explicit behavior.</h2>
+          </div>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {parameters.map((param) => (
+                  <tr>
+                    <td><code>{param.name}</code></td>
+                    <td>{param.type}</td>
+                    <td>{param.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="api-callout">
+            <strong>Format note:</strong>
+            The current edge implementation returns SVG responses. File extensions are parsed for route compatibility, but PNG, JPEG, WebP, AVIF, and GIF conversion should not be advertised until conversion is implemented in the worker.
+          </div>
+        </section>
 
-&lt;!-- Avatar --&gt;
-&lt;img src="{baseUrl}/avatar/100?text=JD"&gt;</code></pre>
+        <section id="examples" class="api-section">
+          <div class="api-section__header">
+            <p>Code Examples</p>
+            <h2>Use the API anywhere an image URL is accepted.</h2>
           </div>
-        </div>
+          <div class="api-code-grid">
+            <CodeBlock label="HTML" language="html" code={htmlExample} />
+            <CodeBlock label="CSS" language="css" code={cssExample} />
+            <CodeBlock label="JavaScript" language="ts" code={jsExample} />
+            <CodeBlock label="React" language="tsx" code={reactExample} />
+          </div>
+        </section>
 
-        <!-- CSS Example -->
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
-            <h3 class="font-semibold text-gray-900">CSS</h3>
-            <button class="text-gray-500 hover:text-gray-900 transition-colors" title="Copy">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
+        <section id="headers" class="api-section">
+          <div class="api-section__header">
+            <p>Headers</p>
+            <h2>Optimized for repeated production delivery.</h2>
           </div>
-          <div class="bg-gray-900 p-4 overflow-x-auto">
-            <pre class="text-sm"><code class="text-cyan-400 font-mono">.hero &#123;
-  background: url('{baseUrl}/1920x1080');
-&#125;
+          <div class="api-header-grid">
+            {headers.map((header) => (
+              <div>
+                <h3>{header.name}</h3>
+                <code>{header.value}</code>
+                <p>{header.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-.avatar &#123;
-  background: url('{baseUrl}/avatar/200');
-&#125;</code></pre>
+        <section id="limits" class="api-section">
+          <div class="api-final-cta">
+            <div>
+              <h2>Ready to ship image fallbacks?</h2>
+              <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through an enterprise agreement.</p>
+            </div>
+            <a href="/docs">Read the Docs</a>
           </div>
-        </div>
-
-        <!-- JavaScript Example -->
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
-            <h3 class="font-semibold text-gray-900">JavaScript</h3>
-            <button class="text-gray-500 hover:text-gray-900 transition-colors" title="Copy">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
-          </div>
-          <div class="bg-gray-900 p-4 overflow-x-auto">
-            <pre class="text-sm"><code class="text-yellow-400 font-mono">function getPlaceholder(w, h, opts = &#123;&#125;) &#123;
-  const base = '{baseUrl}';
-  let url = `$&#123;base&#125;/$&#123;w&#125;x$&#123;h&#125;`;
-  
-  const params = new URLSearchParams();
-  if (opts.text) params.append('text', opts.text);
-  if (opts.bg) params.append('bg', opts.bg);
-  
-  return params.toString() 
-    ? `$&#123;url&#125;?$&#123;params&#125;` 
-    : url;
-&#125;</code></pre>
-          </div>
-        </div>
-
-        <!-- React Example -->
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
-            <h3 class="font-semibold text-gray-900">React</h3>
-            <button class="text-gray-500 hover:text-gray-900 transition-colors" title="Copy">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
-          </div>
-          <div class="bg-gray-900 p-4 overflow-x-auto">
-            <pre class="text-sm"><code class="text-cyan-400 font-mono">const Placeholder = (&#123;w, h, text&#125;) => &#123;
-  const url = `{baseUrl}/$&#123;w&#125;x$&#123;h&#125;`;
-  const params = text ? `?text=$&#123;text&#125;` : '';
-  
-  return &lt;img src=&#123;`$&#123;url&#125;$&#123;params&#125;`&#125; /&gt;;
-&#125;;</code></pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Response Headers -->
-    <section class="mb-10">
-      <div class="flex items-center mb-5">
-        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-md p-3 mr-4">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-semibold text-gray-900">Response Headers</h2>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-          <div class="bg-purple-100 text-purple-600 rounded-md p-3 mb-4 inline-block">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">Content-Type</h3>
-          <div class="space-y-1 text-sm">
-            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/svg+xml</code></div>
-            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/png</code></div>
-            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/jpeg</code></div>
-            <div><code class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">image/webp</code></div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-          <div class="bg-blue-100 text-blue-600 rounded-md p-3 mb-4 inline-block">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">Cache-Control</h3>
-          <code class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">public, max-age=31536000</code>
-          <p class="text-gray-600 mt-2 text-sm">Images cached for 1 year</p>
-        </div>
-        
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-          <div class="bg-green-100 text-green-600 rounded-md p-3 mb-4 inline-block">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">CORS</h3>
-          <code class="bg-green-50 text-green-700 px-2 py-1 rounded text-xs">Access-Control-Allow-Origin: *</code>
-          <p class="text-gray-600 mt-2 text-sm">Available from any origin</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Rate Limits -->
-    <section>
-      <div class="bg-white rounded-md shadow-sm p-5 border border-gray-100">
-        <div class="flex items-center mb-5">
-          <svg class="h-10 w-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <h2 class="text-2xl font-semibold text-gray-900">No Rate Limits!</h2>
-            <p class="text-gray-600">Free forever. No authentication required.</p>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
-          <div class="bg-gray-50 rounded-md p-4 border border-gray-100">
-            <svg class="h-8 w-8 mb-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <h3 class="font-semibold text-lg text-gray-900">Simple URL Requests</h3>
-            <p class="text-gray-600 text-sm mt-1">No daily or monthly limits</p>
-          </div>
-          
-          <div class="bg-gray-50 rounded-md p-4 border border-gray-100">
-            <svg class="h-8 w-8 mb-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <h3 class="font-semibold text-lg text-gray-900">No API Keys</h3>
-            <p class="text-gray-600 text-sm mt-1">Start using immediately</p>
-          </div>
-          
-          <div class="bg-gray-50 rounded-md p-4 border border-gray-100">
-            <svg class="h-8 w-8 mb-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <h3 class="font-semibold text-lg text-gray-900">All Features</h3>
-            <p class="text-gray-600 text-sm mt-1">Everything included free</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
+        </section>
+      </article>
+    </div>
   </div>
 </DocsLayout>
+
+<style>
+  .api-page {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+    padding: 4rem 0 6rem;
+  }
+
+  .api-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
+    gap: 2rem;
+    align-items: end;
+    border-bottom: 1px solid #e4e4e7;
+    padding-bottom: 3rem;
+  }
+
+  .api-eyebrow,
+  .api-section__header p,
+  .api-sidebar span {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .api-hero h1 {
+    max-width: 56rem;
+    margin: 1rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 0.98;
+  }
+
+  .api-hero p:not(.api-eyebrow) {
+    max-width: 45rem;
+    margin: 1.25rem 0 0;
+    color: #52525b;
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .api-hero__panel,
+  .api-route-card,
+  .api-table-wrap,
+  .api-callout,
+  .api-header-grid > div,
+  .api-final-cta {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .api-hero__panel {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .api-hero__panel span {
+    color: #71717a;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .api-hero__panel code,
+  .api-header-grid code {
+    display: block;
+    overflow-wrap: anywhere;
+    border-radius: 0.5rem;
+    background: #18181b;
+    color: #86efac;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    padding: 1rem;
+  }
+
+  .api-grid {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+    padding-top: 3rem;
+  }
+
+  .api-sidebar {
+    position: sticky;
+    top: 5.5rem;
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 0.75rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .api-sidebar span {
+    padding: 0.5rem 0.75rem 0.625rem;
+  }
+
+  .api-sidebar a {
+    border-radius: 0.5rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 650;
+    padding: 0.625rem 0.75rem;
+    text-decoration: none;
+  }
+
+  .api-sidebar a:hover {
+    background: #f4f4f5;
+    color: #18181b;
+  }
+
+  .api-content {
+    display: grid;
+    gap: 4rem;
+    min-width: 0;
+  }
+
+  .api-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .api-section__header {
+    margin-bottom: 1.5rem;
+  }
+
+  .api-section__header h2,
+  .api-final-cta h2 {
+    margin: 0.625rem 0 0;
+    color: #18181b;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .api-route-grid,
+  .api-code-grid,
+  .api-header-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .api-route-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .api-code-grid,
+  .api-header-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .api-route-card {
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .api-route-card:hover {
+    border-color: #c4b5fd;
+    transform: translateY(-1px);
+  }
+
+  .api-route-card__media {
+    display: grid;
+    min-height: 12rem;
+    place-items: center;
+    border-bottom: 1px solid #e4e4e7;
+    background: #f4f4f5;
+    padding: 1rem;
+  }
+
+  .api-route-card img {
+    width: 100%;
+    max-height: 11rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    object-fit: contain;
+  }
+
+  .api-route-card > div:last-child,
+  .api-callout,
+  .api-header-grid > div {
+    padding: 1.25rem;
+  }
+
+  .api-route-card h3,
+  .api-header-grid h3 {
+    margin: 0;
+    color: #18181b;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .api-route-card p,
+  .api-header-grid p,
+  .api-callout,
+  .api-final-cta p {
+    color: #52525b;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .api-route-card code {
+    display: block;
+    margin: 0.75rem 0;
+    overflow-wrap: anywhere;
+    color: #18181b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .api-table-wrap {
+    overflow-x: auto;
+  }
+
+  .api-table {
+    width: 100%;
+    min-width: 44rem;
+    border-collapse: collapse;
+  }
+
+  .api-table th,
+  .api-table td {
+    border-bottom: 1px solid #e4e4e7;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .api-table th {
+    background: #f4f4f5;
+    color: #52525b;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .api-table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .api-table td {
+    color: #52525b;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .api-table code {
+    color: #18181b;
+    font-weight: 700;
+  }
+
+  .api-callout {
+    margin-top: 1rem;
+    border-color: #c4b5fd;
+    background: #f5f3ff;
+  }
+
+  .api-callout strong {
+    color: #4c1d95;
+  }
+
+  .api-final-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: #18181b;
+  }
+
+  .api-final-cta h2 {
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .api-final-cta p {
+    margin: 0.75rem 0 0;
+    color: #a1a1aa;
+  }
+
+  .api-final-cta a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 960px) {
+    .api-hero,
+    .api-grid,
+    .api-route-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .api-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .api-page {
+      padding: 2.5rem 0 4rem;
+    }
+
+    .api-hero h1 {
+      font-size: 2.75rem;
+    }
+
+    .api-final-cta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+</style>

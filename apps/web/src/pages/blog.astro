@@ -1,58 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { blogPosts } from '../data/blogPosts';
 
-const blogPosts = [
-  {
-    title: "Complete Guide to Image Placeholders in Web Development",
-    description: "Learn everything about image placeholders - from basic implementation to advanced techniques that improve user experience and prevent broken image disasters.",
-    slug: "complete-guide-to-image-placeholders-in-web-development",
-    image: "https://fallback.pics/api/v1/400x200/7C3AED/FFFFFF?text=Complete+Guide+to+Image+Placeholders",
-    date: "2025-01-15",
-    readTime: "15 min read",
-    category: "Web Development",
-    tags: ["placeholders", "UX", "web development", "loading states"]
-  },
-  {
-    title: "Why Every Developer Needs Fallback Images (Case Studies)",
-    description: "Discover how fallback images improve user experience, boost conversions, and maintain brand trust. Real case studies from Amazon, Shopify, Twitter, and more.",
-    slug: "why-every-developer-needs-fallback-images-case-studies",
-    image: "https://fallback.pics/api/v1/400x200/3B82F6/FFFFFF?text=Case+Studies+%26+Real+Data",
-    date: "2025-01-15",
-    readTime: "12 min read",
-    category: "Case Studies",
-    tags: ["case studies", "conversions", "user experience", "business impact"]
-  },
-  {
-    title: "Image Loading Best Practices for Better UX",
-    description: "Master modern image loading techniques: lazy loading, progressive loading, placeholders, and performance optimization for exceptional user experiences.",
-    slug: "image-loading-best-practices-for-better-ux",
-    image: "https://fallback.pics/api/v1/400x200/10B981/FFFFFF?text=Performance+%26+UX+Guide",
-    date: "2025-01-15",
-    readTime: "18 min read",
-    category: "Performance",
-    tags: ["performance", "lazy loading", "core web vitals", "optimization"]
-  }
-];
+const featuredPost = blogPosts[0];
+const secondaryPosts = blogPosts.slice(1);
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Blog",
   "name": "fallback.pics Blog",
   "description": "Expert guides on image optimization, placeholders, and web performance from the fallback.pics team.",
-  "url": "https://fallback.pics/api/v1/blog",
+  "url": "https://fallback.pics/blog",
   "publisher": {
     "@type": "Organization",
     "name": "fallback.pics",
     "logo": {
-      "@type": "ImageObject",
-      "url": "https://fallback.pics/api/v1/logo.png"
+    "@type": "ImageObject",
+      "url": "https://fallback.pics/favicon.svg"
     }
   },
   "blogPost": blogPosts.map(post => ({
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.description,
-    "url": `https://fallback.pics/api/v1/blog/${post.slug}`,
+    "url": `https://fallback.pics/blog/${post.slug}`,
     "datePublished": post.date,
     "image": post.image,
     "author": {
@@ -69,330 +40,226 @@ const structuredData = {
   keywords="web performance blog, image optimization guides, lazy loading tutorials, placeholder best practices, core web vitals, web development"
   ogImage="https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog"
 >
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-  <main class="blog-index min-h-screen bg-gray-50 text-gray-950">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <nav class="flex flex-wrap items-center justify-between gap-3">
-          <a href="/" class="flex items-center space-x-2 text-gray-950 hover:text-purple-700 transition-colors">
-            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
-              <path d="M2 17L12 22L22 17"/>
-              <path d="M2 12L12 17L22 12"/>
-            </svg>
-            <span class="font-bold text-lg">fallback.pics</span>
+  <main id="main-content" class="blog-index">
+    <section class="blog-index__hero">
+      <p>Engineering notes</p>
+      <h1>Practical writing for reliable image surfaces.</h1>
+      <span>
+        Guides on placeholder strategy, fallback image systems, loading states, and production UX for teams building resilient interfaces.
+      </span>
+    </section>
+
+    <section class="blog-index__feature">
+      <a href={`/blog/${featuredPost.slug}`} class="featured-card">
+        <img src={featuredPost.image} alt="" loading="eager" />
+        <div>
+          <span>{featuredPost.category}</span>
+          <h2>{featuredPost.title}</h2>
+          <p>{featuredPost.description}</p>
+          <div>
+            <time datetime={featuredPost.date}>
+              {new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+            <span>{featuredPost.readTime}</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <section class="blog-index__grid" aria-label="Latest articles">
+      <div class="blog-index__section-heading">
+        <p>Latest</p>
+        <h2>Guides for production teams</h2>
+      </div>
+      <div class="post-grid">
+        {secondaryPosts.map((post) => (
+          <a href={`/blog/${post.slug}`}>
+            <img src={post.image} alt="" loading="lazy" />
+            <div>
+              <span>{post.category}</span>
+              <h3>{post.title}</h3>
+              <p>{post.description}</p>
+              <div class="post-grid__meta">
+                <time datetime={post.date}>
+                  {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </time>
+                <span>{post.readTime}</span>
+              </div>
+            </div>
           </a>
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium">
-            <a href="/docs" class="text-gray-600 hover:text-purple-700 transition-colors">Docs</a>
-            <a href="/api" class="text-gray-600 hover:text-purple-700 transition-colors">API</a>
-            <a href="/features" class="text-gray-600 hover:text-purple-700 transition-colors">Features</a>
-            <a href="/blog" class="text-purple-700 font-semibold">Blog</a>
-          </div>
-        </nav>
-      </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="border-b border-gray-200 bg-white py-14 sm:py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-14 max-w-4xl text-center">
-          <div class="inline-flex items-center rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-xs font-semibold uppercase text-purple-700">
-            Expert Guides & Insights
-          </div>
-          <h1 class="mt-5 text-4xl font-bold leading-tight text-gray-950 sm:text-5xl">
-            Web Performance Blog
-          </h1>
-          <p class="mx-auto mt-5 max-w-3xl text-lg leading-8 text-gray-600">
-            Expert guides on image optimization, placeholders, lazy loading, and web performance. 
-            Learn from real case studies and battle-tested best practices.
-          </p>
-          
-          <!-- Stats -->
-          <div class="mx-auto mt-10 grid max-w-2xl grid-cols-3 divide-x divide-gray-200 rounded-xl border border-gray-200 bg-gray-50">
-            <div class="px-3 py-5 text-center">
-              <div class="text-2xl font-bold text-gray-950">{blogPosts.length}</div>
-              <div class="mt-1 text-xs font-medium text-gray-600 sm:text-sm">Expert Articles</div>
-            </div>
-            <div class="px-3 py-5 text-center">
-              <div class="text-2xl font-bold text-gray-950">45+</div>
-              <div class="mt-1 text-xs font-medium text-gray-600 sm:text-sm">Code Examples</div>
-            </div>
-            <div class="px-3 py-5 text-center">
-              <div class="text-2xl font-bold text-gray-950">10K+</div>
-              <div class="mt-1 text-xs font-medium text-gray-600 sm:text-sm">Monthly Readers</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Blog Posts Grid -->
-    <section class="py-14 sm:py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Featured Post (First Post) -->
-        <div class="mb-16">
-          <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-            <div class="md:flex">
-              <div class="md:w-1/2">
-                <img 
-                  src={blogPosts[0].image}
-                  alt={blogPosts[0].title}
-                  class="w-full h-64 md:h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div class="md:w-1/2 p-6 sm:p-8 md:p-10">
-                <div class="flex items-center mb-4">
-                  <span class="rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-700">
-                    Featured
-                  </span>
-                  <span class="ml-3 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {blogPosts[0].category}
-                  </span>
-                </div>
-                
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-950 mb-4 leading-tight">
-                  <a href={`/blog/${blogPosts[0].slug}`} class="hover:text-purple-600 transition-colors">
-                    {blogPosts[0].title}
-                  </a>
-                </h2>
-                
-                <p class="text-gray-600 mb-6 text-lg leading-relaxed">
-                  {blogPosts[0].description}
-                </p>
-                
-                <div class="flex items-center justify-between mb-6">
-                  <div class="flex items-center text-sm text-gray-500">
-                    <time datetime={blogPosts[0].date}>
-                      {new Date(blogPosts[0].date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}
-                    </time>
-                    <span class="mx-2">•</span>
-                    <span>{blogPosts[0].readTime}</span>
-                  </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-2 mb-6">
-                  {blogPosts[0].tags.map(tag => (
-                    <span class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                
-                <a 
-                  href={`/blog/${blogPosts[0].slug}`}
-                  class="inline-flex items-center rounded-lg bg-gray-950 px-5 py-3 font-semibold text-white transition-colors hover:bg-purple-700"
-                >
-                  Read Full Article
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Other Posts Grid -->
-        <div class="grid gap-6 md:grid-cols-2">
-          {blogPosts.slice(1).map((post, index) => (
-            <article class="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-              <div class="relative overflow-hidden">
-                <img 
-                  src={post.image}
-                  alt={post.title}
-                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div class="absolute top-4 left-4">
-                  <span class={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    post.category === 'Case Studies' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                  }`}>
-                    {post.category}
-                  </span>
-                </div>
-              </div>
-              
-              <div class="p-6">
-                <h3 class="text-xl font-bold text-gray-950 mb-3 leading-tight">
-                  <a href={`/blog/${post.slug}`} class="hover:text-purple-600 transition-colors">
-                    {post.title}
-                  </a>
-                </h3>
-                
-                <p class="text-gray-600 mb-4 line-clamp-3">
-                  {post.description}
-                </p>
-                
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center text-sm text-gray-500">
-                    <time datetime={post.date}>
-                      {new Date(post.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </time>
-                    <span class="mx-2">•</span>
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-2 mb-6">
-                  {post.tags.slice(0, 3).map(tag => (
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                
-                <a 
-                  href={`/blog/${post.slug}`}
-                  class="inline-flex items-center font-semibold text-purple-700 transition-colors hover:text-purple-900"
-                >
-                  Read More
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                  </svg>
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- Newsletter Section -->
-    <section class="border-y border-gray-200 bg-gray-950 py-14">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold text-white mb-4">
-          Stay Updated with Latest Articles
-        </h2>
-        <p class="text-gray-300 mb-8 text-lg">
-          Get notified when we publish new guides on web performance, image optimization, and development best practices.
-        </p>
-        <div class="mx-auto flex max-w-md flex-col gap-3 sm:flex-row">
-          <input 
-            type="email" 
-            placeholder="Enter your email" 
-            class="min-w-0 flex-1 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-300"
-          />
-          <button class="rounded-lg bg-white px-6 py-3 font-semibold text-gray-950 transition-colors hover:bg-gray-100">
-            Subscribe
-          </button>
-        </div>
-        <p class="text-gray-400 text-sm mt-4">
-          No spam, unsubscribe at any time. We respect your privacy.
-        </p>
-      </div>
-    </section>
-
-    <!-- Related Resources -->
-    <section class="py-16 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">Explore More Resources</h2>
-          <p class="text-xl text-gray-600">Dive deeper into web performance and image optimization</p>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="rounded-xl border border-gray-200 bg-white p-7 text-center shadow-sm transition-shadow hover:shadow-md">
-            <div class="bg-purple-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-purple-900 mb-3">Documentation</h3>
-            <p class="text-purple-700 mb-4">Complete API reference and implementation guides</p>
-            <a href="/docs" class="text-purple-600 font-semibold hover:text-purple-700 transition-colors">
-              Read Docs →
-            </a>
-          </div>
-          
-          <div class="rounded-xl border border-gray-200 bg-white p-7 text-center shadow-sm transition-shadow hover:shadow-md">
-            <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-blue-900 mb-3">API Reference</h3>
-            <p class="text-blue-700 mb-4">Detailed API endpoints and usage examples</p>
-            <a href="/api" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-              View API →
-            </a>
-          </div>
-          
-          <div class="rounded-xl border border-gray-200 bg-white p-7 text-center shadow-sm transition-shadow hover:shadow-md">
-            <div class="bg-green-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-green-900 mb-3">Features</h3>
-            <p class="text-green-700 mb-4">Explore all available features and capabilities</p>
-            <a href="/features" class="text-green-600 font-semibold hover:text-green-700 transition-colors">
-              See Features →
-            </a>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-5 gap-8 mb-8">
-        <div>
-          <h3 class="text-xl font-bold mb-4">fallback.pics</h3>
-          <p class="text-gray-400">Lightning-fast placeholder images for developers.</p>
-        </div>
-        <div>
-          <h4 class="font-semibold mb-3">Documentation</h4>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="/docs" class="hover:text-white transition">Getting Started</a></li>
-            <li><a href="/api" class="hover:text-white transition">API Reference</a></li>
-            <li><a href="/features" class="hover:text-white transition">Features</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-semibold mb-3">Resources</h4>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="/blog" class="hover:text-white transition">Blog</a></li>
-            <li><a href="/docs#presets" class="hover:text-white transition">Presets</a></li>
-            <li><a href="/docs#animations" class="hover:text-white transition">Animations</a></li>
-            <li><a href="/docs#charts" class="hover:text-white transition">Charts</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-semibold mb-3">Connect</h4>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="https://github.com/abhijeetpratapsingh/fallback-pics" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">GitHub</a></li>
-            <li><a href="https://twitter.com/fallbackpics" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Twitter</a></li>
-            <li><a href="mailto:support@fallback.pics" class="hover:text-white transition">Support</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
-        <p>© 2025 ABHIJEET PRATAP SINGH. All rights reserved.</p>
-        <p class="mt-2">Privacy First • No Tracking • No Cookies</p>
-      </div>
-    </div>
-  </footer>
-
 <style>
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+  .blog-index {
+    overflow-x: clip;
+    background: #fafafa;
+    color: #18181b;
+  }
+
+  .blog-index__hero,
+  .blog-index__feature,
+  .blog-index__grid {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+  }
+
+  .blog-index__hero {
+    border-bottom: 1px solid #e4e4e7;
+    padding: 5rem 0 3rem;
+  }
+
+  .blog-index__hero p,
+  .blog-index__section-heading p,
+  .featured-card span,
+  .post-grid span {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .blog-index__hero h1 {
+    max-width: 58rem;
+    margin: 1rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 650;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .blog-index__hero > span {
+    display: block;
+    max-width: 45rem;
+    margin-top: 1.5rem;
+    color: #52525b;
+    font-size: 1.1875rem;
+    line-height: 1.75;
+  }
+
+  .blog-index__feature {
+    padding: 3rem 0;
+  }
+
+  .featured-card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
     overflow: hidden;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: inherit;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .featured-card:hover,
+  .post-grid a:hover {
+    border-color: #c4b5fd;
+    transform: translateY(-1px);
+  }
+
+  .featured-card img,
+  .post-grid img {
+    width: 100%;
+    height: 100%;
+    min-height: 18rem;
+    object-fit: cover;
+    background: #18181b;
+  }
+
+  .featured-card > div {
+    padding: 2rem;
+  }
+
+  .featured-card h2,
+  .blog-index__section-heading h2 {
+    margin: 0.75rem 0 0;
+    color: #18181b;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 650;
+    line-height: 1.04;
+    letter-spacing: 0;
+  }
+
+  .featured-card p,
+  .post-grid p {
+    color: #52525b;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .featured-card div div,
+  .post-grid__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: #71717a;
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+
+  .blog-index__grid {
+    border-top: 1px solid #e4e4e7;
+    padding: 3rem 0 6rem;
+  }
+
+  .blog-index__section-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .post-grid a {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: inherit;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .post-grid img {
+    min-height: 13rem;
+    max-height: 15rem;
+  }
+
+  .post-grid a > div {
+    padding: 1.25rem;
+  }
+
+  .post-grid h3 {
+    margin: 0.75rem 0 0;
+    color: #18181b;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 760px) {
+    .featured-card,
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-index__hero {
+      padding-top: 3rem;
+    }
   }
 </style>
 </Layout>

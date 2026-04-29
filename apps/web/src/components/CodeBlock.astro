@@ -1,0 +1,157 @@
+---
+export interface Props {
+  code: string;
+  label?: string;
+  language?: string;
+}
+
+const { code, label = 'Example', language = 'text' } = Astro.props;
+---
+
+<figure class="code-block">
+  <figcaption>
+    <span>{label}</span>
+    <span class="code-block__language">{language}</span>
+    <button type="button" data-copy-code data-copy-value={code} aria-label={`Copy ${label}`}>
+      Copy
+    </button>
+  </figcaption>
+  <pre><code>{code}</code></pre>
+</figure>
+
+<script>
+  if (!(window as any).__fallbackPicsCopyBound) {
+    (window as any).__fallbackPicsCopyBound = true;
+
+    async function copyText(value: string) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(value);
+        return;
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const execCopy = (document as unknown as { execCommand?: (commandId: string) => boolean }).execCommand;
+      const copied = execCopy?.call(document, 'copy') ?? false;
+      textarea.remove();
+
+      if (!copied) throw new Error('Copy command failed');
+    }
+
+    document.addEventListener('click', async (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
+      if (!button) return;
+
+      const value = button.dataset.copyValue || '';
+      const initial = button.textContent || 'Copy';
+
+      try {
+        await copyText(value);
+        button.textContent = 'Copied';
+        window.setTimeout(() => {
+          button.textContent = initial;
+        }, 1400);
+      } catch {
+        button.textContent = 'Copy failed';
+        window.setTimeout(() => {
+          button.textContent = initial;
+        }, 1400);
+      }
+    });
+  }
+</script>
+
+<style>
+  .code-block {
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    border: 1px solid #27272a;
+    border-radius: 0.5rem;
+    background: #18181b;
+    padding: 0;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .code-block figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .code-block__language {
+    margin-left: auto;
+    color: #a1a1aa;
+    font-family: 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .code-block button {
+    min-height: 2rem;
+    border: 1px solid #3f3f46;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0 0.75rem;
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+
+  .code-block button:hover {
+    background: #f4f4f5;
+    border-color: #71717a;
+  }
+
+  .code-block button:focus-visible {
+    outline: 2px solid #a78bfa;
+    outline-offset: 2px;
+  }
+
+  .code-block pre {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    overflow-x: auto;
+    padding: 1.25rem;
+    color: #e4e4e7;
+    font-family: 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, monospace;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .code-block code {
+    display: block;
+    min-width: 0;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  @media (max-width: 520px) {
+    .code-block figcaption {
+      flex-wrap: wrap;
+    }
+
+    .code-block__language {
+      margin-left: 0;
+    }
+  }
+</style>

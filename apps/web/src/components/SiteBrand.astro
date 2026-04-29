@@ -1,0 +1,42 @@
+---
+export interface Props {
+  class?: string;
+  markClass?: string;
+  textClass?: string;
+}
+
+const {
+  class: className = '',
+  markClass = 'h-8 w-8',
+  textClass = '',
+} = Astro.props;
+---
+
+<span class:list={['site-brand', className]}>
+  <img src="/favicon.svg" alt="" width="32" height="32" class:list={['site-brand__mark', markClass]} />
+  <span class:list={['site-brand__text', textClass]}>fallback.pics</span>
+</span>
+
+<style>
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-width: 0;
+    color: inherit;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .site-brand__mark {
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  .site-brand__text {
+    color: currentColor;
+    font-size: 1rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+</style>
