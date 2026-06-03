@@ -6,6 +6,14 @@ const API_BASE = 'https://fallback.pics/api/v1';
 type Preset = 'standard' | 'avatar' | 'banner' | 'skeleton' | 'blur';
 type CodeTab = 'html' | 'react' | 'next' | 'css' | 'curl';
 
+const presetOptions: Array<{ id: Preset; label: string; icon: string }> = [
+  { id: 'standard', label: 'Standard', icon: 'Std' },
+  { id: 'avatar', label: 'Avatar', icon: 'Av' },
+  { id: 'banner', label: 'Banner', icon: 'Bn' },
+  { id: 'skeleton', label: 'Skeleton', icon: 'Sk' },
+  { id: 'blur', label: 'Blur', icon: 'Bl' },
+];
+
 const trustMetrics = [
   { label: 'Requests served', value: 'Tracked', detail: 'Cloudflare Analytics ready' },
   { label: 'Uptime posture', value: 'Edge-first', detail: 'SLA terms require agreement' },
@@ -225,8 +233,9 @@ function CopyButton({ value, label = 'Copy' }: { value: string; label?: string }
     <button
       type="button"
       onClick={copy}
-      className="inline-flex min-h-10 items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+      className="inline-flex min-h-10 min-w-[5.75rem] items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
       aria-label={copied ? 'Copied' : label}
+      aria-live="polite"
     >
       {copied ? 'Copied' : label}
     </button>
@@ -273,25 +282,25 @@ function EnterpriseLanding() {
       <main id="main-content">
         <section className="relative overflow-hidden border-b border-zinc-200 bg-zinc-50" aria-labelledby="hero-heading">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(24,24,27,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(24,24,27,0.05)_1px,transparent_1px)] bg-[size:48px_48px]" aria-hidden="true" />
-          <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1fr)] lg:items-center lg:gap-10 lg:px-8 lg:py-24">
+          <div className="relative mx-auto grid max-w-7xl gap-6 px-5 py-6 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1fr)] lg:items-center lg:gap-10 lg:px-8 lg:py-24">
             <div>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 shadow-sm">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 shadow-sm sm:mb-5">
                 <span className="h-2 w-2 rounded-full bg-emerald-600" />
                 Placeholder image API for stable media states
               </p>
               <h1 id="hero-heading" className="max-w-4xl text-4xl font-semibold leading-[1.02] tracking-normal text-zinc-950 sm:text-6xl lg:text-7xl">
                 Never show broken images again.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600 sm:mt-6 sm:text-xl sm:leading-8">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-600 sm:mt-6 sm:text-xl sm:leading-8">
                 fallback.pics is a placeholder image API and placeholder image generator for production applications, mockups, docs, and broken image fallback states.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-3">
                 <a
                   href="#developers"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero start using API"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg bg-violet-700 px-4 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 sm:min-h-12 sm:px-5"
                 >
                   Start using API
                 </a>
@@ -300,7 +309,7 @@ function EnterpriseLanding() {
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero placeholder image generator"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 sm:min-h-12 sm:px-5"
                 >
                   Open generator
                 </a>
@@ -309,7 +318,7 @@ function EnterpriseLanding() {
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero view docs"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                  className="hidden min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 sm:inline-flex"
                 >
                   View docs
                 </a>
@@ -318,7 +327,7 @@ function EnterpriseLanding() {
                   data-analytics-event="outbound_click"
                   data-analytics-category="engagement"
                   data-analytics-label="Hero GitHub"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                  className="hidden min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 sm:inline-flex"
                 >
                   GitHub
                 </a>
@@ -333,16 +342,16 @@ function EnterpriseLanding() {
                   <CopyButton value={generatedUrl} label="Copy" />
                 </div>
               </div>
-              <nav className="mt-5 flex flex-wrap gap-3 text-sm font-semibold" aria-label="Popular fallback.pics pages">
-                <a className="text-violet-700 underline-offset-4 hover:underline" href="/placeholder-image-api/">Placeholder image API</a>
-                <a className="text-violet-700 underline-offset-4 hover:underline" href="/dummy-image-generator/">Dummy image generator</a>
-                <a className="text-violet-700 underline-offset-4 hover:underline" href="/broken-image-fallback/">Broken image fallback</a>
-                <a className="text-violet-700 underline-offset-4 hover:underline" href="/guides/react-image-fallback/">React image fallback</a>
+              <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 text-sm font-semibold sm:mt-5 sm:flex-wrap sm:overflow-visible sm:pb-0" aria-label="Popular fallback.pics pages">
+                <a className="shrink-0 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-violet-700 no-underline hover:bg-violet-50" href="/placeholder-image-api/">Placeholder image API</a>
+                <a className="shrink-0 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-violet-700 no-underline hover:bg-violet-50" href="/dummy-image-generator/">Dummy image generator</a>
+                <a className="shrink-0 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-violet-700 no-underline hover:bg-violet-50" href="/broken-image-fallback/">Broken image fallback</a>
+                <a className="shrink-0 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-violet-700 no-underline hover:bg-violet-50" href="/guides/react-image-fallback/">React image fallback</a>
               </nav>
             </div>
 
-            <div id="hero-demo" className="rounded-lg border border-zinc-200 bg-white p-4 shadow-[0_12px_32px_rgba(9,9,11,0.08)]">
-              <div className="mb-4 flex items-center justify-between gap-3 border-b border-zinc-200 pb-4">
+            <div id="hero-demo" className="rounded-lg border border-zinc-200 bg-white p-3 shadow-[0_12px_32px_rgba(9,9,11,0.08)] sm:p-4">
+              <div className="mb-3 flex items-center justify-between gap-3 border-b border-zinc-200 pb-3 sm:mb-4 sm:pb-4">
                 <div>
                   <p className="text-sm font-semibold text-zinc-950">Live fallback builder</p>
                   <p className="text-sm text-zinc-500">Generate a placeholder image URL, preview it, and copy it.</p>
@@ -358,23 +367,24 @@ function EnterpriseLanding() {
                   <fieldset>
                     <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Preset</legend>
                     <div className="grid grid-cols-2 gap-2">
-                      {(['standard', 'avatar', 'banner', 'skeleton', 'blur'] as Preset[]).map((item) => (
+                      {presetOptions.map((item) => (
                         <button
-                          key={item}
+                          key={item.id}
                           type="button"
                           onClick={() => {
-                            setPreset(item);
+                            setPreset(item.id);
                             setImageFailed(false);
                             trackEvent('demo_preset_select', {
                               event_category: 'demo',
-                              event_label: item,
-                              preset: item,
+                              event_label: item.id,
+                              preset: item.id,
                             });
                           }}
-                          aria-pressed={preset === item}
-                          className={`rounded-lg border px-3 py-2 text-left text-sm font-semibold capitalize transition ${preset === item ? 'border-violet-500 bg-violet-50 text-violet-800' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
+                          aria-pressed={preset === item.id}
+                          className={`flex min-h-11 items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-sm font-semibold transition ${preset === item.id ? 'border-violet-500 bg-violet-50 text-violet-900 shadow-sm ring-2 ring-violet-100' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
                         >
-                          {item}
+                          <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-md font-mono text-[0.65rem] ${preset === item.id ? 'bg-violet-700 text-white' : 'bg-zinc-100 text-zinc-600'}`}>{item.icon}</span>
+                          <span>{item.label}</span>
                         </button>
                       ))}
                     </div>
@@ -454,7 +464,7 @@ function EnterpriseLanding() {
                 </div>
 
                 <div className="order-1 flex flex-col gap-4 lg:order-2">
-                  <div className="relative grid min-h-[280px] place-items-center rounded-lg border border-zinc-200 bg-[radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] p-5 [background-size:22px_22px]">
+                  <div className="relative grid min-h-[220px] place-items-center rounded-lg border border-zinc-200 bg-[radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] p-4 [background-size:22px_22px] sm:min-h-[280px] sm:p-5">
                     <img
                       src={previewSrc}
                       onError={() => setImageFailed(true)}

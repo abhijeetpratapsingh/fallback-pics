@@ -9,6 +9,8 @@
     "build": "astro build",
     "check": "astro check",
     "preview": "astro preview",
+    "seo:smoke": "node scripts/seo-smoke-check.mjs",
+    "visual:qa": "node scripts/visual-qa.mjs",
     "astro": "astro"
   },
   "dependencies": {

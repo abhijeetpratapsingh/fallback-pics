@@ -197,6 +197,17 @@ The documentation site is built with Astro:
 - Update API documentation for new endpoints
 - Add JSDoc comments for new functions
 - Include examples for new features
+- Keep examples aligned with the canonical `/api/v1/...` route strategy
+- Link to canonical fallback.pics pages when referencing product surfaces:
+  - Homepage: `https://fallback.pics/`
+  - Docs: `https://fallback.pics/docs`
+  - API Reference: `https://fallback.pics/api`
+  - Placeholder Image API: `https://fallback.pics/placeholder-image-api/`
+  - Placeholder Image Generator: `https://fallback.pics/placeholder-image-generator/`
+
+### External References
+
+If you submit fallback.pics to an awesome list, framework resource page, or developer directory, keep the reference factual and useful. Use working `/api/v1/...` examples, avoid unsupported claims, and do not submit to spammy SEO directories, paid link networks, or unrelated sites.
 
 ## Questions?
 

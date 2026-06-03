@@ -1,6 +1,6 @@
-# fallback.pics SEO Spec Kit Story Commands
+# fallback.pics Spec Kit Story Commands
 
-These files convert the SEO action plan into command-ready Spec Kit story prompts.
+These files convert the SEO and UI refinement action plans into command-ready Spec Kit story prompts.
 Each story keeps the original implementation story under `Source Story`, and starts
 with a paste-ready command sequence so another agent can run the work in order.
 
@@ -28,3 +28,12 @@ Story command files:
 10. [Improve Trust Signals](./10-improve-trust-signals.md)
 11. [Improve GitHub and Link Foundation](./11-improve-github-and-link-foundation.md)
 12. [Add SEO Measurement Checks](./12-add-seo-measurement-checks.md)
+
+UI refinement story command files:
+
+13. [Refine Mobile Homepage First Fold](./13-refine-mobile-homepage-first-fold.md)
+14. [Fix Content Page Sidebar and Code Containment](./14-fix-content-page-sidebar-code-containment.md)
+15. [Refine Mobile Content Page Readability](./15-refine-mobile-content-page-readability.md)
+16. [Unify Navigation and Mobile Menu](./16-unify-navigation-and-mobile-menu.md)
+17. [Polish Live Builder Interactions](./17-polish-live-builder-interactions.md)
+18. [Create Visual QA Workflow](./18-create-visual-qa-workflow.md)

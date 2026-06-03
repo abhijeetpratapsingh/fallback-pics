@@ -90,7 +90,7 @@ const hasCta = Astro.slots.has('cta');
 
   .content-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.46fr);
     gap: 2rem;
     align-items: end;
     border-bottom: 1px solid #e4e4e7;
@@ -116,7 +116,7 @@ const hasCta = Astro.slots.has('cta');
     max-width: 58rem;
     margin: 1rem 0 0;
     color: #18181b;
-    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-size: clamp(2.35rem, 5vw, 5.4rem);
     font-weight: 650;
     letter-spacing: 0;
     line-height: 0.98;
@@ -136,8 +136,8 @@ const hasCta = Astro.slots.has('cta');
 
   .content-body__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 18rem;
-    gap: 3rem;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 18rem);
+    gap: 2rem;
     align-items: start;
   }
 
@@ -148,6 +148,7 @@ const hasCta = Astro.slots.has('cta');
   .content-article {
     display: grid;
     gap: 1rem;
+    max-width: 100%;
     min-width: 0;
   }
 
@@ -156,12 +157,16 @@ const hasCta = Astro.slots.has('cta');
     top: 5.5rem;
     display: grid;
     gap: 1rem;
+    width: 100%;
     min-width: 0;
   }
 
   .content-layout :global(.content-section),
   .content-layout :global(.content-preview-card),
   .content-sidebar :global(.content-sidebar-card) {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
     background: #ffffff;
@@ -434,11 +439,28 @@ const hasCta = Astro.slots.has('cta');
 
   @media (max-width: 640px) {
     .content-hero {
-      padding: 3rem 0 2rem;
+      gap: 1.25rem;
+      padding: 2rem 0 1.5rem;
     }
 
     .content-hero h1 {
-      font-size: 2.75rem;
+      font-size: clamp(2rem, 10vw, 2.45rem);
+      line-height: 1.04;
+    }
+
+    .content-hero > div > p:not(.content-eyebrow) {
+      margin-top: 1rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .content-layout :global(.content-preview-card) {
+      padding: 0.85rem;
+    }
+
+    .content-layout :global(.content-preview-card img) {
+      max-height: 15rem;
+      object-fit: contain;
     }
 
     .content-layout :global(.content-section),

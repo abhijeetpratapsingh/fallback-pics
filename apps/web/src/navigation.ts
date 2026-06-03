@@ -14,10 +14,11 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const landingNav: NavItem[] = [
-  { label: 'Product', href: '#product' },
-  { label: 'API', href: '#developers' },
-  { label: 'Enterprise', href: '#enterprise' },
-  { label: 'Use cases', href: '#use-cases' },
+  { label: 'Generator', href: '#hero-demo' },
+  { label: 'Docs', href: '/docs', active: ['/docs', '/guides'] },
+  { label: 'API', href: '/api', active: '/api' },
+  { label: 'Features', href: '/features', active: '/features' },
+  { label: 'GitHub', href: 'https://github.com/abhijeetpratapsingh/fallback-pics', external: true },
   { label: 'Status', href: 'https://status.fallback.pics', external: true },
 ];
 
