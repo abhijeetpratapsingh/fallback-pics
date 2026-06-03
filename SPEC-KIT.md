@@ -13,7 +13,8 @@ This repository is initialized with GitHub Spec Kit.
 
 - `.specify/` contains Spec Kit templates, workflows, scripts, extensions, and project memory.
 - `.agents/skills/` contains Codex skills for Spec Kit commands.
-- `.specify/memory/constitution.md` is the project constitution template and should be completed before new feature specs are generated.
+- `.specify/memory/constitution.md` contains the completed project constitution
+  and quality gates for future feature specs.
 - `specs/` is the default feature spec directory.
 
 ## Codex Skill Commands
@@ -40,7 +41,10 @@ Git extension skills are also installed:
 
 - Existing markdown files under `specs/` are implementation story specs created before Spec Kit was installed.
 - New Spec Kit features should be created as numbered directories under `specs/`, for example `specs/001-fix-soft-404/spec.md`.
-- Do not manually edit generated templates unless the change is intended to affect future Spec Kit output.
+- Do not manually edit generated templates unless the change is intended to affect
+  future Spec Kit output.
+- Future features must satisfy the constitution's route truth, edge delivery,
+  testing, documentation/SEO, privacy, security, and observability gates.
 
 ## Useful Checks
 
@@ -49,4 +53,3 @@ specify version
 specify integration list
 specify check
 ```
-

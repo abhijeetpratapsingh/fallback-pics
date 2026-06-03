@@ -17,7 +17,9 @@ out/
 # Cloudflare
 .wrangler/
 .dev.vars
+.dev.vars.*
 .miniflare/
+.mf/
 
 # Astro
 .astro/
@@ -85,6 +87,7 @@ desktop.ini
 
 # Package manager files
 .npm/
+.pnpm-debug.log*
 .pnp.*
 .yarn-integrity
 
@@ -138,3 +141,6 @@ analytics/
 
 # Generated files
 *.generated.*
+
+# Spec Kit local workspace
+.specify/
