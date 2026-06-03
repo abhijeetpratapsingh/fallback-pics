@@ -129,9 +129,9 @@ https://fallback.pics/api/v1/chart/heatmap/600x400
 - **No Authentication**: Direct URL access
 
 ### 🔒 Privacy
-- **No Tracking**: Zero cookies or analytics
-- **No Data Collection**: Complete privacy
-- **GDPR/CCPA Compliant**: By design
+- **No Cookies Required for Image Delivery**: Placeholder image responses do not require a client SDK or delivery cookie
+- **Configurable Analytics**: Google Analytics can track website engagement and aggregate Worker URL calls when enabled
+- **Query-Safe Worker Events**: API telemetry strips query strings before sending URL metadata
 
 ## URL Parameter Reference
 
@@ -169,7 +169,7 @@ https://fallback.pics/api/v1/chart/heatmap/600x400
 | **Chart Mockups** | ✅ Yes | ❌ No |
 | **Global CDN** | ✅ 200+ locations | ❓ Not specified |
 | **Response Time** | ✅ <50ms | ❓ Not specified |
-| **Privacy Focus** | ✅ No tracking | ❓ Not specified |
+| **Privacy Focus** | ✅ No cookies required for image delivery | ❓ Not specified |
 
 ## Examples
 

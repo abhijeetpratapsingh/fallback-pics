@@ -7,7 +7,7 @@ const structuredData = {
   '@type': 'SoftwareApplication',
   name: 'fallback.pics',
   description:
-    'Global fallback image infrastructure for production applications. Generate cacheable placeholder images, avatars, banners, and skeleton states from simple URLs.',
+    'Placeholder image API and fallback image service for production applications. Generate cacheable placeholder images, avatars, banners, and skeleton states from simple URLs.',
   url: 'https://fallback.pics',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web Browser',
@@ -24,6 +24,8 @@ const structuredData = {
   keywords: [
     'fallback image infrastructure',
     'placeholder image api',
+    'placeholder image generator',
+    'placeholder image',
     'broken image fallback',
     'image placeholder service',
     'production fallback images',
@@ -33,12 +35,12 @@ const structuredData = {
 ---
 
 <Layout
-  title="Fallback Image Infrastructure for Production Apps | fallback.pics"
-  description="Global fallback image infrastructure for production-grade applications. Generate reliable, cacheable, brand-safe fallback images from simple URLs."
-  keywords="fallback image infrastructure, placeholder image api, broken image fallback, production image fallback, image placeholder service, fallback images, Cloudflare Workers"
-  ogImage="https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Fallback+Image+Infrastructure"
+  title="Placeholder Image API and Fallback Image Generator | fallback.pics"
+  description="Generate placeholder images and fallback images from simple URLs. fallback.pics is a placeholder image API and generator for stable product, docs, and mockup media."
+  keywords="placeholder image API, placeholder image generator, placeholder image, image placeholder, fallback image, broken image fallback, SVG placeholder image"
+  ogImage="https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Placeholder+Image+API"
   header="landing"
 >
   <EnterpriseLanding client:load />
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
 </Layout>

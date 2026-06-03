@@ -9,7 +9,7 @@ The preferred website deployment flow is now Cloudflare Pages Git integration wi
 
 ## Important Cloudflare Pages Note
 
-If the existing `fallback-pics-web` Pages project was created with Wrangler Direct Upload, Cloudflare does not let you convert that same Pages project to Git integration later.
+If an existing Pages project was created with Wrangler Direct Upload, Cloudflare does not let you convert that same Pages project to Git integration later.
 
 Use this migration path:
 
@@ -37,7 +37,7 @@ Use these build settings:
 
 | Setting | Value |
 | --- | --- |
-| Project name | `fallback-pics-web` or a new name if the old Direct Upload project still exists |
+| Project name | `fallback-pics` |
 | Production branch | `main` |
 | Root directory | `/` |
 | Build command | `pnpm web:build` |
@@ -50,6 +50,7 @@ Recommended environment variables:
 | --- | --- |
 | `NODE_VERSION` | `20` |
 | `PNPM_VERSION` | `8.12.0` |
+| `PUBLIC_GA_MEASUREMENT_ID` | Your GA4 measurement ID, for example `G-XXXXXXXXXX` |
 
 Cloudflare will install dependencies, run the build command, and deploy `apps/web/dist`.
 
@@ -88,6 +89,19 @@ The Worker account ID configured locally is:
 
 If you later want the Worker to deploy from GitHub too, set up Cloudflare Workers Builds or a GitHub Action with a scoped Cloudflare API token.
 
+### Worker Google Analytics
+
+To track direct Worker/API URL calls in Google Analytics, enable GA4 Measurement Protocol with Worker secrets:
+
+```bash
+cd apps/worker
+wrangler secret put GOOGLE_ANALYTICS_MEASUREMENT_ID
+wrangler secret put GOOGLE_ANALYTICS_API_SECRET
+wrangler secret put GOOGLE_ANALYTICS_CLIENT_ID_SALT
+```
+
+`GOOGLE_ANALYTICS_ENABLED` is set in `apps/worker/wrangler.toml` for production. The Worker sends `fallback_worker_request` events and strips query strings before sending URL metadata.
+
 ## Local Build Check
 
 Before pushing:
@@ -107,7 +121,7 @@ Manual deployment is still available for emergencies:
 # Website Direct Upload fallback
 cd apps/web
 pnpm build
-npx wrangler pages deploy dist --project-name fallback-pics-web --branch main
+npx wrangler pages deploy dist --project-name fallback-pics --branch main
 
 # Full legacy deployment script
 ./deploy.sh --production
@@ -118,6 +132,6 @@ Prefer the GitHub-connected Pages project for normal website changes.
 ## Useful URLs
 
 - Production: `https://fallback.pics`
-- Pages preview domain: `https://fallback-pics-web.pages.dev`
+- Pages preview domain: `https://fallback-pics.pages.dev`
 - Worker fallback URL: `https://fallback-pics.billing-04f.workers.dev`
 - Cloudflare Dashboard: `https://dash.cloudflare.com`

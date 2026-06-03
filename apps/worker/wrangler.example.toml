@@ -13,17 +13,20 @@ workers_dev = true
 #   { pattern = "your-domain.com/*", zone_name = "your-domain.com" }
 # ]
 
-# Environment-specific configurations
-[env.staging]
-name = "fallback-pics-staging"
-vars = { ENVIRONMENT = "staging" }
+# Production variables for the deployed Worker.
+[vars]
+ENVIRONMENT = "production"
+GOOGLE_ANALYTICS_ENABLED = "false"
 
-[env.production]
-name = "fallback-pics-production"
-vars = { ENVIRONMENT = "production" }
 # routes = [
 #   { pattern = "fallback.pics/*", zone_name = "fallback.pics" }
 # ]
+
+# Optional Google Analytics 4 Measurement Protocol support for direct Worker/API URL calls.
+# Set these with wrangler secrets when enabling telemetry:
+#   wrangler secret put GOOGLE_ANALYTICS_MEASUREMENT_ID
+#   wrangler secret put GOOGLE_ANALYTICS_API_SECRET
+#   wrangler secret put GOOGLE_ANALYTICS_CLIENT_ID_SALT
 
 # Optional: KV namespace for caching
 # [[kv_namespaces]]

@@ -4,13 +4,19 @@
  */
 
 import { generateAISVG } from './ai-generator';
-import { NewRelicTelemetry, extractRoute, extractDimensions, getUserAgentCategory } from './telemetry';
+import { GoogleAnalyticsTelemetry, NewRelicTelemetry, extractFormat, extractRoute, extractDimensions, getUserAgentCategory } from './telemetry';
+import type { RequestMetrics } from './telemetry';
 
 export interface Env {
   ALLOWED_ORIGIN?: string;
   NEW_RELIC_LICENSE_KEY?: string;
   NEW_RELIC_APP_NAME?: string;
   NEW_RELIC_ENABLED?: string;
+  GOOGLE_ANALYTICS_MEASUREMENT_ID?: string;
+  GOOGLE_ANALYTICS_API_SECRET?: string;
+  GOOGLE_ANALYTICS_ENABLED?: string;
+  GOOGLE_ANALYTICS_CLIENT_ID_SALT?: string;
+  GOOGLE_ANALYTICS_WORKER_EVENT_NAME?: string;
 }
 
 // Pre-computed constants
@@ -175,6 +181,30 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const startTime = Date.now();
     const telemetry = new NewRelicTelemetry(env);
+    const googleAnalytics = new GoogleAnalyticsTelemetry(env);
+
+    const trackWorkerResponse = (response: Response, attributes: Partial<RequestMetrics> = {}): Response => {
+      const requestUrl = new URL(request.url);
+      const route = attributes.route || extractRoute(requestUrl.pathname);
+      const dimensions = extractDimensions(requestUrl.pathname);
+      const customText = attributes.customText ?? (requestUrl.searchParams.has('text') || requestUrl.searchParams.has('label'));
+
+      ctx.waitUntil(googleAnalytics.trackWorkerRequest(request, {
+        route,
+        method: request.method,
+        statusCode: response.status,
+        responseTime: Date.now() - startTime,
+        country: request.cf?.country as string | undefined,
+        userAgent: request.headers.get('user-agent'),
+        imageWidth: attributes.imageWidth ?? dimensions.width,
+        imageHeight: attributes.imageHeight ?? dimensions.height,
+        imageFormat: attributes.imageFormat ?? extractFormat(requestUrl.pathname),
+        customText,
+        errorMessage: attributes.errorMessage,
+      }));
+
+      return response;
+    };
 
     // Handle OPTIONS
     if (request.method === 'OPTIONS') {
@@ -195,7 +225,10 @@ export default {
         })
       ]));
 
-      return new Response('Method not allowed', { status: 405, headers: CORS_HEADERS });
+      return trackWorkerResponse(new Response('Method not allowed', { status: 405, headers: CORS_HEADERS }), {
+        route: 'unknown',
+        errorMessage: 'Method not allowed',
+      });
     }
 
     const url = new URL(request.url);
@@ -223,7 +256,10 @@ export default {
         })
       ]));
 
-      return new Response('Invalid dimensions', { status: 400, headers: CORS_HEADERS });
+      return trackWorkerResponse(new Response('Invalid dimensions', { status: 400, headers: CORS_HEADERS }), {
+        route: 'unknown',
+        errorMessage: 'Empty pathname',
+      });
     }
 
     // Parse path segments
@@ -264,7 +300,13 @@ export default {
           })
         ]));
 
-        return new Response(svg, { headers: SVG_HEADERS });
+        return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          route: 'avatar',
+          imageWidth: size,
+          imageHeight: size,
+          imageFormat: 'svg',
+          customText: !!text && text !== 'A',
+        });
       }
     }
 
@@ -277,7 +319,13 @@ export default {
         const textColor = normalizeColor(segments[3]) || DEFAULT_TEXT;
         
         const svg = SVG_TEMPLATE(size, size, bg, textColor, escapeXml(text));
-        return new Response(svg, { headers: SVG_HEADERS });
+        return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          route: 'square',
+          imageWidth: size,
+          imageHeight: size,
+          imageFormat: 'svg',
+          customText: !!url.searchParams.get('text'),
+        });
       }
     }
 
@@ -292,7 +340,13 @@ export default {
         if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
           const text = url.searchParams.get('text') || 'Banner';
           const svg = GRADIENT_TEMPLATE(width, height, '#667EEA', '#764BA2', '#FFFFFF');
-          return new Response(svg, { headers: SVG_HEADERS });
+          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+            route: 'banner',
+            imageWidth: width,
+            imageHeight: height,
+            imageFormat: 'svg',
+            customText: !!url.searchParams.get('text'),
+          });
         }
       }
     }
@@ -310,7 +364,12 @@ export default {
         if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
           // Use the improved chart generator
           const svg = generateChartSVG(width, height, chartType);
-          return new Response(svg, { headers: SVG_HEADERS });
+          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+            route: 'chart',
+            imageWidth: width,
+            imageHeight: height,
+            imageFormat: 'svg',
+          });
         }
       }
     }
@@ -347,7 +406,13 @@ export default {
           
           // Use the intelligent AI generator
           const svg = generateAISVG(width, height, context, mood, customText || undefined, customBgColor || undefined, customTextColor || undefined);
-          return new Response(svg, { headers: SVG_HEADERS });
+          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+            route: 'ai',
+            imageWidth: width,
+            imageHeight: height,
+            imageFormat: 'svg',
+            customText: !!customText,
+          });
         }
       }
     }
@@ -364,14 +429,29 @@ export default {
           if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
             if (firstSegment === 'skeleton') {
               const svg = SKELETON_TEMPLATE(width, height);
-              return new Response(svg, { headers: SVG_HEADERS });
+              return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+                route: 'skeleton',
+                imageWidth: width,
+                imageHeight: height,
+                imageFormat: 'svg',
+              });
             } else if (firstSegment === 'blur') {
               // Blur effect using SVG filter
               const blurSvg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><filter id="blur"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="100%" height="100%" fill="#e0e0e0" filter="url(#blur)"/></svg>`;
-              return new Response(blurSvg, { headers: SVG_HEADERS });
+              return trackWorkerResponse(new Response(blurSvg, { headers: SVG_HEADERS }), {
+                route: 'blur',
+                imageWidth: width,
+                imageHeight: height,
+                imageFormat: 'svg',
+              });
             } else if (firstSegment === 'gradient') {
               const svg = GRADIENT_TEMPLATE(width, height, '#7C3AED', '#3B82F6', '#FFFFFF');
-              return new Response(svg, { headers: SVG_HEADERS });
+              return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+                route: 'gradient',
+                imageWidth: width,
+                imageHeight: height,
+                imageFormat: 'svg',
+              });
             }
           }
         }
@@ -411,9 +491,19 @@ export default {
               svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="animGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7C3AED"><animate attributeName="stop-color" values="#7C3AED;#3B82F6;#7C3AED" dur="3s" repeatCount="indefinite"/></stop><stop offset="100%" style="stop-color:#3B82F6"><animate attributeName="stop-color" values="#3B82F6;#7C3AED;#3B82F6" dur="3s" repeatCount="indefinite"/></stop></linearGradient></defs><rect width="100%" height="100%" fill="url(#animGrad)"/></svg>`;
               break;
             default:
-              return new Response('Invalid animation type', { status: 400, headers: CORS_HEADERS });
+              return trackWorkerResponse(new Response('Invalid animation type', { status: 400, headers: CORS_HEADERS }), {
+                route: `animated-${animationType || 'unknown'}`,
+                imageWidth: width,
+                imageHeight: height,
+                errorMessage: 'Invalid animation type',
+              });
           }
-          return new Response(svg, { headers: SVG_HEADERS });
+          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+            route: `animated-${animationType}`,
+            imageWidth: width,
+            imageHeight: height,
+            imageFormat: 'svg',
+          });
         }
       }
     }
@@ -434,7 +524,10 @@ export default {
         })
       ]));
 
-      return new Response('Invalid dimensions format', { status: 400, headers: CORS_HEADERS });
+      return trackWorkerResponse(new Response('Invalid dimensions format', { status: 400, headers: CORS_HEADERS }), {
+        route: extractRoute(pathname),
+        errorMessage: 'Invalid dimensions format',
+      });
     }
 
     const width = parseInt(match[1]);
@@ -454,7 +547,12 @@ export default {
         })
       ]));
 
-      return new Response('Invalid dimensions (max 5000x5000)', { status: 400, headers: CORS_HEADERS });
+      return trackWorkerResponse(new Response('Invalid dimensions (max 5000x5000)', { status: 400, headers: CORS_HEADERS }), {
+        route: extractRoute(pathname),
+        imageWidth: width,
+        imageHeight: height,
+        errorMessage: 'Invalid dimensions range',
+      });
     }
 
     // Check for special effects in path
@@ -462,12 +560,22 @@ export default {
       const color1 = normalizeColor(segments[2]) || '#7C3AED';
       const color2 = normalizeColor(segments[3]) || '#3B82F6';
       const svg = GRADIENT_TEMPLATE(width, height, color1, color2, '#FFFFFF');
-      return new Response(svg, { headers: SVG_HEADERS });
+      return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+        route: 'gradient',
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: 'svg',
+      });
     }
 
     if (segments[1] === 'skeleton') {
       const svg = SKELETON_TEMPLATE(width, height);
-      return new Response(svg, { headers: SVG_HEADERS });
+      return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+        route: 'skeleton',
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: 'svg',
+      });
     }
 
     // Standard placeholder
@@ -504,6 +612,12 @@ export default {
       })
     ]));
 
-    return new Response(svg, { headers: SVG_HEADERS });
+    return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+      route,
+      imageWidth: dimensions.width,
+      imageHeight: dimensions.height,
+      imageFormat: 'svg',
+      customText: !!url.searchParams.get('text'),
+    });
   }
 };

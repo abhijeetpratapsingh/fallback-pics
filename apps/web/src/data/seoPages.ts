@@ -15,6 +15,10 @@ export interface SeoPage {
   keywords: string[];
   exampleUrl: string;
   sections: SeoSection[];
+  examples?: Array<{ label: string; description: string; url: string }>;
+  comparison?: Array<{ service: string; fit: string; output: string; notes: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
+  howToSteps?: Array<{ name: string; text: string }>;
   cta: string;
   links: Array<{ href: string; label: string }>;
 }
@@ -22,20 +26,20 @@ export interface SeoPage {
 export const seoPages: SeoPage[] = [
   {
     slug: 'placeholder-image-api',
-    title: 'Placeholder Image API for Developers | fallback.pics',
+    title: 'Placeholder Image API and Generator for Developers | fallback.pics',
     description:
-      'Generate production-safe SVG placeholder images from simple URLs. Use fallback.pics for UI mockups, docs, ecommerce states, SaaS dashboards, and broken image fallbacks.',
-    h1: 'Placeholder Image API Built for Real Product Interfaces',
+      'Generate production-safe SVG placeholder images from simple API URLs. Compare placeholder image tools, copy examples, and use fallback.pics in HTML, React, and Next.js.',
+    h1: 'Placeholder Image API for Real Product Interfaces',
     eyebrow: 'Placeholder image API',
     intro:
-      'fallback.pics gives developers a simple URL-based placeholder image API for layouts, fallback states, documentation, seed data, and production UI edge cases.',
-    keywords: ['placeholder image api', 'image placeholder api', 'svg placeholder image', 'placeholder image generator'],
+      'fallback.pics gives developers a simple URL-based placeholder image API and placeholder image generator for layouts, fallback states, documentation, seed data, and production UI edge cases.',
+    keywords: ['placeholder image api', 'placeholder image', 'image placeholder', 'placeholder image generator'],
     exampleUrl: 'https://fallback.pics/api/v1/600x400?text=Product+Image',
     sections: [
       {
-        heading: 'A URL API your frontend can use anywhere',
+        heading: 'A placeholder image URL your frontend can use anywhere',
         body: [
-          'Drop a fallback.pics URL into an img tag, React component, Next.js page, Markdown doc, CMS field, or product catalog. Start with dimensions, then add custom text or colors when the placeholder needs to match the surrounding UI.'
+          'Drop a fallback.pics URL into an img tag, React component, Next.js page, Markdown doc, CMS field, or product catalog. Start with dimensions, then add custom text or colors when the placeholder image needs to match the surrounding UI.'
         ],
         code: '<img src="https://fallback.pics/api/v1/600x400?text=Product+Image" alt="Product image" />'
       },
@@ -53,17 +57,87 @@ export const seoPages: SeoPage[] = [
         ]
       },
       {
-        heading: 'SVG-first output',
+        heading: 'SVG-first output with deterministic caching',
         body: [
-          'fallback.pics generates lightweight SVG placeholders that scale cleanly and work well for layout-safe UI states. The API is a good fit when you need dependable generated placeholders without maintaining a raster image generation service.'
+          'fallback.pics generates lightweight SVG image placeholders that scale cleanly and work well for layout-safe UI states. Deterministic URLs can be cached for repeated product, docs, and test surfaces without maintaining a raster image generation service.'
         ]
+      }
+    ],
+    examples: [
+      {
+        label: 'Basic placeholder image',
+        description: 'A fixed-size SVG placeholder image from the canonical API route.',
+        url: 'https://fallback.pics/api/v1/600x400?text=Placeholder+Image'
+      },
+      {
+        label: 'Custom image placeholder',
+        description: 'A branded image placeholder with explicit background and text colors.',
+        url: 'https://fallback.pics/api/v1/600x400/18181B/FFFFFF?text=Product+Image'
+      },
+      {
+        label: 'Avatar placeholder',
+        description: 'An initials-style placeholder for profiles, comments, and teams.',
+        url: 'https://fallback.pics/api/v1/avatar/200?text=JD'
+      },
+      {
+        label: 'Skeleton placeholder',
+        description: 'A generated SVG skeleton for loading media frames.',
+        url: 'https://fallback.pics/api/v1/animated/skeleton/600x400'
+      }
+    ],
+    comparison: [
+      {
+        service: 'fallback.pics',
+        fit: 'Production fallback states, docs, mockups, avatars, and deterministic placeholder image URLs',
+        output: 'Generated SVG',
+        notes: 'Uses the documented /api/v1 route strategy and explicit cache headers.'
+      },
+      {
+        service: 'placehold.co',
+        fit: 'Simple placeholder URLs for development and examples',
+        output: 'Generated placeholder images',
+        notes: 'A familiar option for quick placeholders; compare route syntax and output needs before switching.'
+      },
+      {
+        service: 'picsum.photos',
+        fit: 'Random photo-style placeholders for visual mockups',
+        output: 'Photo placeholders',
+        notes: 'Useful when realistic photography is desired, less deterministic for fallback-state messaging.'
+      },
+      {
+        service: 'dummyimage.com',
+        fit: 'Classic dummy image URLs with dimensions and text',
+        output: 'Generated dummy images',
+        notes: 'Long-standing dummy image pattern; fallback.pics focuses more on production missing-media states.'
+      },
+      {
+        service: 'placeholderimage.dev',
+        fit: 'Developer placeholder image generation',
+        output: 'Generated placeholders',
+        notes: 'Useful for development placeholders; validate response behavior against your production needs.'
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is a placeholder image API?',
+        answer: 'A placeholder image API returns generated images from URLs, usually based on dimensions, text, and colors, so developers can reserve layout space or show a controlled fallback when real media is missing.'
+      },
+      {
+        question: 'How do I create a placeholder image URL?',
+        answer: 'Use the fallback.pics API route with dimensions, then optionally add colors and text, such as https://fallback.pics/api/v1/600x400/18181B/FFFFFF?text=Product+Image.'
+      },
+      {
+        question: 'Can I use fallback.pics in HTML, React, and Next.js?',
+        answer: 'Yes. The generated URL works anywhere an image URL is accepted, including HTML img tags, React components, Next.js Image with unoptimized SVG usage, CSS backgrounds, Markdown, and CMS fields.'
       }
     ],
     cta: 'Start with one URL and replace broken or missing images with predictable SVG placeholders.',
     links: [
+      { href: '/docs', label: 'Docs' },
+      { href: '/api', label: 'API Reference' },
       { href: '/broken-image-fallback', label: 'Broken image fallback' },
       { href: '/dummy-image-generator', label: 'Dummy image generator' },
-      { href: '/product-image-placeholder', label: 'Product image placeholder' },
+      { href: '/placeholder-image-generator', label: 'Placeholder image generator' },
       { href: '/guides/react-image-fallback', label: 'React image fallback' }
     ]
   },
@@ -109,20 +183,20 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'dummy-image-generator',
-    title: 'Dummy Image Generator for Apps, Docs, and Mockups | fallback.pics',
+    title: 'Dummy Image Generator with URL Examples | fallback.pics',
     description:
-      'Create SVG dummy images with custom sizes, text, and colors. Use fallback.pics for mockups, seed data, design systems, tutorials, and production fallback states.',
-    h1: 'Dummy Image Generator for Developers Who Need Predictable UI States',
+      'Create dummy images with custom sizes, text, colors, avatars, and product-card examples. Copy working dummy image URLs from fallback.pics.',
+    h1: 'Dummy Image Generator for Mockups, Tests, and Product UI',
     eyebrow: 'Dummy image generator',
     intro:
-      'Generate clean SVG dummy images from readable URLs and use them in prototypes, test data, documentation, ecommerce catalogs, and fallback flows.',
-    keywords: ['dummy image generator', 'dummy images', 'placeholder image generator', 'mockup image generator'],
+      'Generate clean SVG dummy images from readable dummy image URLs and use them in prototypes, test data, documentation, ecommerce catalogs, and fallback flows.',
+    keywords: ['dummy image generator', 'dummy image', 'dummy images', 'dummy image url'],
     exampleUrl: 'https://fallback.pics/api/v1/400x300?text=Preview',
     sections: [
       {
         heading: 'Generate dummy images from the URL',
         body: [
-          'Use dimensions directly in the path to generate an image with the exact layout size you need. Add text when the placeholder should explain the intended asset.'
+          'Use dimensions directly in the path to generate a dummy image with the exact layout size you need. Add text when the placeholder should explain the intended asset.'
         ],
         code: 'https://fallback.pics/api/v1/1200x400?text=Hero+Banner'
       },
@@ -133,18 +207,149 @@ export const seoPages: SeoPage[] = [
         ]
       },
       {
+        heading: 'Dummy images are different from fallback images',
+        body: [
+          'Dummy images are often used before real assets exist in mockups, fixtures, and demos. Fallback images are used when expected production media fails or is missing. fallback.pics supports both patterns with the same deterministic URL format.'
+        ]
+      },
+      {
         heading: 'Predictable instead of random',
         body: [
           'Generated dummy images avoid visual surprises, keep screenshots consistent, and communicate the role of missing content clearly.'
         ]
       }
     ],
+    examples: [
+      {
+        label: 'Fixed-size dummy image',
+        description: 'A basic dummy image for mockups and test fixtures.',
+        url: 'https://fallback.pics/api/v1/400x300?text=Dummy+Image'
+      },
+      {
+        label: 'Custom text',
+        description: 'A dummy image URL with visible text for the intended asset.',
+        url: 'https://fallback.pics/api/v1/800x450?text=Hero+Banner'
+      },
+      {
+        label: 'Custom colors',
+        description: 'A dummy image with background and text colors in the path.',
+        url: 'https://fallback.pics/api/v1/600x400/F4F4F5/18181B?text=Card+Image'
+      },
+      {
+        label: 'Avatar dummy image',
+        description: 'An avatar-style dummy image for profiles and team examples.',
+        url: 'https://fallback.pics/api/v1/avatar/200?text=JD'
+      },
+      {
+        label: 'Product card mockup',
+        description: 'A square dummy image sized for ecommerce product cards.',
+        url: 'https://fallback.pics/api/v1/600x600/EEF2FF/4338CA?text=Product'
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is a dummy image used for?',
+        answer: 'A dummy image stands in for missing or unfinished media in mockups, tests, seed data, design-system examples, documentation, and staging environments.'
+      },
+      {
+        question: 'Can dummy images include custom text and colors?',
+        answer: 'Yes. fallback.pics dummy image URLs can include dimensions, custom text, background color, and text color using the documented /api/v1 route format.'
+      },
+      {
+        question: 'Should I use dummy images for production fallback states?',
+        answer: 'Use a descriptive fallback image URL for production missing-media states, such as Product Image or Image Unavailable, so users understand what happened.'
+      }
+    ],
     cta: 'Generate a dummy image now and use it anywhere an image URL is accepted.',
     links: [
       { href: '/placeholder-image-api', label: 'Placeholder image API' },
+      { href: '/api', label: 'API Reference' },
+      { href: '/docs', label: 'Docs' },
       { href: '/alternatives/dummyimage-alternative', label: 'DummyImage alternative' },
-      { href: '/avatar-placeholder-generator', label: 'Avatar placeholder generator' },
-      { href: '/skeleton-placeholder-generator', label: 'Skeleton placeholder generator' }
+      { href: '/guides/react-image-fallback', label: 'React image fallback' }
+    ]
+  },
+  {
+    slug: 'placeholder-image-generator',
+    title: 'Placeholder Image Generator with Copyable URLs | fallback.pics',
+    description:
+      'Use a placeholder image generator with size, text, background color, and text color examples. Copy working fallback.pics image URLs and HTML snippets.',
+    h1: 'Placeholder Image Generator for Developers',
+    eyebrow: 'Placeholder image generator',
+    intro:
+      'Create a working placeholder image URL from simple controls: choose the size, label, background color, and text color, then copy the URL into an app, doc, mockup, or fallback state.',
+    keywords: ['placeholder image generator', 'placeholder image', 'image placeholder generator', 'placeholder image api'],
+    exampleUrl: 'https://fallback.pics/api/v1/800x450/7C3AED/FFFFFF?text=Placeholder+Image',
+    sections: [
+      {
+        heading: 'Build a placeholder image URL',
+        body: [
+          'Use the canonical /api/v1 route strategy for generated images. Start with width and height, then add optional background color, text color, and text parameters.'
+        ],
+        code: 'https://fallback.pics/api/v1/800x450/7C3AED/FFFFFF?text=Placeholder+Image'
+      },
+      {
+        heading: 'Copy the HTML snippet',
+        body: [
+          'The generated URL can be used anywhere an image URL is accepted. Keep width and height attributes in markup when layout stability matters.'
+        ],
+        code: '<img src="https://fallback.pics/api/v1/800x450/7C3AED/FFFFFF?text=Placeholder+Image" width="800" height="450" alt="Placeholder image" />'
+      },
+      {
+        heading: 'Use the generator without duplicate content',
+        body: [
+          'This page focuses on creating and copying a working placeholder image URL. The Placeholder Image API page covers API concepts, comparisons, and production tradeoffs in more detail.'
+        ],
+        bullets: [
+          'Size: 800x450',
+          'Text: Placeholder Image',
+          'Background color: #7C3AED',
+          'Text color: #FFFFFF'
+        ]
+      }
+    ],
+    examples: [
+      {
+        label: 'Generator default',
+        description: 'A first-screen placeholder image URL with size, text, and colors.',
+        url: 'https://fallback.pics/api/v1/800x450/7C3AED/FFFFFF?text=Placeholder+Image'
+      },
+      {
+        label: 'Product card',
+        description: 'A square placeholder image for ecommerce or card layouts.',
+        url: 'https://fallback.pics/api/v1/600x600/EEF2FF/4338CA?text=Product+Image'
+      },
+      {
+        label: 'Documentation banner',
+        description: 'A wide placeholder image for docs, tutorials, or previews.',
+        url: 'https://fallback.pics/api/v1/1200x400/18181B/FFFFFF?text=Docs+Preview'
+      },
+      {
+        label: 'Avatar initials',
+        description: 'A generated avatar placeholder URL for profile surfaces.',
+        url: 'https://fallback.pics/api/v1/avatar/200?text=JD'
+      }
+    ],
+    faqs: [
+      {
+        question: 'Does the generator create a permanent image file?',
+        answer: 'No. The generated URL describes a deterministic SVG response. Reusing the same URL returns the same placeholder image behavior.'
+      },
+      {
+        question: 'Which route should generated URLs use?',
+        answer: 'Use the canonical https://fallback.pics/api/v1 route prefix for public generated image URLs.'
+      },
+      {
+        question: 'Can I copy both a URL and HTML?',
+        answer: 'Yes. The page includes a plain URL and an HTML img example that can be copied into projects, docs, and mockups.'
+      }
+    ],
+    cta: 'Generate a placeholder image URL with the canonical API route.',
+    links: [
+      { href: '/placeholder-image-api', label: 'Placeholder Image API' },
+      { href: '/dummy-image-generator', label: 'Dummy Image Generator' },
+      { href: '/docs', label: 'Docs' },
+      { href: '/api', label: 'API Reference' }
     ]
   },
   {
@@ -279,9 +484,15 @@ export const seoPages: SeoPage[] = [
       {
         heading: 'Basic img onerror pattern',
         body: [
-          'Clear the error handler before changing the source. That prevents an error loop if the fallback URL ever fails.'
+          'Clear the error handler before changing the source. That prevents an infinite fallback loop if the fallback URL ever fails.'
         ],
-        code: '<img src="/photo.jpg" alt="Product image" onerror="this.onerror=null;this.src=\'https://fallback.pics/api/v1/600x400?text=Image+Unavailable\'" />'
+        code: `<img
+  src="/photo.jpg"
+  width="600"
+  height="400"
+  alt="Product image"
+  onerror="this.onerror=null;this.src='https://fallback.pics/api/v1/600x400?text=Image+Unavailable'"
+/>`
       },
       {
         heading: 'Choose fallback copy by context',
@@ -296,11 +507,16 @@ export const seoPages: SeoPage[] = [
         ]
       }
     ],
+    howToSteps: [
+      { name: 'Start with the real image URL', text: 'Render the expected image source in the src attribute and keep meaningful alt text for the content the image represents.' },
+      { name: 'Clear the error handler', text: 'Set this.onerror to null before swapping the source so a failed fallback URL cannot trigger an infinite loop.' },
+      { name: 'Swap to fallback.pics', text: 'Set the src to a fallback.pics /api/v1 URL that matches the expected dimensions and user-facing context.' }
+    ],
     cta: 'Use fallback.pics as your default HTML image fallback URL.',
     links: [
+      { href: '/docs', label: 'Docs' },
+      { href: '/api', label: 'API Reference' },
       { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' },
-      { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' },
       { href: '/placeholder-image-api', label: 'Placeholder image API' }
     ]
   },
@@ -322,14 +538,16 @@ export const seoPages: SeoPage[] = [
           'Use onError to swap the failed image source for a placeholder. Clear the error handler first to avoid a loop if the fallback URL is ever unavailable.'
         ],
         code: `function ProductImage({ src, alt }) {
+  const fallbackSrc =
+    "https://fallback.pics/api/v1/600x400?text=Product+Image";
+
   return (
     <img
       src={src}
       alt={alt}
       onError={(event) => {
         event.currentTarget.onerror = null;
-        event.currentTarget.src =
-          "https://fallback.pics/api/v1/600x400?text=Product+Image";
+        event.currentTarget.src = fallbackSrc;
       }}
     />
   );
@@ -338,8 +556,30 @@ export const seoPages: SeoPage[] = [
       {
         heading: 'Create a reusable component',
         body: [
-          'For production apps, put fallback behavior in one shared image component. That keeps product pages, profile cards, dashboards, and content previews consistent.'
-        ]
+          'For production apps, put fallback behavior in one shared image component. That keeps product pages, profile cards, dashboards, and content previews consistent while avoiding repeated error-handler logic.'
+        ],
+        code: `type FallbackImageProps = {
+  src?: string;
+  fallbackSrc?: string;
+  alt: string;
+};
+
+export function FallbackImage({
+  src,
+  fallbackSrc = "https://fallback.pics/api/v1/600x400?text=Image+Unavailable",
+  alt
+}: FallbackImageProps) {
+  return (
+    <img
+      src={src || fallbackSrc}
+      alt={alt}
+      onError={(event) => {
+        event.currentTarget.onerror = null;
+        event.currentTarget.src = fallbackSrc;
+      }}
+    />
+  );
+}`
       },
       {
         heading: 'Use different fallbacks by context',
@@ -354,11 +594,17 @@ export const seoPages: SeoPage[] = [
         ]
       }
     ],
+    howToSteps: [
+      { name: 'Define the fallback URL', text: 'Choose a fallback.pics /api/v1 URL with dimensions and text that match the image surface.' },
+      { name: 'Handle React onError', text: 'Use the image onError event to clear the handler and swap the current source to the fallback URL.' },
+      { name: 'Reuse a shared component', text: 'Centralize fallback behavior in a component so product, avatar, and content images use consistent behavior.' }
+    ],
     cta: 'Add a React fallback image today with a stable fallback.pics URL.',
     links: [
+      { href: '/docs', label: 'Docs' },
+      { href: '/api', label: 'API Reference' },
+      { href: '/placeholder-image-api', label: 'Placeholder image API' },
       { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/product-image-placeholder', label: 'Product image placeholder' },
-      { href: '/avatar-placeholder-generator', label: 'Avatar placeholder generator' },
       { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' }
     ]
   },
@@ -391,25 +637,50 @@ export const seoPages: SeoPage[] = [
         code: `"use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
-export function SafeImage({ src, fallbackSrc, alt }) {
-  const [currentSrc, setCurrentSrc] = useState(src);
-  return <img src={currentSrc} alt={alt} onError={() => setCurrentSrc(fallbackSrc)} />;
+export function SafeImage({ src, alt }) {
+  const fallbackSrc = "https://fallback.pics/api/v1/600x600?text=Product+Image";
+  const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc);
+
+  return (
+    <Image
+      src={currentSrc}
+      width={600}
+      height={600}
+      alt={alt}
+      unoptimized
+      onError={() => {
+        if (currentSrc !== fallbackSrc) setCurrentSrc(fallbackSrc);
+      }}
+    />
+  );
 }`
       },
       {
         heading: 'Choose placeholders by surface',
         body: [
-          'Use product placeholders for commerce pages, avatar placeholders for account UI, skeleton placeholders for temporary loading states, and Image unavailable copy when a final asset cannot be displayed.'
-        ]
+          'Use product placeholders for commerce pages, avatar placeholders for account UI, skeleton placeholders for temporary loading states, and Image unavailable copy when a final asset cannot be displayed. The currentSrc guard prevents repeated fallback state updates.'
+        ],
+        code: `const fallbackBySurface = {
+  product: "https://fallback.pics/api/v1/600x600?text=Product+Image",
+  avatar: "https://fallback.pics/api/v1/avatar/200?text=JD",
+  banner: "https://fallback.pics/api/v1/banner/1200x400?text=Banner"
+};`
       }
+    ],
+    howToSteps: [
+      { name: 'Choose a missing-data fallback', text: 'Use a fallback.pics URL when CMS or product data does not provide an image source.' },
+      { name: 'Use a client error handler', text: 'For remote load failures after render, use a client component that swaps to the fallback source.' },
+      { name: 'Guard against loops', text: 'Only update state when the current source is not already the fallback URL.' }
     ],
     cta: 'Use fallback.pics as your default missing-image URL in Next.js.',
     links: [
+      { href: '/docs', label: 'Docs' },
+      { href: '/api', label: 'API Reference' },
+      { href: '/placeholder-image-api', label: 'Placeholder image API' },
       { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' },
-      { href: '/product-image-placeholder', label: 'Product image placeholder' },
-      { href: '/skeleton-placeholder-generator', label: 'Skeleton placeholder generator' }
+      { href: '/guides/react-image-fallback', label: 'React image fallback' }
     ]
   },
   {

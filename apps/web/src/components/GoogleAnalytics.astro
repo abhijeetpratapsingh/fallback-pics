@@ -1,0 +1,47 @@
+---
+const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
+const isEnabled = Boolean(measurementId);
+const tagUrl = isEnabled
+  ? `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId!)}`
+  : '';
+const setupScript = isEnabled
+  ? `
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+window.gtag = window.gtag || gtag;
+gtag('js', new Date());
+gtag('config', ${JSON.stringify(measurementId)}, {
+  anonymize_ip: true,
+  send_page_view: true
+});
+
+document.addEventListener('click', function(event) {
+  var clicked = event.target instanceof Element
+    ? event.target.closest('[data-analytics-event]')
+    : null;
+
+  if (!clicked || !window.gtag) return;
+
+  var eventName = clicked.getAttribute('data-analytics-event');
+  if (!eventName) return;
+
+  var href = clicked instanceof HTMLAnchorElement ? clicked.href : undefined;
+  var label = clicked.getAttribute('data-analytics-label') || clicked.textContent || '';
+
+  window.gtag('event', eventName, {
+    event_category: clicked.getAttribute('data-analytics-category') || 'engagement',
+    event_label: label.trim().slice(0, 100),
+    link_url: href,
+    page_path: window.location.pathname
+  });
+});
+`
+  : '';
+---
+
+{isEnabled && (
+  <>
+    <script is:inline async src={tagUrl}></script>
+    <script is:inline set:html={setupScript}></script>
+  </>
+)}

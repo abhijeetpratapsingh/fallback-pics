@@ -11,6 +11,7 @@ const sideNav = [
   { href: '#presets', label: 'Presets' },
   { href: '#frameworks', label: 'Framework examples' },
   { href: '#production', label: 'Production notes' },
+  { href: '#trust', label: 'Trust signals' },
 ];
 
 const endpointExamples = [
@@ -35,10 +36,10 @@ const endpointExamples = [
 ];
 
 const parameters = [
-  { name: 'width', type: 'number', detail: '10-4000px. Required for standard routes.' },
-  { name: 'height', type: 'number', detail: '10-4000px. Omitted for avatar and square presets.' },
-  { name: 'bgColor', type: 'hex', detail: 'Optional background color, without the # prefix.' },
-  { name: 'textColor', type: 'hex', detail: 'Optional foreground text color, without the # prefix.' },
+  { name: 'width', type: 'number', detail: '1-5000px. Required for standard routes.' },
+  { name: 'height', type: 'number', detail: '1-5000px. Omitted for avatar and square presets.' },
+  { name: 'bgColor', type: 'path hex', detail: 'Optional path segment after dimensions, without the # prefix.' },
+  { name: 'textColor', type: 'path hex', detail: 'Optional foreground path segment after background color, without the # prefix.' },
   { name: 'text', type: 'query', detail: 'Optional URL-encoded label rendered into the fallback.' },
 ];
 
@@ -209,11 +210,32 @@ export function ProductFallback() {
             </div>
             <div>
               <h3>Privacy</h3>
-              <p>Text parameters appear in URLs and logs. Do not place secrets, tokens, or regulated customer data in fallback image URLs.</p>
+              <p>Image delivery does not require cookies, authentication, or a client SDK. Text parameters appear in URLs and logs, so do not place secrets, tokens, or regulated customer data in fallback image URLs.</p>
             </div>
             <div>
               <h3>Enterprise</h3>
               <p>Custom domains, support windows, and SLA commitments can be handled through an enterprise deployment agreement.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="trust" class="docs-section">
+          <div class="docs-section__header">
+            <p>Trust signals</p>
+            <h2>Response behavior you can verify before adoption.</h2>
+          </div>
+          <div class="docs-note-grid">
+            <div>
+              <h3>Headers</h3>
+              <p>Valid image routes return <code>image/svg+xml</code>, immutable cache headers, CORS for browser use, and <code>X-Content-Type-Options: nosniff</code>.</p>
+            </div>
+            <div>
+              <h3>API errors</h3>
+              <p>Unsupported methods, invalid dimensions, and unknown image-like paths return explicit API errors rather than homepage HTML.</p>
+            </div>
+            <div>
+              <h3>Useful links</h3>
+              <p><a href="/api">API Reference</a>, <a href="/privacy">Privacy</a>, <a href="https://status.fallback.pics">Status</a>, and <a href="https://github.com/abhijeetpratapsingh/fallback-pics">GitHub</a> are the canonical trust surfaces.</p>
             </div>
           </div>
           <div class="docs-final-cta">

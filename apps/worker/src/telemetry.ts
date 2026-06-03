@@ -7,6 +7,11 @@ export interface Env {
   NEW_RELIC_LICENSE_KEY?: string;
   NEW_RELIC_APP_NAME?: string;
   NEW_RELIC_ENABLED?: string;
+  GOOGLE_ANALYTICS_MEASUREMENT_ID?: string;
+  GOOGLE_ANALYTICS_API_SECRET?: string;
+  GOOGLE_ANALYTICS_ENABLED?: string;
+  GOOGLE_ANALYTICS_CLIENT_ID_SALT?: string;
+  GOOGLE_ANALYTICS_WORKER_EVENT_NAME?: string;
 }
 
 export interface MetricData {
@@ -111,21 +116,206 @@ class NewRelicTelemetry {
   }
 }
 
-export { NewRelicTelemetry };
+type AnalyticsParamValue = string | number | boolean | null | undefined;
+
+class GoogleAnalyticsTelemetry {
+  private measurementId: string;
+  private apiSecret: string;
+  private enabled: boolean;
+  private clientIdSalt: string;
+  private workerEventName: string;
+  private endpoint = 'https://www.google-analytics.com/mp/collect';
+
+  constructor(env: Env) {
+    this.measurementId = env.GOOGLE_ANALYTICS_MEASUREMENT_ID || '';
+    this.apiSecret = env.GOOGLE_ANALYTICS_API_SECRET || '';
+    this.enabled = env.GOOGLE_ANALYTICS_ENABLED !== 'false' && !!this.measurementId && !!this.apiSecret;
+    this.clientIdSalt = env.GOOGLE_ANALYTICS_CLIENT_ID_SALT || this.apiSecret || this.measurementId;
+    this.workerEventName = this.normalizeEventName(env.GOOGLE_ANALYTICS_WORKER_EVENT_NAME || 'fallback_worker_request');
+  }
+
+  async trackWorkerRequest(request: Request, metrics: RequestMetrics): Promise<void> {
+    if (!this.enabled) {
+      return;
+    }
+
+    const url = new URL(request.url);
+    const clientId = await this.resolveClientId(request);
+    const sanitizedLocation = `${url.origin}${url.pathname}`;
+    const sanitizedReferrer = this.sanitizeUrl(request.headers.get('referer'));
+
+    await this.sendEvent(this.workerEventName, clientId, {
+      engagement_time_msec: 1,
+      page_location: sanitizedLocation,
+      page_referrer: sanitizedReferrer,
+      page_title: `fallback.pics ${metrics.route}`,
+      request_path: url.pathname,
+      request_route: metrics.route,
+      request_method: metrics.method,
+      status_code: metrics.statusCode,
+      response_time_ms: metrics.responseTime,
+      country: metrics.country,
+      user_agent_category: getUserAgentCategory(metrics.userAgent),
+      image_width: metrics.imageWidth,
+      image_height: metrics.imageHeight,
+      image_format: metrics.imageFormat,
+      custom_text: metrics.customText ? 'true' : 'false',
+      error_message: metrics.errorMessage,
+      source: 'cloudflare_worker',
+    });
+  }
+
+  private async sendEvent(
+    name: string,
+    clientId: string,
+    params: Record<string, AnalyticsParamValue>
+  ): Promise<void> {
+    try {
+      const response = await fetch(
+        `${this.endpoint}?measurement_id=${encodeURIComponent(this.measurementId)}&api_secret=${encodeURIComponent(this.apiSecret)}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            client_id: clientId,
+            non_personalized_ads: true,
+            events: [
+              {
+                name,
+                params: this.cleanParams(params),
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Google Analytics telemetry failed:', response.status, await response.text());
+      }
+    } catch (error) {
+      console.error('Google Analytics telemetry error:', error);
+    }
+  }
+
+  private cleanParams(params: Record<string, AnalyticsParamValue>): Record<string, string | number> {
+    return Object.entries(params).reduce<Record<string, string | number>>((cleaned, [key, value]) => {
+      if (value === undefined || value === null || value === '') {
+        return cleaned;
+      }
+
+      cleaned[key] = this.cleanParamValue(value);
+      return cleaned;
+    }, {});
+  }
+
+  private cleanParamValue(value: Exclude<AnalyticsParamValue, null | undefined>): string | number {
+    if (typeof value === 'number') {
+      return value;
+    }
+
+    return String(value).slice(0, 100);
+  }
+
+  private normalizeEventName(value: string): string {
+    const normalized = value.replace(/[^a-zA-Z0-9_]/g, '_');
+    const withValidPrefix = /^[a-zA-Z]/.test(normalized) ? normalized : `event_${normalized}`;
+    return withValidPrefix.slice(0, 40);
+  }
+
+  private async resolveClientId(request: Request): Promise<string> {
+    const cookieClientId = this.getGoogleAnalyticsClientId(request.headers.get('cookie'));
+    if (cookieClientId) {
+      return cookieClientId;
+    }
+
+    const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+    const ip = request.headers.get('CF-Connecting-IP') || forwardedFor || '';
+    const userAgent = request.headers.get('user-agent') || '';
+    const country = request.cf?.country as string | undefined;
+    const source = `${this.clientIdSalt}:${ip}:${userAgent}:${country || ''}`;
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(source));
+    const bytes = Array.from(new Uint8Array(digest));
+    const hex = bytes.map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    const first = parseInt(hex.slice(0, 8), 16);
+    const second = parseInt(hex.slice(8, 16), 16);
+
+    return `${first}.${second}`;
+  }
+
+  private getGoogleAnalyticsClientId(cookieHeader: string | null): string | undefined {
+    if (!cookieHeader) {
+      return undefined;
+    }
+
+    const gaCookie = cookieHeader
+      .split(';')
+      .map((cookie) => cookie.trim())
+      .find((cookie) => cookie.startsWith('_ga='));
+
+    if (!gaCookie) {
+      return undefined;
+    }
+
+    const value = decodeURIComponent(gaCookie.slice(4));
+    const segments = value.split('.');
+    const clientId = segments.length >= 4 ? segments.slice(-2).join('.') : value;
+
+    return /^\d+\.\d+$/.test(clientId) ? clientId : undefined;
+  }
+
+  private sanitizeUrl(value: string | null): string | undefined {
+    if (!value) {
+      return undefined;
+    }
+
+    try {
+      const url = new URL(value);
+      return `${url.origin}${url.pathname}`;
+    } catch {
+      return undefined;
+    }
+  }
+}
+
+export { NewRelicTelemetry, GoogleAnalyticsTelemetry };
+
+function normalizeTelemetryPathname(pathname: string): string {
+  if (pathname.startsWith('/api/v1/')) {
+    pathname = pathname.substring(8);
+  }
+
+  if (pathname.startsWith('/')) {
+    pathname = pathname.substring(1);
+  }
+
+  return pathname;
+}
+
+function extractDimensionsFromSegment(segment: string | undefined, defaultHeight?: number): { width?: number; height?: number } {
+  if (!segment) {
+    return {};
+  }
+
+  const dimensionStr = segment.replace(/\.(svg|png|jpg|jpeg|webp|avif|gif)$/i, '');
+  const match = /^(\d+)(?:x(\d+))?$/.exec(dimensionStr);
+
+  if (!match) {
+    return {};
+  }
+
+  const width = parseInt(match[1], 10);
+  const height = match[2] ? parseInt(match[2], 10) : defaultHeight ?? width;
+
+  return { width, height };
+}
 
 /**
  * Helper function to extract route information from pathname
  */
 export function extractRoute(pathname: string): string {
-  // Remove /api/v1 prefix
-  if (pathname.startsWith('/api/v1/')) {
-    pathname = pathname.substring(8);
-  }
-
-  // Remove leading slash
-  if (pathname.startsWith('/')) {
-    pathname = pathname.substring(1);
-  }
+  pathname = normalizeTelemetryPathname(pathname);
 
   const segments = pathname.split('/');
   const firstSegment = segments[0];
@@ -149,39 +339,43 @@ export function extractRoute(pathname: string): string {
  * Helper function to extract dimensions from pathname
  */
 export function extractDimensions(pathname: string): { width?: number; height?: number } {
-  // Remove /api/v1 prefix and leading slash
-  if (pathname.startsWith('/api/v1/')) {
-    pathname = pathname.substring(8);
-  }
-  if (pathname.startsWith('/')) {
-    pathname = pathname.substring(1);
-  }
+  pathname = normalizeTelemetryPathname(pathname);
 
   const segments = pathname.split('/');
   const firstSegment = segments[0];
 
   // Handle special routes
   if (firstSegment === 'avatar' && segments[1]) {
-    const size = parseInt(segments[1]);
-    return { width: size, height: size };
+    return extractDimensionsFromSegment(segments[1]);
   }
 
   if (firstSegment === 'square' && segments[1]) {
-    const size = parseInt(segments[1]);
-    return { width: size, height: size };
+    return extractDimensionsFromSegment(segments[1]);
+  }
+
+  if (firstSegment === 'banner' && segments[1]) {
+    return extractDimensionsFromSegment(segments[1], 400);
+  }
+
+  if (firstSegment === 'ai' && segments[1]) {
+    return extractDimensionsFromSegment(segments[1]);
+  }
+
+  if ((firstSegment === 'skeleton' || firstSegment === 'blur' || firstSegment === 'gradient') && segments[1]) {
+    return extractDimensionsFromSegment(segments[1]);
+  }
+
+  if ((firstSegment === 'animated' || firstSegment === 'chart') && segments[2]) {
+    return extractDimensionsFromSegment(segments[2]);
   }
 
   // Standard dimensions
-  const dimensionStr = firstSegment.replace(/\.(svg|png|jpg|jpeg|webp|avif|gif)$/i, '');
-  const match = /^(\d+)(?:x(\d+))?$/.exec(dimensionStr);
+  return extractDimensionsFromSegment(firstSegment);
+}
 
-  if (match) {
-    const width = parseInt(match[1]);
-    const height = match[2] ? parseInt(match[2]) : width;
-    return { width, height };
-  }
-
-  return {};
+export function extractFormat(pathname: string): string {
+  const match = /\.(svg|png|jpg|jpeg|webp|avif|gif)$/i.exec(pathname);
+  return match ? match[1].toLowerCase() : 'svg';
 }
 
 /**

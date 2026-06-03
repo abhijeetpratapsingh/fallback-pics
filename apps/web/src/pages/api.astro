@@ -10,6 +10,7 @@ const navItems = [
   { href: '#parameters', label: 'Parameters' },
   { href: '#examples', label: 'Code Examples' },
   { href: '#headers', label: 'Response Headers' },
+  { href: '#errors', label: 'Error Behavior' },
   { href: '#limits', label: 'Usage Limits' },
 ];
 
@@ -43,17 +44,24 @@ const routes = [
 const parameters = [
   { name: 'width', type: 'number', description: 'Image width in pixels. Standard routes support 1-5000px in the active worker.' },
   { name: 'height', type: 'number', description: 'Image height in pixels. Omit for square and avatar presets.' },
-  { name: 'bg', type: 'hex', description: 'Optional background color. Path colors and query colors are both supported.' },
-  { name: 'fg', type: 'hex', description: 'Optional foreground/text color.' },
+  { name: 'bgColor', type: 'path hex', description: 'Optional background color as a path segment after dimensions, without the # prefix.' },
+  { name: 'textColor', type: 'path hex', description: 'Optional foreground/text color as the next path segment, without the # prefix.' },
   { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated SVG.' },
-  { name: 'retina', type: 'number', description: 'Optional size multiplier for higher-density placeholders.' },
-  { name: 'reducedMotion', type: 'boolean', description: 'Disables animated SVG effects where supported.' },
+  { name: 'extension', type: 'path suffix', description: 'Optional route suffix such as .png or .webp. The current worker still returns SVG output.' },
 ];
 
 const headers = [
   { name: 'Content-Type', value: 'image/svg+xml', detail: 'The production worker currently returns SVG for generated images.' },
   { name: 'Cache-Control', value: 'public, max-age=31536000, immutable', detail: 'Deterministic URLs are designed for long-lived CDN caching.' },
+  { name: 'CDN-Cache-Control', value: 'max-age=31536000', detail: 'Cloudflare can cache deterministic image responses close to users.' },
   { name: 'Access-Control-Allow-Origin', value: '*', detail: 'Generated fallbacks can be used from browser, server, email, and native surfaces.' },
+  { name: 'X-Content-Type-Options', value: 'nosniff', detail: 'The worker declares image content explicitly for SVG responses.' },
+];
+
+const errorRows = [
+  { request: 'POST /api/v1/400x300', response: '405 Method not allowed', detail: 'The public image API is read-only and supports GET plus OPTIONS preflight.' },
+  { request: 'GET /api/v1/not-a-size', response: '400 Invalid dimensions format', detail: 'Unknown API image paths return an API error, not homepage HTML.' },
+  { request: 'GET /api/v1/0x300', response: '400 Invalid dimensions', detail: 'Dimensions must be positive and within the documented range.' },
 ];
 
 const htmlExample = `<img
@@ -193,11 +201,63 @@ const reactExample = `export function ProductImageFallback() {
           </div>
         </section>
 
+        <section id="errors" class="api-section">
+          <div class="api-section__header">
+            <p>Errors</p>
+            <h2>Invalid API requests return API errors, not web pages.</h2>
+          </div>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead>
+                <tr>
+                  <th>Request</th>
+                  <th>Response</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {errorRows.map((row) => (
+                  <tr>
+                    <td><code>{row.request}</code></td>
+                    <td>{row.response}</td>
+                    <td>{row.detail}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="api-callout">
+            <strong>Privacy note:</strong>
+            Image delivery does not require cookies, authentication, or a client SDK. Avoid placing secrets, tokens, or regulated customer data in URL text parameters because URLs may appear in logs.
+          </div>
+        </section>
+
         <section id="limits" class="api-section">
+          <div class="api-section__header">
+            <p>Usage Limits</p>
+            <h2>Bounded inputs for predictable edge rendering.</h2>
+          </div>
+          <div class="api-header-grid">
+            <div>
+              <h3>Dimensions</h3>
+              <code>1px-5000px</code>
+              <p>Requests outside the supported range return a 400 response instead of generating an oversized asset.</p>
+            </div>
+            <div>
+              <h3>Output</h3>
+              <code>image/svg+xml</code>
+              <p>The worker parses common image extensions for URL compatibility, while SVG remains the active response format.</p>
+            </div>
+            <div>
+              <h3>Cache policy</h3>
+              <code>immutable</code>
+              <p>Deterministic URLs are safe for long-lived CDN and browser caching across repeated product states.</p>
+            </div>
+          </div>
           <div class="api-final-cta">
             <div>
               <h2>Ready to ship image fallbacks?</h2>
-              <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through an enterprise agreement.</p>
+              <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through a separate enterprise agreement.</p>
             </div>
             <a href="/docs">Read the Docs</a>
           </div>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { trackConversion, trackEvent } from '../utils/analytics';
 
 const API_BASE = 'https://fallback.pics/api/v1';
 
@@ -7,8 +8,8 @@ type CodeTab = 'html' | 'react' | 'next' | 'css' | 'curl';
 
 const trustMetrics = [
   { label: 'Requests served', value: 'Tracked', detail: 'Cloudflare Analytics ready' },
-  { label: 'Uptime posture', value: '99.9%', detail: 'Enterprise SLA path' },
-  { label: 'Latency target', value: '<50ms', detail: 'Cached edge response' },
+  { label: 'Uptime posture', value: 'Edge-first', detail: 'SLA terms require agreement' },
+  { label: 'Latency posture', value: 'Cacheable', detail: 'Designed for edge responses' },
   { label: 'Cache policy', value: '1 year', detail: 'Immutable deterministic URLs' },
 ];
 
@@ -209,6 +210,11 @@ function CopyButton({ value, label = 'Copy' }: { value: string; label?: string }
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
+      trackEvent('copy_click', {
+        event_category: 'conversion',
+        event_label: label,
+      });
+      trackConversion('copy', label);
       window.setTimeout(() => setCopied(false), 1400);
     } catch {
       setCopied(false);
@@ -245,7 +251,7 @@ function EnterpriseLanding() {
   const safeFg = sanitizeHex(fg, 'FFFFFF');
   const path = buildPath(preset, safeWidth, safeHeight, safeBg, safeFg, text);
   const generatedUrl = `${API_BASE}${path}`;
-  const displayUrl = `https://fallback.pics${path.replace(/^\/api\/v1/, '')}`;
+  const displayUrl = generatedUrl;
   const previewSvg = createPreviewSvg(safeWidth, safeHeight, safeBg, safeFg, text, preset);
   const previewSrc = imageFailed ? previewSvg : generatedUrl;
 
@@ -271,22 +277,49 @@ function EnterpriseLanding() {
             <div>
               <p className="mb-5 inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 shadow-sm">
                 <span className="h-2 w-2 rounded-full bg-emerald-600" />
-                Global fallback image infrastructure
+                Placeholder image API for stable media states
               </p>
               <h1 id="hero-heading" className="max-w-4xl text-4xl font-semibold leading-[1.02] tracking-normal text-zinc-950 sm:text-6xl lg:text-7xl">
                 Never show broken images again.
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600 sm:mt-6 sm:text-xl sm:leading-8">
-                fallback.pics gives production applications predictable, cacheable, brand-safe fallback images generated at the edge from simple URLs.
+                fallback.pics is a placeholder image API and placeholder image generator for production applications, mockups, docs, and broken image fallback states.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#developers" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="#developers"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Hero start using API"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   Start using API
                 </a>
-                <a href="/docs" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="/placeholder-image-generator/"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Hero placeholder image generator"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
+                  Open generator
+                </a>
+                <a
+                  href="/docs"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Hero view docs"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   View docs
                 </a>
-                <a href="https://github.com/abhijeetpratapsingh/fallback-pics" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="https://github.com/abhijeetpratapsingh/fallback-pics"
+                  data-analytics-event="outbound_click"
+                  data-analytics-category="engagement"
+                  data-analytics-label="Hero GitHub"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   GitHub
                 </a>
               </div>
@@ -300,13 +333,19 @@ function EnterpriseLanding() {
                   <CopyButton value={generatedUrl} label="Copy" />
                 </div>
               </div>
+              <nav className="mt-5 flex flex-wrap gap-3 text-sm font-semibold" aria-label="Popular fallback.pics pages">
+                <a className="text-violet-700 underline-offset-4 hover:underline" href="/placeholder-image-api/">Placeholder image API</a>
+                <a className="text-violet-700 underline-offset-4 hover:underline" href="/dummy-image-generator/">Dummy image generator</a>
+                <a className="text-violet-700 underline-offset-4 hover:underline" href="/broken-image-fallback/">Broken image fallback</a>
+                <a className="text-violet-700 underline-offset-4 hover:underline" href="/guides/react-image-fallback/">React image fallback</a>
+              </nav>
             </div>
 
             <div id="hero-demo" className="rounded-lg border border-zinc-200 bg-white p-4 shadow-[0_12px_32px_rgba(9,9,11,0.08)]">
               <div className="mb-4 flex items-center justify-between gap-3 border-b border-zinc-200 pb-4">
                 <div>
                   <p className="text-sm font-semibold text-zinc-950">Live fallback builder</p>
-                  <p className="text-sm text-zinc-500">Generate, preview, copy, ship.</p>
+                  <p className="text-sm text-zinc-500">Generate a placeholder image URL, preview it, and copy it.</p>
                 </div>
                 <div className="flex gap-2">
                   <span className="rounded-md bg-blue-50 px-2 py-1 font-mono text-xs font-semibold text-blue-700">edge</span>
@@ -326,6 +365,11 @@ function EnterpriseLanding() {
                           onClick={() => {
                             setPreset(item);
                             setImageFailed(false);
+                            trackEvent('demo_preset_select', {
+                              event_category: 'demo',
+                              event_label: item,
+                              preset: item,
+                            });
                           }}
                           aria-pressed={preset === item}
                           className={`rounded-lg border px-3 py-2 text-left text-sm font-semibold capitalize transition ${preset === item ? 'border-violet-500 bg-violet-50 text-violet-800' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
@@ -460,10 +504,10 @@ function EnterpriseLanding() {
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-700">Problem to solution</p>
               <h2 id="problem-heading" className="mt-4 text-4xl font-semibold leading-tight tracking-normal text-zinc-950 sm:text-5xl">
-                Broken image states should not ship to users.
+                Placeholder images should keep real interfaces stable.
               </h2>
               <p className="mt-5 text-lg leading-8 text-zinc-600">
-                Missing media creates layout shifts, empty cards, failed previews, and unreliable QA snapshots. fallback.pics turns that failure into a controlled, branded response.
+                Missing media creates layout shifts, empty cards, failed previews, and unreliable QA snapshots. fallback.pics turns placeholder image and fallback image needs into controlled, branded responses.
               </p>
               <ul className="mt-8 space-y-4 text-sm leading-6 text-zinc-700">
                 {['Keep layouts stable when uploads or CMS assets fail.', 'Replace fragile local placeholder files with cacheable edge responses.', 'Standardize fallback policy across product, marketing, docs, and tests.'].map((item) => (
@@ -502,10 +546,10 @@ function EnterpriseLanding() {
             <div className="mb-12 max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-700">Deep features</p>
               <h2 id="features-heading" className="mt-4 text-4xl font-semibold tracking-normal text-zinc-950 sm:text-5xl">
-                Built for engineers who care about reliability.
+                Built for engineers who need copy-paste placeholder images.
               </h2>
               <p className="mt-5 text-lg leading-8 text-zinc-600">
-                Every feature is designed around a production failure mode: missing media, unpredictable upstreams, incomplete content, and repeated UI states.
+                Every feature is designed around a practical media state: placeholder images for mockups, missing media fallbacks, incomplete content, and repeated UI fixtures.
               </p>
             </div>
             <div className="grid gap-4 lg:grid-cols-5">
@@ -538,7 +582,7 @@ function EnterpriseLanding() {
               <div className="grid gap-4">
                 {[
                   ['1', 'Replace image URL', 'Use fallback.pics wherever a controlled image response is safer than a missing asset.'],
-                  ['2', 'Add fallback params', 'Set dimensions, background, text color, label, avatar, banner, skeleton, or blur behavior.'],
+                  ['2', 'Add placeholder params', 'Set dimensions, background, text color, label, avatar, banner, skeleton, or blur behavior.'],
                   ['3', 'Ship the response', 'The generated SVG is returned with deterministic output and cache-friendly headers.'],
                 ].map(([step, title, body]) => (
                   <div key={step} className="grid gap-4 rounded-lg border border-zinc-200 bg-zinc-50 p-5 sm:grid-cols-[56px_1fr]">
@@ -571,7 +615,15 @@ function EnterpriseLanding() {
                     <button
                       key={item}
                       type="button"
-                      onClick={() => setCodeTab(item === 'Next.js' ? 'next' : (item.toLowerCase() as CodeTab))}
+                      onClick={() => {
+                        const nextTab = item === 'Next.js' ? 'next' : (item.toLowerCase() as CodeTab);
+                        setCodeTab(nextTab);
+                        trackEvent('code_tab_select', {
+                          event_category: 'engagement',
+                          event_label: item,
+                          code_tab: nextTab,
+                        });
+                      }}
                       aria-pressed={(item === 'Next.js' ? 'next' : item.toLowerCase()) === codeTab}
                       className={`rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${((item === 'Next.js' ? 'next' : item.toLowerCase()) === codeTab) ? 'border-violet-400 bg-violet-500/15 text-white' : 'border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'}`}
                     >
@@ -606,10 +658,22 @@ function EnterpriseLanding() {
                 For organizations shipping high-volume apps, internal platforms, CMS workflows, or design systems, fallback.pics supports custom domains, visibility, limits, and production rollout guidance.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="mailto:support@fallback.pics?subject=Enterprise%20fallback.pics" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white no-underline transition hover:bg-zinc-800">
+                <a
+                  href="mailto:support@fallback.pics?subject=Enterprise%20fallback.pics"
+                  data-analytics-event="contact_sales_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Enterprise contact sales"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white no-underline transition hover:bg-zinc-800"
+                >
                   Contact sales
                 </a>
-                <a href="/api" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline transition hover:bg-zinc-50">
+                <a
+                  href="/api"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Enterprise review infrastructure details"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline transition hover:bg-zinc-50"
+                >
                   Review infrastructure details
                 </a>
               </div>
@@ -619,7 +683,13 @@ function EnterpriseLanding() {
                 <div key={row.title} className="border-b border-zinc-200 last:border-b-0">
                   <button
                     type="button"
-                    onClick={() => setEnterpriseOpen(index)}
+                    onClick={() => {
+                      setEnterpriseOpen(index);
+                      trackEvent('enterprise_section_open', {
+                        event_category: 'engagement',
+                        event_label: row.title,
+                      });
+                    }}
                     className="flex w-full items-center justify-between gap-4 rounded-lg px-4 py-5 text-left text-base font-semibold text-zinc-950 transition hover:bg-white"
                     aria-expanded={enterpriseOpen === index}
                   >
@@ -649,7 +719,13 @@ function EnterpriseLanding() {
                   <button
                     key={item.title}
                     type="button"
-                    onClick={() => setScenario(index)}
+                    onClick={() => {
+                      setScenario(index);
+                      trackEvent('use_case_select', {
+                        event_category: 'engagement',
+                        event_label: item.title,
+                      });
+                    }}
                     aria-pressed={scenario === index}
                     className={`rounded-lg border p-5 text-left transition ${scenario === index ? 'border-violet-400 bg-white shadow-sm' : 'border-zinc-200 bg-white/70 hover:bg-white'}`}
                   >
@@ -685,10 +761,22 @@ function EnterpriseLanding() {
               Start with a single fallback URL, then standardize dimensions, labels, colors, and custom domains as your team scales.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a href="#hero-demo" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800">
+              <a
+                href="#hero-demo"
+                data-analytics-event="cta_click"
+                data-analytics-category="conversion"
+                data-analytics-label="Final generate first URL"
+                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800"
+              >
                 Generate your first URL
               </a>
-              <a href="/docs" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50">
+              <a
+                href="/docs"
+                data-analytics-event="cta_click"
+                data-analytics-category="conversion"
+                data-analytics-label="Final read docs"
+                className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50"
+              >
                 Read the docs
               </a>
             </div>

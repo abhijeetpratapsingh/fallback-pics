@@ -190,6 +190,20 @@ pnpm deploy:worker
 pnpm deploy:web
 ```
 
+### Optional Google Analytics
+
+Set `PUBLIC_GA_MEASUREMENT_ID` in Cloudflare Pages to enable website page views and client-side engagement events.
+
+Set these Worker secrets to track direct image/API URL calls through GA4 Measurement Protocol:
+
+```bash
+wrangler secret put GOOGLE_ANALYTICS_MEASUREMENT_ID
+wrangler secret put GOOGLE_ANALYTICS_API_SECRET
+wrangler secret put GOOGLE_ANALYTICS_CLIENT_ID_SALT
+```
+
+Worker traffic is sent as the `fallback_worker_request` event by default. Query strings are stripped before URL metadata is sent.
+
 ## Local Development
 
 ### Prerequisites
