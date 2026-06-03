@@ -15,7 +15,7 @@ const capabilities = [
   {
     title: 'URL-based image API',
     detail: 'Every fallback is encoded as a readable URL, so it works in HTML, CSS, React, CMS content, emails, and native clients.',
-    example: '/800x450/18181B/FFFFFF?text=Product+Image',
+    example: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
   },
   {
     title: 'Deterministic SVG output',
@@ -25,12 +25,12 @@ const capabilities = [
   {
     title: 'Presets for product states',
     detail: 'Use avatar, banner, skeleton, blur, animated, contextual, and chart routes for common placeholder surfaces.',
-    example: '/avatar/160?text=JD',
+    example: '/api/v1/avatar/160?text=JD',
   },
   {
     title: 'Brand-safe customization',
     detail: 'Control dimensions, path-based background and foreground colors, label copy, and selected route behavior from the URL.',
-    example: '/800x450/18181B/FFFFFF?text=Fallback',
+    example: '/api/v1/800x450/18181B/FFFFFF?text=Fallback',
   },
   {
     title: 'Edge-first delivery',
@@ -77,7 +77,7 @@ const useCases = [
       <div class="features-hero__panel">
         <span>Live route</span>
         <img src={`${baseUrl}/800x450/18181B/FFFFFF?text=Fallback+Image`} alt="Generated fallback image preview" />
-        <code>/800x450/18181B/FFFFFF?text=Fallback+Image</code>
+        <code>/api/v1/800x450/18181B/FFFFFF?text=Fallback+Image</code>
       </div>
     </section>
 

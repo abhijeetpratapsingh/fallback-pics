@@ -17,25 +17,25 @@ const navItems = [
 const routes = [
   {
     title: 'Standard fallback',
-    path: '/640x360',
+    path: '/api/v1/640x360',
     description: 'Create a deterministic SVG placeholder from dimensions alone.',
     image: `${baseUrl}/640x360`,
   },
   {
     title: 'Custom color and label',
-    path: '/800x450/18181B/FFFFFF?text=Product+Image',
+    path: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
     description: 'Set visible fallback copy and brand-safe colors from the URL.',
     image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
   },
   {
     title: 'Avatar initials',
-    path: '/avatar/160?text=JD',
+    path: '/api/v1/avatar/160?text=JD',
     description: 'Generate compact initials for user, team, or organization avatars.',
     image: `${baseUrl}/avatar/160?text=JD`,
   },
   {
     title: 'Skeleton state',
-    path: '/animated/skeleton/640x360',
+    path: '/api/v1/animated/skeleton/640x360',
     description: 'Reserve the final image box while asynchronous media loads.',
     image: `${baseUrl}/animated/skeleton/640x360`,
   },
@@ -259,7 +259,7 @@ const reactExample = `export function ProductImageFallback() {
               <h2>Ready to ship image fallbacks?</h2>
               <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through a separate enterprise agreement.</p>
             </div>
-            <a href="/docs">Read the Docs</a>
+            <a href="/docs/">Read the Docs</a>
           </div>
         </section>
       </article>

@@ -259,6 +259,7 @@ function EnterpriseLanding() {
   const safeBg = sanitizeHex(bg, '18181B');
   const safeFg = sanitizeHex(fg, 'FFFFFF');
   const path = buildPath(preset, safeWidth, safeHeight, safeBg, safeFg, text);
+  const publicPath = `/api/v1${path}`;
   const generatedUrl = `${API_BASE}${path}`;
   const displayUrl = generatedUrl;
   const previewSvg = createPreviewSvg(safeWidth, safeHeight, safeBg, safeFg, text, preset);
@@ -314,7 +315,7 @@ function EnterpriseLanding() {
                   Open generator
                 </a>
                 <a
-                  href="/docs"
+                  href="/docs/"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero view docs"
@@ -603,7 +604,7 @@ function EnterpriseLanding() {
                     </div>
                   </div>
                 ))}
-                <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-5 text-sm leading-6 text-zinc-100"><code>{`GET ${path}\nHTTP/2 200\ncontent-type: image/svg+xml\ncache-control: public, max-age=31536000, immutable`}</code></pre>
+                <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-5 text-sm leading-6 text-zinc-100"><code>{`GET ${publicPath}\nHTTP/2 200\ncontent-type: image/svg+xml\ncache-control: public, max-age=31536000, immutable`}</code></pre>
               </div>
             </div>
           </div>
@@ -678,7 +679,7 @@ function EnterpriseLanding() {
                   Contact sales
                 </a>
                 <a
-                  href="/api"
+                  href="/api/"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Enterprise review infrastructure details"
@@ -781,7 +782,7 @@ function EnterpriseLanding() {
                 Generate your first URL
               </a>
               <a
-                href="/docs"
+                href="/docs/"
                 data-analytics-event="cta_click"
                 data-analytics-category="conversion"
                 data-analytics-label="Final read docs"

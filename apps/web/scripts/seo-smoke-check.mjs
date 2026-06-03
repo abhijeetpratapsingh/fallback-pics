@@ -71,6 +71,13 @@ async function checkSitemap() {
     expect(new URL(loc).pathname, 'sitemap status', locResponse.status, 200);
     if (locResponse.status >= 300 && locResponse.status < 400) {
       failures.push(`${loc} redirects; sitemap entries must resolve directly`);
+      continue;
+    }
+
+    const html = await locResponse.text();
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+    if (canonical) {
+      expect(new URL(loc).pathname, 'sitemap canonical', canonical, loc);
     }
   }
 }

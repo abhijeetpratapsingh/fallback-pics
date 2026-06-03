@@ -14,6 +14,7 @@
     "web:dev": "pnpm --filter @fallback-pics/web dev",
     "web:build": "pnpm --filter @fallback-pics/web build",
     "web:seo:smoke": "pnpm --filter @fallback-pics/web seo:smoke",
+    "web:seo:priority": "pnpm --filter @fallback-pics/web seo:priority",
     "web:visual:qa": "pnpm --filter @fallback-pics/web visual:qa",
     "deploy": "./deploy.sh --production",
     "deploy:preview": "./deploy.sh",

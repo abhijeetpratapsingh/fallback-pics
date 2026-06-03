@@ -10,6 +10,7 @@
     "check": "astro check",
     "preview": "astro preview",
     "seo:smoke": "node scripts/seo-smoke-check.mjs",
+    "seo:priority": "node scripts/seo-priority-recheck.mjs",
     "visual:qa": "node scripts/visual-qa.mjs",
     "astro": "astro"
   },

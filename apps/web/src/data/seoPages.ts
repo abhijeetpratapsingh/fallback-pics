@@ -133,12 +133,12 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Start with one URL and replace broken or missing images with predictable SVG placeholders.',
     links: [
-      { href: '/docs', label: 'Docs' },
-      { href: '/api', label: 'API Reference' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/dummy-image-generator', label: 'Dummy image generator' },
-      { href: '/placeholder-image-generator', label: 'Placeholder image generator' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' }
+      { href: '/docs/', label: 'Docs' },
+      { href: '/api/', label: 'API Reference' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/dummy-image-generator/', label: 'Dummy image generator' },
+      { href: '/placeholder-image-generator/', label: 'Placeholder image generator' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' }
     ]
   },
   {
@@ -175,10 +175,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Create a broken image fallback URL that communicates the missing media state clearly.',
     links: [
-      { href: '/guides/img-onerror-fallback', label: 'img onerror fallback guide' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' },
-      { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' },
-      { href: '/product-image-placeholder', label: 'Product image placeholder' }
+      { href: '/guides/img-onerror-fallback/', label: 'img onerror fallback guide' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' },
+      { href: '/guides/nextjs-image-fallback/', label: 'Next.js image fallback' },
+      { href: '/product-image-placeholder/', label: 'Product image placeholder' }
     ]
   },
   {
@@ -262,11 +262,11 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Generate a dummy image now and use it anywhere an image URL is accepted.',
     links: [
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/api', label: 'API Reference' },
-      { href: '/docs', label: 'Docs' },
-      { href: '/alternatives/dummyimage-alternative', label: 'DummyImage alternative' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' }
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/api/', label: 'API Reference' },
+      { href: '/docs/', label: 'Docs' },
+      { href: '/alternatives/dummyimage-alternative/', label: 'DummyImage alternative' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' }
     ]
   },
   {
@@ -346,10 +346,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Generate a placeholder image URL with the canonical API route.',
     links: [
-      { href: '/placeholder-image-api', label: 'Placeholder Image API' },
-      { href: '/dummy-image-generator', label: 'Dummy Image Generator' },
-      { href: '/docs', label: 'Docs' },
-      { href: '/api', label: 'API Reference' }
+      { href: '/placeholder-image-api/', label: 'Placeholder Image API' },
+      { href: '/dummy-image-generator/', label: 'Dummy Image Generator' },
+      { href: '/docs/', label: 'Docs' },
+      { href: '/api/', label: 'API Reference' }
     ]
   },
   {
@@ -385,10 +385,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Use a dependable product image placeholder for missing catalog media.',
     links: [
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' },
-      { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' }
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' },
+      { href: '/guides/nextjs-image-fallback/', label: 'Next.js image fallback' }
     ]
   },
   {
@@ -424,10 +424,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Generate an avatar placeholder with initials in one URL.',
     links: [
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/dummy-image-generator', label: 'Dummy image generator' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' },
-      { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' }
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/dummy-image-generator/', label: 'Dummy image generator' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' },
+      { href: '/guides/nextjs-image-fallback/', label: 'Next.js image fallback' }
     ]
   },
   {
@@ -463,10 +463,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Create a skeleton placeholder URL for your loading media state.',
     links: [
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/product-image-placeholder', label: 'Product image placeholder' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' }
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/product-image-placeholder/', label: 'Product image placeholder' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' }
     ]
   },
   {
@@ -514,10 +514,10 @@ export const seoPages: SeoPage[] = [
     ],
     cta: 'Use fallback.pics as your default HTML image fallback URL.',
     links: [
-      { href: '/docs', label: 'Docs' },
-      { href: '/api', label: 'API Reference' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/placeholder-image-api', label: 'Placeholder image API' }
+      { href: '/docs/', label: 'Docs' },
+      { href: '/api/', label: 'API Reference' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' }
     ]
   },
   {
@@ -601,11 +601,11 @@ export function FallbackImage({
     ],
     cta: 'Add a React fallback image today with a stable fallback.pics URL.',
     links: [
-      { href: '/docs', label: 'Docs' },
-      { href: '/api', label: 'API Reference' },
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/guides/nextjs-image-fallback', label: 'Next.js image fallback' }
+      { href: '/docs/', label: 'Docs' },
+      { href: '/api/', label: 'API Reference' },
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/guides/nextjs-image-fallback/', label: 'Next.js image fallback' }
     ]
   },
   {
@@ -676,11 +676,11 @@ export function SafeImage({ src, alt }) {
     ],
     cta: 'Use fallback.pics as your default missing-image URL in Next.js.',
     links: [
-      { href: '/docs', label: 'Docs' },
-      { href: '/api', label: 'API Reference' },
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/guides/react-image-fallback', label: 'React image fallback' }
+      { href: '/docs/', label: 'Docs' },
+      { href: '/api/', label: 'API Reference' },
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/guides/react-image-fallback/', label: 'React image fallback' }
     ]
   },
   {
@@ -716,10 +716,10 @@ export function SafeImage({ src, alt }) {
     ],
     cta: 'Try a production-focused placeholder API built around fallback states.',
     links: [
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/alternatives/dummyimage-alternative', label: 'DummyImage alternative' },
-      { href: '/self-hosted-placeholder-image-api', label: 'Self-hosted placeholder API' }
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/alternatives/dummyimage-alternative/', label: 'DummyImage alternative' },
+      { href: '/self-hosted-placeholder-image-api/', label: 'Self-hosted placeholder API' }
     ]
   },
   {
@@ -755,10 +755,10 @@ export function SafeImage({ src, alt }) {
     ],
     cta: 'Replace generic dummy images with contextual fallback URLs from fallback.pics.',
     links: [
-      { href: '/dummy-image-generator', label: 'Dummy image generator' },
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/avatar-placeholder-generator', label: 'Avatar placeholder generator' },
-      { href: '/skeleton-placeholder-generator', label: 'Skeleton placeholder generator' }
+      { href: '/dummy-image-generator/', label: 'Dummy image generator' },
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/avatar-placeholder-generator/', label: 'Avatar placeholder generator' },
+      { href: '/skeleton-placeholder-generator/', label: 'Skeleton placeholder generator' }
     ]
   },
   {
@@ -794,10 +794,10 @@ export function SafeImage({ src, alt }) {
     ],
     cta: 'Use fallback.pics directly or deploy your own placeholder image API from the open-source project.',
     links: [
-      { href: '/placeholder-image-api', label: 'Placeholder image API' },
-      { href: '/broken-image-fallback', label: 'Broken image fallback' },
-      { href: '/alternatives/placehold-co-alternative', label: 'Placehold.co alternative' },
-      { href: '/docs', label: 'Documentation' }
+      { href: '/placeholder-image-api/', label: 'Placeholder image API' },
+      { href: '/broken-image-fallback/', label: 'Broken image fallback' },
+      { href: '/alternatives/placehold-co-alternative/', label: 'Placehold.co alternative' },
+      { href: '/docs/', label: 'Documentation' }
     ]
   }
 ];

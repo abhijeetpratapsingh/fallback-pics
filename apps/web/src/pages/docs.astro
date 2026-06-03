@@ -17,19 +17,19 @@ const sideNav = [
 const endpointExamples = [
   {
     title: 'Basic fallback',
-    path: '/640x360',
+    path: '/api/v1/640x360',
     description: 'Generate a deterministic image from dimensions alone.',
     image: `${baseUrl}/640x360`,
   },
   {
     title: 'Brand-safe media',
-    path: '/800x450/18181B/FFFFFF?text=Product+Image',
+    path: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
     description: 'Control background, foreground, and visible label from the URL.',
     image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
   },
   {
     title: 'Avatar initials',
-    path: '/avatar/160?text=AP',
+    path: '/api/v1/avatar/160?text=AP',
     description: 'Use compact presets for user, team, and organization avatars.',
     image: `${baseUrl}/avatar/160?text=AP`,
   },
@@ -44,10 +44,10 @@ const parameters = [
 ];
 
 const presets = [
-  { name: 'avatar', route: '/avatar/128?text=JD', use: 'Initials, teams, people, organizations' },
-  { name: 'banner', route: '/banner/1200x400?text=Campaign', use: 'Marketing cards, CMS hero images, social previews' },
-  { name: 'skeleton', route: '/animated/skeleton/640x360', use: 'Loading states that preserve layout dimensions' },
-  { name: 'blur', route: '/blur/640x360', use: 'Soft media placeholders before real images load' },
+  { name: 'avatar', route: '/api/v1/avatar/128?text=JD', use: 'Initials, teams, people, organizations' },
+  { name: 'banner', route: '/api/v1/banner/1200x400?text=Campaign', use: 'Marketing cards, CMS hero images, social previews' },
+  { name: 'skeleton', route: '/api/v1/animated/skeleton/640x360', use: 'Loading states that preserve layout dimensions' },
+  { name: 'blur', route: '/api/v1/blur/640x360', use: 'Soft media placeholders before real images load' },
 ];
 
 const htmlExample = `<img
@@ -235,7 +235,7 @@ export function ProductFallback() {
             </div>
             <div>
               <h3>Useful links</h3>
-              <p><a href="/api">API Reference</a>, <a href="/privacy">Privacy</a>, <a href="https://status.fallback.pics">Status</a>, and <a href="https://github.com/abhijeetpratapsingh/fallback-pics">GitHub</a> are the canonical trust surfaces.</p>
+              <p><a href="/api/">API Reference</a>, <a href="/privacy/">Privacy</a>, <a href="https://status.fallback.pics">Status</a>, and <a href="https://github.com/abhijeetpratapsingh/fallback-pics">GitHub</a> are the canonical trust surfaces.</p>
             </div>
           </div>
           <div class="docs-final-cta">
@@ -243,7 +243,7 @@ export function ProductFallback() {
               <h2>Ready to standardize image fallbacks?</h2>
               <p>Start with one URL, then expand into presets, custom domains, and team-wide conventions.</p>
             </div>
-            <a href="/api">View API Reference</a>
+            <a href="/api/">View API Reference</a>
           </div>
         </section>
       </article>
