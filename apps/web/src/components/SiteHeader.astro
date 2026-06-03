@@ -12,7 +12,7 @@ const { variant = 'default' } = Astro.props;
 const items = variant === 'landing' ? landingNav : primaryNav;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const secondaryAction = variant === 'landing'
-  ? { label: 'Docs', href: '/docs', external: false }
+  ? null
   : { label: 'GitHub', href: 'https://github.com/abhijeetpratapsingh/fallback-pics', external: true };
 
 function normalize(path: string) {
@@ -65,17 +65,19 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     </nav>
 
     <div class="site-header__actions">
-      <a
-        href={secondaryAction.href}
-        class="site-header__secondary"
-        data-analytics-event="nav_click"
-        data-analytics-category="navigation"
-        data-analytics-label={secondaryAction.label}
-        target={secondaryAction.external ? '_blank' : undefined}
-        rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
-      >
-        {secondaryAction.label}
-      </a>
+      {secondaryAction && (
+        <a
+          href={secondaryAction.href}
+          class="site-header__secondary"
+          data-analytics-event="nav_click"
+          data-analytics-category="navigation"
+          data-analytics-label={secondaryAction.label}
+          target={secondaryAction.external ? '_blank' : undefined}
+          rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
+        >
+          {secondaryAction.label}
+        </a>
+      )}
       <a
         href={primaryHref}
         class="site-header__primary"
@@ -86,6 +88,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
         Start using API
       </a>
       <button class="site-header__menu-button" type="button" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Open navigation menu">
+        <span class="site-header__menu-text">Menu</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
         </svg>
@@ -108,26 +111,30 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
           {item.label}
         </a>
       ))}
-      <a
-        href={secondaryAction.href}
-        class="site-header__mobile-link"
-        data-analytics-event="nav_click"
-        data-analytics-category="navigation"
-        data-analytics-label={`Mobile ${secondaryAction.label}`}
-        target={secondaryAction.external ? '_blank' : undefined}
-        rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
-      >
-        {secondaryAction.label}
-      </a>
-      <a
-        href={primaryHref}
-        class="site-header__mobile-cta"
-        data-analytics-event="cta_click"
-        data-analytics-category="conversion"
-        data-analytics-label="Mobile header start using API"
-      >
-        Start using API
-      </a>
+      {secondaryAction && (
+        <a
+          href={secondaryAction.href}
+          class="site-header__mobile-link"
+          data-analytics-event="nav_click"
+          data-analytics-category="navigation"
+          data-analytics-label={`Mobile ${secondaryAction.label}`}
+          target={secondaryAction.external ? '_blank' : undefined}
+          rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
+        >
+          {secondaryAction.label}
+        </a>
+      )}
+      <div class="site-header__mobile-actions">
+        <a
+          href={primaryHref}
+          class="site-header__mobile-cta"
+          data-analytics-event="cta_click"
+          data-analytics-category="conversion"
+          data-analytics-label="Mobile header open generator"
+        >
+          Open generator
+        </a>
+      </div>
     </div>
   </div>
 </header>
@@ -142,6 +149,8 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     if (!menuButton || !mobileMenu) return;
     menuButton.setAttribute('aria-expanded', String(open));
     menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    const label = menuButton.querySelector<HTMLElement>('.site-header__menu-text');
+    if (label) label.textContent = open ? 'Close' : 'Menu';
     mobileMenu.hidden = !open;
   }
 
@@ -288,14 +297,19 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 
   .site-header__menu-button {
     display: none;
-    width: 2.5rem;
+    min-width: 2.5rem;
     height: 2.5rem;
-    place-items: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
     background: #ffffff;
     color: #18181b;
     cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 750;
+    padding: 0 0.7rem;
   }
 
   .site-header__menu-button svg {
@@ -317,9 +331,9 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   }
 
   .site-header__mobile-link {
-    min-height: 2.75rem;
+    min-height: 2.5rem;
     border-radius: 0.5rem;
-    padding: 0.75rem;
+    padding: 0.625rem 0.75rem;
     color: #52525b;
     font-size: 0.9375rem;
     font-weight: 650;
@@ -331,8 +345,15 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     color: #18181b;
   }
 
+  .site-header__mobile-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+  }
+
   .site-header__mobile-cta {
-    margin-top: 0.5rem;
+    min-height: 2.5rem;
+    padding: 0 0.85rem;
   }
 
   @media (max-width: 900px) {
@@ -347,7 +368,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     }
 
     .site-header__menu-button {
-      display: inline-grid;
+      display: inline-flex;
     }
   }
 </style>

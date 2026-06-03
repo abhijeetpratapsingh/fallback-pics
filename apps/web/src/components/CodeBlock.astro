@@ -134,6 +134,7 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
 
   .code-block pre {
     box-sizing: border-box;
+    width: 100%;
     max-width: 100%;
     min-width: 0;
     margin: 0;
@@ -147,10 +148,13 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
 
   .code-block code {
     display: block;
-    min-width: 0;
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
     background: transparent;
     color: inherit;
     padding: 0;
+    white-space: pre;
   }
 
   @media (max-width: 520px) {

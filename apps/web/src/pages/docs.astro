@@ -282,7 +282,7 @@ export function ProductFallback() {
     max-width: 54rem;
     margin: 1rem 0 0;
     color: #18181b;
-    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-size: clamp(2.35rem, 5vw, 5.4rem);
     font-weight: 650;
     line-height: 0.98;
     letter-spacing: 0;
@@ -579,11 +579,27 @@ export function ProductFallback() {
 
   @media (max-width: 640px) {
     .docs-page {
-      padding: 2.5rem 0 4rem;
+      padding: 2rem 0 4rem;
+    }
+
+    .docs-hero {
+      gap: 1.25rem;
+      padding-bottom: 1.5rem;
     }
 
     .docs-hero h1 {
-      font-size: 2.75rem;
+      font-size: clamp(2rem, 10vw, 2.45rem);
+      line-height: 1.04;
+    }
+
+    .docs-hero p:not(.docs-eyebrow) {
+      margin-top: 1rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .docs-hero__panel {
+      padding: 0.85rem;
     }
 
     .docs-preset-grid,
