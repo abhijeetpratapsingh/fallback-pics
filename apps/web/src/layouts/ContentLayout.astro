@@ -1,0 +1,386 @@
+---
+import Layout from './Layout.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  keywords?: string;
+  canonical?: string;
+  ogImage?: string;
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  header?: 'default' | 'landing' | 'docs' | false;
+}
+
+const {
+  title,
+  description,
+  keywords,
+  canonical,
+  ogImage,
+  eyebrow,
+  heading,
+  intro,
+  header = 'default',
+} = Astro.props;
+
+const hasHeroPanel = Astro.slots.has('hero-panel');
+const hasSidebar = Astro.slots.has('sidebar');
+const hasCta = Astro.slots.has('cta');
+---
+
+<Layout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonical={canonical}
+  ogImage={ogImage}
+  header={header}
+>
+  <main id="main-content" class="content-layout">
+    <section class:list={['content-hero', { 'content-hero--single': !hasHeroPanel }]}>
+      <div>
+        <p class="content-eyebrow">{eyebrow}</p>
+        <h1>{heading}</h1>
+        <p>{intro}</p>
+      </div>
+      {hasHeroPanel && <slot name="hero-panel" />}
+    </section>
+
+    <section class="content-body">
+      <div class="content-body__grid" data-sidebar={hasSidebar ? 'true' : 'false'}>
+        <article class="content-article">
+          <slot />
+        </article>
+        {hasSidebar && (
+          <aside class="content-sidebar">
+            <slot name="sidebar" />
+          </aside>
+        )}
+      </div>
+    </section>
+
+    {hasCta && (
+      <section class="content-cta">
+        <div class="content-cta__inner">
+          <slot name="cta" />
+        </div>
+      </section>
+    )}
+  </main>
+
+  <slot name="structured-data" />
+</Layout>
+
+<style>
+  .content-layout {
+    min-height: 100vh;
+    overflow-x: clip;
+    background: #fafafa;
+    color: #18181b;
+  }
+
+  .content-hero,
+  .content-body__grid,
+  .content-cta__inner {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+  }
+
+  .content-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
+    gap: 2rem;
+    align-items: end;
+    border-bottom: 1px solid #e4e4e7;
+    padding: 5rem 0 3rem;
+  }
+
+  .content-hero--single {
+    grid-template-columns: minmax(0, 52rem);
+  }
+
+  .content-eyebrow,
+  .content-layout :global(.content-section__eyebrow),
+  .content-sidebar :global(h2) {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .content-hero h1 {
+    max-width: 58rem;
+    margin: 1rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 0.98;
+  }
+
+  .content-hero > div > p:not(.content-eyebrow) {
+    max-width: 45rem;
+    margin: 1.25rem 0 0;
+    color: #52525b;
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .content-body {
+    padding: 3rem 0 5rem;
+  }
+
+  .content-body__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .content-body__grid[data-sidebar='false'] {
+    grid-template-columns: minmax(0, 48rem);
+  }
+
+  .content-article {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .content-sidebar {
+    position: sticky;
+    top: 5.5rem;
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .content-layout :global(.content-section),
+  .content-layout :global(.content-preview-card),
+  .content-sidebar :global(.content-sidebar-card) {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .content-layout :global(.content-section),
+  .content-sidebar :global(.content-sidebar-card) {
+    padding: 1.5rem;
+  }
+
+  .content-layout :global(.content-section) {
+    scroll-margin-top: 6rem;
+  }
+
+  .content-layout :global(.content-section h2) {
+    margin: 0;
+    color: #18181b;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+
+  .content-layout :global(.content-section h3) {
+    margin: 1.5rem 0 0;
+    color: #18181b;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .content-layout :global(.content-section p),
+  .content-layout :global(.content-section li),
+  .content-sidebar :global(p),
+  .content-sidebar :global(li) {
+    color: #52525b;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .content-layout :global(.content-section p) {
+    margin: 1rem 0 0;
+  }
+
+  .content-layout :global(.content-section a) {
+    color: #4c1d95;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .content-layout :global(.content-section a:hover) {
+    color: #6d28d9;
+  }
+
+  .content-layout :global(.content-section > .code-block) {
+    margin-top: 1.25rem;
+  }
+
+  .content-layout :global(.content-section p code) {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.375rem;
+    background: #f4f4f5;
+    color: #18181b;
+    font-size: 0.875em;
+    padding: 0.1rem 0.3rem;
+  }
+
+  .content-layout :global(.content-bullet-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .content-layout :global(.content-bullet-grid li) {
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #f4f4f5;
+    color: #3f3f46;
+    font-size: 0.9375rem;
+    font-weight: 650;
+    line-height: 1.5;
+    padding: 0.875rem 1rem;
+  }
+
+  .content-layout :global(.content-preview-card) {
+    overflow: hidden;
+    padding: 1rem;
+  }
+
+  .content-layout :global(.content-preview-card__code) {
+    border-radius: 0.5rem;
+    background: #18181b;
+    padding: 1rem;
+  }
+
+  .content-layout :global(.content-preview-card__code span) {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .content-layout :global(.content-preview-card__code code),
+  .content-cta :global(code) {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #86efac;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .content-layout :global(.content-preview-card img) {
+    width: 100%;
+    margin-top: 1rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #ffffff;
+  }
+
+  .content-sidebar :global(.content-sidebar-card ul) {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .content-sidebar :global(.content-sidebar-card a) {
+    color: #4c1d95;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+
+  .content-sidebar :global(.content-sidebar-card a:hover) {
+    color: #6d28d9;
+  }
+
+  .content-cta {
+    border-top: 1px solid #27272a;
+    background: #18181b;
+    color: #ffffff;
+    padding: 4rem 0;
+  }
+
+  .content-cta__inner {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 52rem;
+    text-align: center;
+  }
+
+  .content-cta :global(h2) {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.06;
+  }
+
+  .content-cta :global(.content-cta__code) {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1rem;
+  }
+
+  .content-cta :global(a) {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 960px) {
+    .content-hero,
+    .content-body__grid,
+    .content-body__grid[data-sidebar='false'] {
+      grid-template-columns: 1fr;
+    }
+
+    .content-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .content-hero {
+      padding: 3rem 0 2rem;
+    }
+
+    .content-hero h1 {
+      font-size: 2.75rem;
+    }
+
+    .content-layout :global(.content-section),
+    .content-sidebar :global(.content-sidebar-card) {
+      padding: 1.25rem;
+    }
+
+    .content-layout :global(.content-bullet-grid) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

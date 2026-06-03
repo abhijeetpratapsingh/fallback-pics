@@ -35,10 +35,10 @@ const endpointExamples = [
 ];
 
 const parameters = [
-  { name: 'width', type: 'number', detail: '10-4000px. Required for standard routes.' },
-  { name: 'height', type: 'number', detail: '10-4000px. Omitted for avatar and square presets.' },
-  { name: 'bgColor', type: 'hex', detail: 'Optional background color, without the # prefix.' },
-  { name: 'textColor', type: 'hex', detail: 'Optional foreground text color, without the # prefix.' },
+  { name: 'width', type: 'number', detail: '1-5000px. Required for standard routes.' },
+  { name: 'height', type: 'number', detail: '1-5000px. Omitted for avatar and square presets.' },
+  { name: 'bgColor', type: 'path hex', detail: 'Optional path segment after dimensions, without the # prefix.' },
+  { name: 'textColor', type: 'path hex', detail: 'Optional foreground path segment after background color, without the # prefix.' },
   { name: 'text', type: 'query', detail: 'Optional URL-encoded label rendered into the fallback.' },
 ];
 

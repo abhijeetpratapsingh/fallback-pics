@@ -139,7 +139,7 @@ if [ "$DEPLOY_WEB" = true ]; then
     print_status "Deploying to Cloudflare Pages..."
     
     # IMPORTANT: Using the correct project name that has the custom domain
-    PROJECT_NAME="fallback-pics-web"
+    PROJECT_NAME="fallback-pics"
     
     if [ "$PRODUCTION" = true ]; then
         print_status "Deploying to PRODUCTION..."
@@ -212,7 +212,7 @@ if [ "$DEPLOY_WEB" = true ]; then
         echo "  - Production: https://fallback.pics"
         echo "  - API: https://fallback.pics/api/v1/*"
     else
-        echo "  - Preview: https://fallback-pics-web.pages.dev"
+        echo "  - Preview: https://fallback-pics.pages.dev"
     fi
 fi
 

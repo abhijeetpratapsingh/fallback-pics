@@ -11,7 +11,7 @@
 
 2. **Website**
    - Production URL: `https://fallback.pics`
-   - Pages URL: `https://fallback-pics-web.pages.dev`
+   - Pages URL: `https://fallback-pics.pages.dev`
    - Deployment approach: migrate to Cloudflare Pages Git integration with GitHub
 
 ## Configuration Files Updated
@@ -19,11 +19,9 @@
 ### 1. `apps/worker/wrangler.toml`
 ```toml
 # Production configuration
-[env.production]
-name = "fallback-pics-production"
-
-[env.production.vars]
+[vars]
 ALLOWED_ORIGIN = "https://fallback.pics"
+GOOGLE_ANALYTICS_ENABLED = "true"
 ```
 
 ### 2. `apps/worker/src/index.ts`
@@ -64,6 +62,13 @@ Or use CNAME:
 
 ### Production Worker
 - `ALLOWED_ORIGIN`: `https://fallback.pics` (set in wrangler.toml)
+- `GOOGLE_ANALYTICS_ENABLED`: `true` (set in wrangler.toml)
+- `GOOGLE_ANALYTICS_MEASUREMENT_ID`: GA4 measurement ID (set as Worker secret)
+- `GOOGLE_ANALYTICS_API_SECRET`: GA4 Measurement Protocol API secret (set as Worker secret)
+- `GOOGLE_ANALYTICS_CLIENT_ID_SALT`: Salt used for pseudonymous Worker client IDs when no `_ga` cookie is present (set as Worker secret)
+
+### Production Website
+- `PUBLIC_GA_MEASUREMENT_ID`: GA4 measurement ID (set in Cloudflare Pages build environment)
 
 ### Local Development
 - Worker runs on: `http://localhost:8787`
@@ -83,7 +88,7 @@ The website should deploy through Cloudflare Pages Git integration:
 | Node version | `20` |
 | pnpm version | `8.12.0` |
 
-If the current `fallback-pics-web` Pages project was created with Wrangler Direct Upload, create a new Git-connected Pages project and then move the `fallback.pics` custom domain to it after verification.
+If the current Pages project was created with Wrangler Direct Upload, create a new Git-connected Pages project and then move the `fallback.pics` custom domain to it after verification.
 
 ## Deployment Commands
 
@@ -118,9 +123,10 @@ curl https://fallback.pics
 ## Monitoring
 
 - Worker Analytics: [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → fallback-pics → Analytics
-- Pages Analytics: [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → fallback-pics-web → Analytics
+- Pages Analytics: [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → fallback-pics → Analytics
+- Google Analytics: website page views and engagement events, plus Worker `fallback_worker_request` events when GA environment variables are configured
 
 ## Support URLs
 
 - Worker Logs: https://dash.cloudflare.com/workers-and-pages/view/fallback-pics
-- Pages Logs: https://dash.cloudflare.com/workers-and-pages/view/fallback-pics-web
+- Pages Logs: https://dash.cloudflare.com/workers-and-pages/view/fallback-pics

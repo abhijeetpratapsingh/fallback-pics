@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { API_URL } from '../config';
+import { trackConversion, trackEvent } from '../utils/analytics';
 
 const presets = [
   { id: 'standard', label: 'Standard', description: 'Dimension-based SVG' },
@@ -95,6 +96,12 @@ export default function LiveDemoEnhanced() {
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(imageUrl);
     setCopied(true);
+    trackEvent('demo_url_copy', {
+      event_category: 'conversion',
+      event_label: preset,
+      preset,
+    });
+    trackConversion('demo_url_copy', preset);
     setRecentUrls((previous) => [imageUrl, ...previous.filter((url) => url !== imageUrl)].slice(0, 3));
     setTimeout(() => setCopied(false), 2000);
   };
@@ -130,7 +137,14 @@ export default function LiveDemoEnhanced() {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setPreset(item.id)}
+                  onClick={() => {
+                    setPreset(item.id);
+                    trackEvent('demo_preset_select', {
+                      event_category: 'demo',
+                      event_label: item.label,
+                      preset: item.id,
+                    });
+                  }}
                   role="radio"
                   aria-checked={preset === item.id}
                   className={`rounded-lg border p-3 text-left transition ${
@@ -187,6 +201,12 @@ export default function LiveDemoEnhanced() {
                   onClick={() => {
                     setWidth(size.w);
                     setHeight(size.h);
+                    trackEvent('demo_dimension_select', {
+                      event_category: 'demo',
+                      event_label: size.label,
+                      width: size.w,
+                      height: size.h,
+                    });
                   }}
                   disabled={preset === 'square' || preset === 'avatar'}
                   className="rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
@@ -204,7 +224,13 @@ export default function LiveDemoEnhanced() {
                 <button
                   key={color.label}
                   type="button"
-                  onClick={() => applyColorPreset(color.bg, color.fg)}
+                  onClick={() => {
+                    applyColorPreset(color.bg, color.fg);
+                    trackEvent('demo_color_select', {
+                      event_category: 'demo',
+                      event_label: color.label,
+                    });
+                  }}
                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition ${
                     bgColor === color.bg
                       ? 'border-purple-500 bg-purple-50 text-purple-800'
@@ -282,7 +308,14 @@ export default function LiveDemoEnhanced() {
                     type="button"
                     role="radio"
                     aria-checked={animationType === item.id}
-                    onClick={() => setAnimationType(item.id)}
+                    onClick={() => {
+                      setAnimationType(item.id);
+                      trackEvent('demo_animation_select', {
+                        event_category: 'demo',
+                        event_label: item.label,
+                        animation_type: item.id,
+                      });
+                    }}
                     className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
                       animationType === item.id
                         ? 'border-purple-500 bg-white font-semibold text-purple-900 shadow-sm'

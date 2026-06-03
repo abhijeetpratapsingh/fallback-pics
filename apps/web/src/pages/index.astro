@@ -40,5 +40,5 @@ const structuredData = {
   header="landing"
 >
   <EnterpriseLanding client:load />
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
 </Layout>

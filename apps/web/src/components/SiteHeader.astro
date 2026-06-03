@@ -35,7 +35,14 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 
 <header class="site-header" data-site-header data-variant={variant}>
   <div class="site-header__inner">
-    <a href="/" class="site-header__brand" aria-label="fallback.pics home">
+    <a
+      href="/"
+      class="site-header__brand"
+      aria-label="fallback.pics home"
+      data-analytics-event="nav_click"
+      data-analytics-category="navigation"
+      data-analytics-label="Brand home"
+    >
       <SiteBrand />
     </a>
 
@@ -45,6 +52,9 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
           href={item.href}
           class:list={['site-header__link', { 'site-header__link--active': isActive(item) }]}
           data-section-link={item.href.startsWith('#') ? item.href.slice(1) : undefined}
+          data-analytics-event="nav_click"
+          data-analytics-category="navigation"
+          data-analytics-label={item.label}
           aria-current={isActive(item) ? 'page' : undefined}
           target={item.external ? '_blank' : undefined}
           rel={item.external ? 'noopener noreferrer' : undefined}
@@ -58,12 +68,23 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
       <a
         href={secondaryAction.href}
         class="site-header__secondary"
+        data-analytics-event="nav_click"
+        data-analytics-category="navigation"
+        data-analytics-label={secondaryAction.label}
         target={secondaryAction.external ? '_blank' : undefined}
         rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
       >
         {secondaryAction.label}
       </a>
-      <a href={primaryHref} class="site-header__primary">Start using API</a>
+      <a
+        href={primaryHref}
+        class="site-header__primary"
+        data-analytics-event="cta_click"
+        data-analytics-category="conversion"
+        data-analytics-label="Header start using API"
+      >
+        Start using API
+      </a>
       <button class="site-header__menu-button" type="button" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Open navigation menu">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
@@ -78,6 +99,9 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
         <a
           href={item.href}
           class:list={['site-header__mobile-link', { 'site-header__mobile-link--active': isActive(item) }]}
+          data-analytics-event="nav_click"
+          data-analytics-category="navigation"
+          data-analytics-label={`Mobile ${item.label}`}
           target={item.external ? '_blank' : undefined}
           rel={item.external ? 'noopener noreferrer' : undefined}
         >
@@ -87,12 +111,23 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
       <a
         href={secondaryAction.href}
         class="site-header__mobile-link"
+        data-analytics-event="nav_click"
+        data-analytics-category="navigation"
+        data-analytics-label={`Mobile ${secondaryAction.label}`}
         target={secondaryAction.external ? '_blank' : undefined}
         rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
       >
         {secondaryAction.label}
       </a>
-      <a href={primaryHref} class="site-header__mobile-cta">Start using API</a>
+      <a
+        href={primaryHref}
+        class="site-header__mobile-cta"
+        data-analytics-event="cta_click"
+        data-analytics-category="conversion"
+        data-analytics-label="Mobile header start using API"
+      >
+        Start using API
+      </a>
     </div>
   </div>
 </header>

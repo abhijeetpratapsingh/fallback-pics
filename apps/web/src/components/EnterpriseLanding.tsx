@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { trackConversion, trackEvent } from '../utils/analytics';
 
 const API_BASE = 'https://fallback.pics/api/v1';
 
@@ -209,6 +210,11 @@ function CopyButton({ value, label = 'Copy' }: { value: string; label?: string }
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
+      trackEvent('copy_click', {
+        event_category: 'conversion',
+        event_label: label,
+      });
+      trackConversion('copy', label);
       window.setTimeout(() => setCopied(false), 1400);
     } catch {
       setCopied(false);
@@ -280,13 +286,31 @@ function EnterpriseLanding() {
                 fallback.pics gives production applications predictable, cacheable, brand-safe fallback images generated at the edge from simple URLs.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#developers" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="#developers"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Hero start using API"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   Start using API
                 </a>
-                <a href="/docs" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="/docs"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Hero view docs"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   View docs
                 </a>
-                <a href="https://github.com/abhijeetpratapsingh/fallback-pics" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2">
+                <a
+                  href="https://github.com/abhijeetpratapsingh/fallback-pics"
+                  data-analytics-event="outbound_click"
+                  data-analytics-category="engagement"
+                  data-analytics-label="Hero GitHub"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+                >
                   GitHub
                 </a>
               </div>
@@ -326,6 +350,11 @@ function EnterpriseLanding() {
                           onClick={() => {
                             setPreset(item);
                             setImageFailed(false);
+                            trackEvent('demo_preset_select', {
+                              event_category: 'demo',
+                              event_label: item,
+                              preset: item,
+                            });
                           }}
                           aria-pressed={preset === item}
                           className={`rounded-lg border px-3 py-2 text-left text-sm font-semibold capitalize transition ${preset === item ? 'border-violet-500 bg-violet-50 text-violet-800' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
@@ -571,7 +600,15 @@ function EnterpriseLanding() {
                     <button
                       key={item}
                       type="button"
-                      onClick={() => setCodeTab(item === 'Next.js' ? 'next' : (item.toLowerCase() as CodeTab))}
+                      onClick={() => {
+                        const nextTab = item === 'Next.js' ? 'next' : (item.toLowerCase() as CodeTab);
+                        setCodeTab(nextTab);
+                        trackEvent('code_tab_select', {
+                          event_category: 'engagement',
+                          event_label: item,
+                          code_tab: nextTab,
+                        });
+                      }}
                       aria-pressed={(item === 'Next.js' ? 'next' : item.toLowerCase()) === codeTab}
                       className={`rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${((item === 'Next.js' ? 'next' : item.toLowerCase()) === codeTab) ? 'border-violet-400 bg-violet-500/15 text-white' : 'border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'}`}
                     >
@@ -606,10 +643,22 @@ function EnterpriseLanding() {
                 For organizations shipping high-volume apps, internal platforms, CMS workflows, or design systems, fallback.pics supports custom domains, visibility, limits, and production rollout guidance.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="mailto:support@fallback.pics?subject=Enterprise%20fallback.pics" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white no-underline transition hover:bg-zinc-800">
+                <a
+                  href="mailto:support@fallback.pics?subject=Enterprise%20fallback.pics"
+                  data-analytics-event="contact_sales_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Enterprise contact sales"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white no-underline transition hover:bg-zinc-800"
+                >
                   Contact sales
                 </a>
-                <a href="/api" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline transition hover:bg-zinc-50">
+                <a
+                  href="/api"
+                  data-analytics-event="cta_click"
+                  data-analytics-category="conversion"
+                  data-analytics-label="Enterprise review infrastructure details"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline transition hover:bg-zinc-50"
+                >
                   Review infrastructure details
                 </a>
               </div>
@@ -619,7 +668,13 @@ function EnterpriseLanding() {
                 <div key={row.title} className="border-b border-zinc-200 last:border-b-0">
                   <button
                     type="button"
-                    onClick={() => setEnterpriseOpen(index)}
+                    onClick={() => {
+                      setEnterpriseOpen(index);
+                      trackEvent('enterprise_section_open', {
+                        event_category: 'engagement',
+                        event_label: row.title,
+                      });
+                    }}
                     className="flex w-full items-center justify-between gap-4 rounded-lg px-4 py-5 text-left text-base font-semibold text-zinc-950 transition hover:bg-white"
                     aria-expanded={enterpriseOpen === index}
                   >
@@ -649,7 +704,13 @@ function EnterpriseLanding() {
                   <button
                     key={item.title}
                     type="button"
-                    onClick={() => setScenario(index)}
+                    onClick={() => {
+                      setScenario(index);
+                      trackEvent('use_case_select', {
+                        event_category: 'engagement',
+                        event_label: item.title,
+                      });
+                    }}
                     aria-pressed={scenario === index}
                     className={`rounded-lg border p-5 text-left transition ${scenario === index ? 'border-violet-400 bg-white shadow-sm' : 'border-zinc-200 bg-white/70 hover:bg-white'}`}
                   >
@@ -685,10 +746,22 @@ function EnterpriseLanding() {
               Start with a single fallback URL, then standardize dimensions, labels, colors, and custom domains as your team scales.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a href="#hero-demo" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800">
+              <a
+                href="#hero-demo"
+                data-analytics-event="cta_click"
+                data-analytics-category="conversion"
+                data-analytics-label="Final generate first URL"
+                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-violet-800"
+              >
                 Generate your first URL
               </a>
-              <a href="/docs" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50">
+              <a
+                href="/docs"
+                data-analytics-event="cta_click"
+                data-analytics-category="conversion"
+                data-analytics-label="Final read docs"
+                className="inline-flex min-h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white px-5 text-sm font-semibold text-zinc-950 no-underline shadow-sm transition hover:bg-zinc-50"
+              >
                 Read the docs
               </a>
             </div>

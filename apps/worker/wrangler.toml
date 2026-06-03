@@ -16,19 +16,21 @@ local_protocol = "http"
 # Production URL: https://fallback.pics/api/v1
 # Fallback URL: https://fallback-pics.billing-04f.workers.dev
 
-# Environment configuration
-[env.production]
-name = "fallback-pics-production"
-# Custom domain configured in Cloudflare Dashboard:
+# Production custom domain configured in Cloudflare Dashboard:
 # - https://fallback.pics/api/v1
-
+#
 # Routes configuration - configured via dashboard
 # routes = [
 #   { pattern = "https://fallback.pics/api/v1/*", zone_name = "fallback.pics" }
 # ]
 
-# CORS headers for production
-[env.production.vars]
+# Production variables for the deployed Worker named "fallback-pics".
+[vars]
 ALLOWED_ORIGIN = "https://fallback.pics"
 NEW_RELIC_APP_NAME = "fallback-pics"
 NEW_RELIC_ENABLED = "true"
+GOOGLE_ANALYTICS_ENABLED = "true"
+# Set GOOGLE_ANALYTICS_MEASUREMENT_ID and GOOGLE_ANALYTICS_API_SECRET as Cloudflare Worker secrets.
+# Example:
+#   wrangler secret put GOOGLE_ANALYTICS_MEASUREMENT_ID
+#   wrangler secret put GOOGLE_ANALYTICS_API_SECRET

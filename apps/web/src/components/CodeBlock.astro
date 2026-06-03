@@ -12,7 +12,15 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
   <figcaption>
     <span>{label}</span>
     <span class="code-block__language">{language}</span>
-    <button type="button" data-copy-code data-copy-value={code} aria-label={`Copy ${label}`}>
+    <button
+      type="button"
+      data-copy-code
+      data-copy-value={code}
+      data-analytics-event="code_copy"
+      data-analytics-category="conversion"
+      data-analytics-label={label}
+      aria-label={`Copy ${label}`}
+    >
       Copy
     </button>
   </figcaption>

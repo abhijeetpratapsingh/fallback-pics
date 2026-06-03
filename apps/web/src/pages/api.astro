@@ -43,11 +43,10 @@ const routes = [
 const parameters = [
   { name: 'width', type: 'number', description: 'Image width in pixels. Standard routes support 1-5000px in the active worker.' },
   { name: 'height', type: 'number', description: 'Image height in pixels. Omit for square and avatar presets.' },
-  { name: 'bg', type: 'hex', description: 'Optional background color. Path colors and query colors are both supported.' },
-  { name: 'fg', type: 'hex', description: 'Optional foreground/text color.' },
+  { name: 'bgColor', type: 'path hex', description: 'Optional background color as a path segment after dimensions, without the # prefix.' },
+  { name: 'textColor', type: 'path hex', description: 'Optional foreground/text color as the next path segment, without the # prefix.' },
   { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated SVG.' },
-  { name: 'retina', type: 'number', description: 'Optional size multiplier for higher-density placeholders.' },
-  { name: 'reducedMotion', type: 'boolean', description: 'Disables animated SVG effects where supported.' },
+  { name: 'extension', type: 'path suffix', description: 'Optional route suffix such as .png or .webp. The current worker still returns SVG output.' },
 ];
 
 const headers = [
@@ -194,6 +193,27 @@ const reactExample = `export function ProductImageFallback() {
         </section>
 
         <section id="limits" class="api-section">
+          <div class="api-section__header">
+            <p>Usage Limits</p>
+            <h2>Bounded inputs for predictable edge rendering.</h2>
+          </div>
+          <div class="api-header-grid">
+            <div>
+              <h3>Dimensions</h3>
+              <code>1px-5000px</code>
+              <p>Requests outside the supported range return a 400 response instead of generating an oversized asset.</p>
+            </div>
+            <div>
+              <h3>Output</h3>
+              <code>image/svg+xml</code>
+              <p>The worker parses common image extensions for URL compatibility, while SVG remains the active response format.</p>
+            </div>
+            <div>
+              <h3>Cache policy</h3>
+              <code>immutable</code>
+              <p>Deterministic URLs are safe for long-lived CDN and browser caching across repeated product states.</p>
+            </div>
+          </div>
           <div class="api-final-cta">
             <div>
               <h2>Ready to ship image fallbacks?</h2>
