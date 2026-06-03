@@ -41,121 +41,94 @@
 
   <!-- SEO Landing Pages -->
   <url>
-    <loc>https://fallback.pics/placeholder-image-api</loc>
+    <loc>https://fallback.pics/placeholder-image-api/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/broken-image-fallback</loc>
+    <loc>https://fallback.pics/broken-image-fallback/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/dummy-image-generator</loc>
+    <loc>https://fallback.pics/dummy-image-generator/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/product-image-placeholder</loc>
+    <loc>https://fallback.pics/product-image-placeholder/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/avatar-placeholder-generator</loc>
+    <loc>https://fallback.pics/avatar-placeholder-generator/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/skeleton-placeholder-generator</loc>
+    <loc>https://fallback.pics/skeleton-placeholder-generator/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/guides/img-onerror-fallback</loc>
+    <loc>https://fallback.pics/placeholder-image-generator/</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/guides/img-onerror-fallback/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/guides/react-image-fallback</loc>
+    <loc>https://fallback.pics/guides/react-image-fallback/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/guides/nextjs-image-fallback</loc>
+    <loc>https://fallback.pics/guides/nextjs-image-fallback/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/alternatives/placehold-co-alternative</loc>
+    <loc>https://fallback.pics/alternatives/placehold-co-alternative/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/alternatives/dummyimage-alternative</loc>
+    <loc>https://fallback.pics/alternatives/dummyimage-alternative/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://fallback.pics/self-hosted-placeholder-image-api</loc>
+    <loc>https://fallback.pics/self-hosted-placeholder-image-api/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
-  </url>
-
-  <!-- API Endpoints (examples for SEO) -->
-  <url>
-    <loc>https://fallback.pics/400x300</loc>
-    <lastmod>2025-01-18</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://fallback.pics/api/v1/400x300</image:loc>
-      <image:title>400x300 Placeholder Image</image:title>
-    </image:image>
-  </url>
-
-  <url>
-    <loc>https://fallback.pics/square/400</loc>
-    <lastmod>2025-01-18</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://fallback.pics/api/v1/square/400</image:loc>
-      <image:title>400x400 Square Placeholder Image</image:title>
-    </image:image>
-  </url>
-
-  <url>
-    <loc>https://fallback.pics/avatar/200</loc>
-    <lastmod>2025-01-18</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://fallback.pics/api/v1/avatar/200</image:loc>
-      <image:title>200x200 Avatar Placeholder Image</image:title>
-    </image:image>
   </url>
 
   <!-- Blog -->

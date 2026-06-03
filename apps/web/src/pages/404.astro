@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Page Not Found | fallback.pics"
+  description="This fallback.pics page does not exist. Use the docs, API reference, or homepage to find working placeholder image URLs."
+  canonical="https://fallback.pics/404"
+  robots="noindex, follow"
+>
+  <main id="main-content" class="not-found">
+    <section class="not-found__inner">
+      <p class="not-found__eyebrow">404</p>
+      <h1>This fallback.pics page does not exist.</h1>
+      <p>
+        Invalid web URLs return a real not-found response so crawlers and developers only trust working pages and image routes.
+      </p>
+      <div class="not-found__links" aria-label="Helpful links">
+        <a href="/">Homepage</a>
+        <a href="/docs">Docs</a>
+        <a href="/api">API Reference</a>
+        <a href="/placeholder-image-api/">Placeholder Image API</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .not-found {
+    min-height: 72vh;
+    display: grid;
+    place-items: center;
+    background: #fafafa;
+    color: #18181b;
+    padding: 4rem 1rem;
+  }
+
+  .not-found__inner {
+    width: min(100%, 48rem);
+  }
+
+  .not-found__eyebrow {
+    margin: 0;
+    color: #6d28d9;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .not-found h1 {
+    margin: 1rem 0 0;
+    color: #18181b;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .not-found p:not(.not-found__eyebrow) {
+    max-width: 40rem;
+    margin: 1.25rem 0 0;
+    color: #52525b;
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .not-found__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .not-found__links a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #18181b;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0 1rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .not-found__links a:first-child {
+    border-color: #6d28d9;
+    background: #7c3aed;
+    color: #ffffff;
+  }
+</style>

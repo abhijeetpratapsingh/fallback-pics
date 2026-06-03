@@ -13,6 +13,7 @@ export interface Props {
   ogImage?: string;
   header?: 'default' | 'landing' | 'docs' | false;
   footer?: boolean;
+  robots?: string;
 }
 
 const { 
@@ -23,6 +24,7 @@ const {
   ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics",
   header = 'default',
   footer = true,
+  robots = 'index, follow',
 } = Astro.props;
 
 const fullTitle = title.includes('fallback.pics') ? title : `${title} - fallback.pics`;
@@ -36,7 +38,7 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={robots} />
     <meta name="author" content="ABHIJEET PRATAP SINGH" />
     
     <!-- Canonical URL -->
