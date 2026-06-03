@@ -1,19 +1,20 @@
-# fallback.pics SEO Implementation Stories
+# fallback.pics SEO Spec Kit Story Commands
 
-These stories convert the SEO action plan into implementation-ready work items.
+These files convert the SEO action plan into command-ready Spec Kit story prompts.
+Each story keeps the original implementation story under `Source Story`, and starts
+with a paste-ready command sequence so another agent can run the work in order.
 
-Each story includes:
+Run one story at a time using this sequence:
 
-- Title
-- Description
-- User story
-- Acceptance criteria
-- Technical details
-- Likely files
-- Validation steps
-- Out of scope
+1. `$speckit-specify`
+2. `$speckit-clarify`
+3. `$speckit-plan`
+4. `$speckit-checklist`
+5. `$speckit-tasks`
+6. `$speckit-analyze`
+7. `$speckit-implement`
 
-Stories:
+Story command files:
 
 1. [Fix Soft 404 Routing](./01-fix-soft-404-routing.md)
 2. [Resolve Public Image Route Strategy](./02-resolve-public-image-route-strategy.md)
@@ -27,4 +28,3 @@ Stories:
 10. [Improve Trust Signals](./10-improve-trust-signals.md)
 11. [Improve GitHub and Link Foundation](./11-improve-github-and-link-foundation.md)
 12. [Add SEO Measurement Checks](./12-add-seo-measurement-checks.md)
-

@@ -1,4 +1,78 @@
-# Story 03: Align Canonical and Sitemap URLs
+# Spec Kit Command Sequence: Align Canonical and Sitemap URLs
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/003-align-canonical-sitemap
+GIT_BRANCH_NAME=003-align-canonical-sitemap
+
+Create a Spec Kit feature for aligning fallback.pics canonical URLs, redirects, structured data URLs, Open Graph URLs, and sitemap entries.
+
+Problem: Several SEO pages redirect to trailing-slash URLs while declaring non-trailing-slash canonical URLs. The sitemap also lists URLs that redirect or serve misleading content.
+
+User value: Search engines should see one final preferred URL per page so ranking signals consolidate cleanly.
+
+Functional requirements:
+- Every sitemap loc must resolve directly to its final canonical URL.
+- SEO page canonical tags must match the actual rendered final URL.
+- Open Graph og:url must match the canonical URL.
+- Structured data url fields must match the canonical URL.
+- No sitemap entry may point to a URL that returns homepage HTML for an image endpoint.
+- Sitemap entries for pages that should not be indexed must be removed.
+- Redirecting URLs must not be listed as canonical sitemap URLs.
+
+Out of scope:
+- Writing new SEO copy.
+- Changing route names unless required to fix canonical consistency.
+- Submitting sitemap to external tools.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only the canonical URL style if the spec does not clearly choose trailing-slash or non-trailing-slash final URLs.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan canonical, sitemap, Open Graph, and structured-data alignment. Include validation for redirect count, canonical tag, og:url, JSON-LD url, and sitemap loc values.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for canonical consistency, sitemap accuracy, redirect avoidance, structured data URL alignment, and indexability boundaries.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for canonical generation, sitemap updates, structured data URL alignment, page metadata checks, and sitemap validation.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze the canonical/sitemap artifacts for terminology drift, redirect conflicts, unmapped validation tasks, and constitution issues.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after the canonical style is explicit and validation tasks cover sitemap, metadata, and structured data.
+```
+
+## Source Story
 
 ## Description
 
@@ -47,4 +121,3 @@ As a search engine, I want sitemap URLs and canonical tags to resolve to the fin
 - Writing new SEO copy.
 - Changing route names unless required to fix canonical consistency.
 - Submitting sitemap to external tools.
-

@@ -1,4 +1,78 @@
-# Story 06: Strengthen Placeholder Image API Page
+# Spec Kit Command Sequence: Strengthen Placeholder Image API Page
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/006-strengthen-placeholder-api-page
+GIT_BRANCH_NAME=006-strengthen-placeholder-api-page
+
+Create a Spec Kit feature for strengthening /placeholder-image-api/ as the primary commercial SEO page for fallback.pics.
+
+Problem: The page should better target the highest-fit developer keywords with stronger exact-intent copy, richer API examples, competitor-aware comparison content, and FAQ schema.
+
+User value: Developers evaluating placeholder image tools should see examples, capabilities, and tradeoffs clearly enough to decide whether fallback.pics fits their project.
+
+Functional requirements:
+- The page must naturally target placeholder image api, placeholder image, image placeholder, and placeholder image generator.
+- The page must include live examples using the selected public image route strategy.
+- The page must include a concise comparison table covering fallback.pics, placehold.co, picsum.photos, dummyimage.com, and placeholderimage.dev.
+- The comparison must use factual, defensible points and avoid unsupported superiority claims.
+- The page must include FAQ content for what a placeholder image API is, how to create a placeholder image URL, and whether it works in HTML, React, and Next.js.
+- FAQ schema must be emitted as JSON-LD.
+- The page must link to Docs, API Reference, Dummy Image Generator, Broken Image Fallback, and implementation guides.
+
+Out of scope:
+- Publishing claims about competitor uptime or performance without evidence.
+- Adding paid plan or account management features.
+- Creating new image generation capabilities.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only if comparison scope, FAQ scope, or target keyword ownership remains ambiguous. Prefer factual comparison and no unsupported competitor claims.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan content model updates, comparison table rendering, FAQ JSON-LD, live example URLs, internal links, and validation for rendered HTML and structured data.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for commercial SEO intent, comparison claim safety, FAQ completeness, JSON-LD clarity, live examples, and internal link coverage.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for updating /placeholder-image-api/ content, comparison data, FAQ schema, live examples, internal links, and validation.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze placeholder API page artifacts for duplicate targeting, unsupported claims, missing structured-data validation, and unmapped examples.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after comparison and FAQ requirements are unambiguous and validated.
+```
+
+## Source Story
 
 ## Description
 
@@ -54,4 +128,3 @@ As a developer evaluating placeholder image tools, I want the Placeholder Image 
 - Publishing claims about competitor uptime or performance without evidence.
 - Adding paid plan or account management features.
 - Creating new image generation capabilities.
-

@@ -1,4 +1,87 @@
-# Story 12: Add SEO Measurement Checks
+# Spec Kit Command Sequence: Add SEO Measurement Checks
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/012-seo-measurement-checks
+GIT_BRANCH_NAME=012-seo-measurement-checks
+
+Create a Spec Kit feature for adding repeatable SEO measurement checks to fallback.pics.
+
+Problem: The SEO audit identified regressions that are easy to reintroduce: soft 404s, bad content types on image URLs, canonical mismatches, and sitemap drift.
+
+User value: Maintainers should have repeatable checks so routing, sitemap, canonical, and image-response behavior stay correct after changes.
+
+Functional requirements:
+- A local script or test must check known valid web pages for expected status and content type.
+- A local script or test must check known valid API image URLs for image content type and cache headers.
+- A local script or test must check unknown web paths for 404.
+- A sitemap check must verify URLs resolve directly and do not redirect.
+- A canonical check must verify selected pages declare the same final URL they are served from.
+- A command must be documented for running the checks.
+- The checks must run without requiring paid external services.
+
+Representative routes:
+- /
+- /placeholder-image-api/
+- /dummy-image-generator/
+- /broken-image-fallback/
+- /api/v1/400x300
+- /api/v1/avatar/200
+- /not-a-real-seo-test-page
+
+Out of scope:
+- Integrating paid Semrush data into CI.
+- Running Lighthouse or full browser performance audits.
+- Tracking rankings inside the repo.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only if the base URL, required route list, or pass/fail behavior for local versus production checks is ambiguous.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan a local SEO smoke-check command with configurable base URL, route/status/content-type/header checks, sitemap/canonical checks, and documentation.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for measurable SEO checks, route coverage, canonical/sitemap coverage, local/prod configurability, and external-service independence.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for the SEO smoke-check script, package command, representative route fixtures, sitemap/canonical parsing, documentation, and validation.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze SEO measurement artifacts for missing route coverage, vague pass/fail criteria, unmapped documentation tasks, and constitution issues.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after route coverage and pass/fail criteria are explicit.
+```
+
+## Source Story
 
 ## Description
 
@@ -54,4 +137,3 @@ As a maintainer, I want repeatable SEO checks so that routing, sitemap, canonica
 - Integrating paid Semrush data into CI.
 - Running Lighthouse or full browser performance audits.
 - Tracking rankings inside the repo.
-

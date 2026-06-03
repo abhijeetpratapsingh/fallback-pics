@@ -1,4 +1,78 @@
-# Story 05: Retarget Homepage for Search Demand
+# Spec Kit Command Sequence: Retarget Homepage for Search Demand
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/005-retarget-homepage-search-demand
+GIT_BRANCH_NAME=005-retarget-homepage-search-demand
+
+Create a Spec Kit feature for retargeting the fallback.pics homepage toward validated placeholder-image search demand while preserving the brand promise.
+
+Problem: The homepage differentiates around fallback image infrastructure, but Semrush demand is larger around placeholder image, image placeholder, placeholder image API, and placeholder image generator.
+
+User value: Developers searching for a placeholder image API should immediately understand that fallback.pics generates placeholder images and fallback images.
+
+Functional requirements:
+- The homepage title must include placeholder image API or a close high-intent variant.
+- The meta description must include both placeholder image and fallback image language.
+- Above-the-fold copy must include placeholder image API and placeholder image generator naturally.
+- The hero promise "Never show broken images again" must remain visible.
+- Homepage internal links must point to /placeholder-image-api/, /dummy-image-generator/, /broken-image-fallback/, and /guides/react-image-fallback/.
+- The homepage must not overpromise uptime, latency, or enterprise guarantees beyond what the product supports.
+- Structured data must remain valid and reflect the updated positioning.
+
+Out of scope:
+- Rebuilding the full homepage layout.
+- Adding new pricing or account features.
+- Changing visual brand direction.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only if homepage positioning creates a conflict between the brand promise and the target keyword phrase. Prefer preserving the hero promise while improving metadata and supporting copy.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan homepage metadata, hero/supporting copy, internal links, structured data, and claim-safety updates. Include rendered-source and responsive visual validation.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for homepage search intent, claim safety, internal linking, structured data consistency, and copy clarity.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for homepage metadata, visible copy, internal links, structured data, claim review, and validation without changing the full visual design.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze homepage retargeting artifacts for keyword stuffing risk, unsupported claims, missing internal links, and validation gaps.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after the homepage copy requirements and claim-safety checklist are complete.
+```
+
+## Source Story
 
 ## Description
 
@@ -49,4 +123,3 @@ As a developer searching for a placeholder image API, I want the fallback.pics h
 - Rebuilding the full homepage layout.
 - Adding new pricing or account features.
 - Changing visual brand direction.
-

@@ -1,4 +1,80 @@
-# Story 09: Add Placeholder Image Generator Page
+# Spec Kit Command Sequence: Add Placeholder Image Generator Page
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/009-placeholder-image-generator-page
+GIT_BRANCH_NAME=009-placeholder-image-generator-page
+
+Create a Spec Kit feature for adding a dedicated /placeholder-image-generator/ page to fallback.pics.
+
+Problem: Semrush shows placeholder image generator has direct demand and strong product fit. fallback.pics should have a dedicated generator page if the product supports an interactive or example-driven generator experience.
+
+User value: Developers searching for a placeholder image generator should get a page where they can generate and copy a working placeholder image URL.
+
+Functional requirements:
+- A canonical /placeholder-image-generator/ page must exist.
+- The page title, description, H1, and intro must target placeholder image generator.
+- The first screen must include a usable generator or clearly visible live URL builder.
+- The generator must support size, text, background color, and text color.
+- Generated URLs must follow the selected public route strategy.
+- The page must include copyable HTML and plain URL examples.
+- The page must link to Placeholder Image API, Dummy Image Generator, Docs, and API Reference.
+- The page must be included in the sitemap with its canonical final URL.
+- The page must not duplicate the homepage or /placeholder-image-api/ content.
+
+Out of scope:
+- Adding account storage for generated images.
+- Adding advanced image editing.
+- Adding paid-only generator controls.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only if the generator must be interactive versus example-driven, or if public route strategy is unresolved.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan the generator page, route/canonical/sitemap entry, live builder or examples, copyable snippets, internal links, and responsive validation.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for generator page scope, first-screen usability, URL generation controls, canonical/sitemap coverage, and duplicate-content boundaries.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for creating the generator page, embedding or reusing the builder, adding metadata and sitemap links, validating generated URLs, and checking responsive rendering.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze generator page artifacts for missing route strategy coverage, duplicate-content risk, sitemap gaps, and untestable acceptance criteria.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after generator scope, URL behavior, and sitemap/canonical requirements are complete.
+```
+
+## Source Story
 
 ## Description
 
@@ -50,4 +126,3 @@ As a developer searching for a placeholder image generator, I want a page where 
 - Adding account storage for generated images.
 - Adding advanced image editing.
 - Adding paid-only generator controls.
-

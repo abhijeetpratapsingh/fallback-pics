@@ -1,4 +1,79 @@
-# Story 08: Improve Implementation Guides and Schema
+# Spec Kit Command Sequence: Improve Implementation Guides and Schema
+
+Run these one at a time, in order.
+
+## 1. `$speckit-specify`
+
+```text
+$speckit-specify
+SPECIFY_FEATURE_DIRECTORY=specs/008-improve-guides-schema
+GIT_BRANCH_NAME=008-improve-guides-schema
+
+Create a Spec Kit feature for improving fallback.pics implementation guides and schema.
+
+Problem: The image fallback implementation guides should be code-first, visible in server-rendered HTML, and eligible for rich search understanding.
+
+User value: Frontend developers should get practical copy-paste guidance for adding fallback.pics to HTML, React, or Next.js projects quickly.
+
+Functional requirements:
+- /guides/img-onerror-fallback/ must include a complete HTML example with onerror behavior.
+- /guides/react-image-fallback/ must include a complete React component example.
+- /guides/nextjs-image-fallback/ must include a complete Next.js-compatible example.
+- Each guide must explain how to avoid infinite fallback loops.
+- Each guide must include at least one fallback.pics URL that returns an image response.
+- Each guide must link to Docs, API Reference, Placeholder Image API, and Broken Image Fallback.
+- HowTo schema must be emitted for guides structured as step-by-step instructions.
+- Code examples must be visible in rendered HTML and not depend on client-side hydration.
+
+Out of scope:
+- Supporting every frontend framework.
+- Adding package-specific SDKs.
+- Rewriting blog posts not listed in this feature.
+```
+
+## 2. `$speckit-clarify`
+
+```text
+$speckit-clarify
+Clarify only if guide scope, HowTo schema eligibility, or required code examples are ambiguous.
+```
+
+## 3. `$speckit-plan`
+
+```text
+$speckit-plan
+Plan guide content updates, visible code examples, HowTo JSON-LD behavior, internal links, and validation for rendered HTML and example image URLs.
+```
+
+## 4. `$speckit-checklist`
+
+```text
+$speckit-checklist
+Generate a requirements-quality checklist for guide coverage, code-example clarity, infinite-loop handling, HowTo schema eligibility, and internal link consistency.
+```
+
+## 5. `$speckit-tasks`
+
+```text
+$speckit-tasks
+Generate tasks for updating the HTML, React, and Next.js guides, adding schema where appropriate, validating example URLs, and checking source HTML visibility.
+```
+
+## 6. `$speckit-analyze`
+
+```text
+$speckit-analyze
+Analyze guide artifacts for missing exception-flow coverage, schema conflicts, code visibility gaps, and unmapped validation tasks.
+```
+
+## 7. `$speckit-implement`
+
+```text
+$speckit-implement
+Implement only after guide scope and schema requirements are clear.
+```
+
+## Source Story
 
 ## Description
 
@@ -47,4 +122,3 @@ As a frontend developer, I want practical implementation guides with copy-paste 
 - Supporting every frontend framework.
 - Adding package-specific SDKs.
 - Rewriting blog posts not listed in this story.
-
