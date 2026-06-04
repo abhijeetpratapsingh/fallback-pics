@@ -18,7 +18,7 @@ Fast, self-hostable placeholder images and production-friendly fallback images f
 
 Fallback.pics is a fast **placeholder image API**, **placeholder image generator**, **dummy image generator**, and **broken image fallback** service for developers who do not want broken images showing up in apps, docs, prototypes, dashboards, or ecommerce pages.
 
-Generate dummy images, avatar placeholders, product image placeholders, banners, skeleton placeholder images, and broken image fallbacks with readable URLs. The service is a Cloudflare Workers SVG placeholder API, and `/api/v1/...` is the canonical public image route.
+Generate dummy images, avatar placeholders, product image placeholders, banners, skeleton placeholder images, and broken image fallbacks with readable URLs. The service is a Cloudflare Workers placeholder image API with SVG, PNG, JPEG, and WebP output, and `/api/v1/...` is the canonical public image route.
 
 Created and maintained by [Abhijeet Pratap Singh](https://abhijeetpratapsingh.in/).
 
@@ -68,7 +68,7 @@ function ProductImage({ src, alt }: { src: string; alt: string }) {
 }
 ```
 
-Use it in Next.js when you want a generated SVG URL:
+Use it in Next.js when you want a generated image URL:
 
 ```tsx
 import Image from "next/image";
@@ -119,18 +119,20 @@ Fallback.pics uses readable URLs, so you can drop placeholders directly into HTM
 ### Generate an Image
 
 ```http
-GET /api/v1/{width}x{height}[.svg]
+GET /api/v1/{width}x{height}[.svg|.png|.jpg|.webp]
 ```
 
 | Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
 | `width` | integer | Yes | Image width in pixels. |
 | `height` | integer | Yes | Image height in pixels. |
-| `format` | string | No | Optional `.svg` compatibility suffix. Current responses are SVG. |
+| `format` | string | No | Optional `.svg`, `.png`, `.jpg`, `.jpeg`, or `.webp` suffix. SVG is the default when omitted. |
 
 ```text
 https://fallback.pics/api/v1/400x300
 https://fallback.pics/api/v1/1920x1080.svg
+https://fallback.pics/api/v1/1200x630.png
+https://fallback.pics/api/v1/800x450.webp
 ```
 
 ### Set Colors
@@ -292,6 +294,20 @@ Update `account_id`, routes, and zone settings in `apps/worker/wrangler.toml`, t
 pnpm deploy:worker
 pnpm deploy:web
 ```
+
+Cloudflare Pages must also define the Worker origin used by the `/api/v1/*` proxy:
+
+```text
+WORKER_ORIGIN=https://fallback-pics.billing-04f.workers.dev
+```
+
+Set it in the Pages project environment variables for production and previews, or with Wrangler for Direct Upload projects:
+
+```bash
+wrangler pages secret put WORKER_ORIGIN --project-name fallback-pics
+```
+
+For local Pages Functions testing, copy `apps/web/.dev.vars.example` to `apps/web/.dev.vars` and point `WORKER_ORIGIN` at your local Worker, for example `http://localhost:8787`.
 
 ### Optional Google Analytics
 

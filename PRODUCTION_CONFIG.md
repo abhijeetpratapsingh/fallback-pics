@@ -36,6 +36,15 @@ export const API_URL = import.meta.env.DEV
   : 'https://fallback.pics/api/v1';
 ```
 
+### 4. Cloudflare Pages API proxy
+The Pages Function at `/api/v1/*` forwards requests to the Worker configured by the Pages runtime variable:
+
+```text
+WORKER_ORIGIN=https://fallback-pics.billing-04f.workers.dev
+```
+
+Do not include `/api/v1` in `WORKER_ORIGIN`; the proxy appends the incoming path and query string.
+
 ## DNS Configuration Required
 
 Add these DNS records in Cloudflare Dashboard:
@@ -69,10 +78,12 @@ Or use CNAME:
 
 ### Production Website
 - `PUBLIC_GA_MEASUREMENT_ID`: GA4 measurement ID (set in Cloudflare Pages build environment)
+- `WORKER_ORIGIN`: Worker origin for the Pages `/api/v1/*` proxy, for example `https://fallback-pics.billing-04f.workers.dev`
 
 ### Local Development
 - Worker runs on: `http://localhost:8787`
 - Website runs on: `http://localhost:4321`
+- Pages Functions use `apps/web/.dev.vars`; copy `apps/web/.dev.vars.example` and set `WORKER_ORIGIN=http://localhost:8787`
 
 ## Website Deployment Approach
 
@@ -98,6 +109,9 @@ pnpm worker:deploy
 
 # Local website build check before pushing
 pnpm web:build
+
+# Pages Direct Upload runtime variable
+wrangler pages secret put WORKER_ORIGIN --project-name fallback-pics
 ```
 
 ## Testing Production
@@ -105,6 +119,8 @@ pnpm web:build
 ```bash
 # Test Worker API
 curl https://fallback.pics/api/v1/400x300
+curl -I "https://fallback.pics/api/v1/400x300?text=Head+Check"
+curl -X OPTIONS -I https://fallback.pics/api/v1/400x300
 curl https://fallback.pics/api/v1/chart/bar/600x400
 curl https://fallback.pics/api/v1/animated/pulse/200x200
 

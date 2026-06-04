@@ -6,8 +6,10 @@
 import { generateAISVG } from './ai-generator';
 import { GoogleAnalyticsTelemetry, NewRelicTelemetry, extractFormat, extractRoute, extractDimensions, getUserAgentCategory } from './telemetry';
 import type { RequestMetrics } from './telemetry';
+import { encodeSvg, extractFormatFromSegment, getContentType, ImagesEncoder, SupportedOutputFormat } from './raster';
 
 export interface Env {
+  IMAGES?: ImagesEncoder;
   ALLOWED_ORIGIN?: string;
   NEW_RELIC_LICENSE_KEY?: string;
   NEW_RELIC_APP_NAME?: string;
@@ -44,6 +46,13 @@ const SVG_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   ...CORS_HEADERS
 };
+
+async function createImageResponse(svg: string, format: SupportedOutputFormat, images?: ImagesEncoder): Promise<Response> {
+  const encoded = await encodeSvg(svg, format, images);
+  const headers = new Headers(SVG_HEADERS);
+  headers.set('Content-Type', encoded.contentType || getContentType(format));
+  return new Response(encoded.body, { headers });
+}
 
 // Fast XML escape
 const escapeXml = (str: string): string => {
@@ -270,6 +279,7 @@ export default {
     
     // Avatar route
     if (firstSegment === 'avatar' && segments[1]) {
+      const outputFormat = extractFormatFromSegment(segments[1]);
       const size = parseInt(segments[1]);
       if (size > 0 && size <= 5000) {
         const text = url.searchParams.get('text') || 'A';
@@ -290,7 +300,7 @@ export default {
             userAgent: request.headers.get('user-agent'),
             imageWidth: size,
             imageHeight: size,
-            imageFormat: 'svg',
+            imageFormat: outputFormat,
             customText: !!text && text !== 'A',
           }),
           telemetry.trackBusinessMetric('avatar_generated', 1, {
@@ -300,11 +310,11 @@ export default {
           })
         ]));
 
-        return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+        return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
           route: 'avatar',
           imageWidth: size,
           imageHeight: size,
-          imageFormat: 'svg',
+          imageFormat: outputFormat,
           customText: !!text && text !== 'A',
         });
       }
@@ -312,6 +322,7 @@ export default {
 
     // Square format
     if (firstSegment === 'square' && segments[1]) {
+      const outputFormat = extractFormatFromSegment(segments[1]);
       const size = parseInt(segments[1]);
       if (size > 0 && size <= 5000) {
         const text = url.searchParams.get('text') || `${size} × ${size}`;
@@ -319,11 +330,11 @@ export default {
         const textColor = normalizeColor(segments[3]) || DEFAULT_TEXT;
         
         const svg = SVG_TEMPLATE(size, size, bg, textColor, escapeXml(text));
-        return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+        return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
           route: 'square',
           imageWidth: size,
           imageHeight: size,
-          imageFormat: 'svg',
+          imageFormat: outputFormat,
           customText: !!url.searchParams.get('text'),
         });
       }
@@ -331,6 +342,7 @@ export default {
 
     // Banner preset
     if (firstSegment === 'banner' && segments[1]) {
+      const outputFormat = extractFormatFromSegment(segments[1]);
       const dimensionStr = segments[1].replace(FORMAT_REGEX, '');
       const match = DIMENSION_REGEX.exec(dimensionStr);
       if (match) {
@@ -340,11 +352,11 @@ export default {
         if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
           const text = url.searchParams.get('text') || 'Banner';
           const svg = GRADIENT_TEMPLATE(width, height, '#667EEA', '#764BA2', '#FFFFFF');
-          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
             route: 'banner',
             imageWidth: width,
             imageHeight: height,
-            imageFormat: 'svg',
+            imageFormat: outputFormat,
             customText: !!url.searchParams.get('text'),
           });
         }
@@ -354,6 +366,7 @@ export default {
     // Chart generation with sophisticated visualizations
     if (firstSegment === 'chart' && segments[1] && segments[2]) {
       const chartType = segments[1];
+      const outputFormat = extractFormatFromSegment(segments[2]);
       const dimensionStr = segments[2].replace(FORMAT_REGEX, '');
       const match = DIMENSION_REGEX.exec(dimensionStr);
       
@@ -364,11 +377,11 @@ export default {
         if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
           // Use the improved chart generator
           const svg = generateChartSVG(width, height, chartType);
-          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
             route: 'chart',
             imageWidth: width,
             imageHeight: height,
-            imageFormat: 'svg',
+            imageFormat: outputFormat,
           });
         }
       }
@@ -376,6 +389,7 @@ export default {
 
     // AI context generation with intelligent layouts
     if (firstSegment === 'ai' && segments[1]) {
+      const outputFormat = extractFormatFromSegment(segments[1]);
       const dimensionStr = segments[1].replace(FORMAT_REGEX, '');
       const match = DIMENSION_REGEX.exec(dimensionStr);
       
@@ -406,11 +420,11 @@ export default {
           
           // Use the intelligent AI generator
           const svg = generateAISVG(width, height, context, mood, customText || undefined, customBgColor || undefined, customTextColor || undefined);
-          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
             route: 'ai',
             imageWidth: width,
             imageHeight: height,
-            imageFormat: 'svg',
+            imageFormat: outputFormat,
             customText: !!customText,
           });
         }
@@ -419,6 +433,7 @@ export default {
 
     // Direct effect endpoints (e.g., /skeleton/400x300, /blur/400x300)
     if (firstSegment === 'skeleton' || firstSegment === 'blur' || firstSegment === 'gradient') {
+      const outputFormat = extractFormatFromSegment(segments[1]);
       const dimensionStr = segments[1]?.replace(FORMAT_REGEX, '');
       if (dimensionStr) {
         const match = DIMENSION_REGEX.exec(dimensionStr);
@@ -429,28 +444,28 @@ export default {
           if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
             if (firstSegment === 'skeleton') {
               const svg = SKELETON_TEMPLATE(width, height);
-              return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+              return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
                 route: 'skeleton',
                 imageWidth: width,
                 imageHeight: height,
-                imageFormat: 'svg',
+                imageFormat: outputFormat,
               });
             } else if (firstSegment === 'blur') {
               // Blur effect using SVG filter
               const blurSvg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><filter id="blur"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="100%" height="100%" fill="#e0e0e0" filter="url(#blur)"/></svg>`;
-              return trackWorkerResponse(new Response(blurSvg, { headers: SVG_HEADERS }), {
+              return trackWorkerResponse(await createImageResponse(blurSvg, outputFormat, env.IMAGES), {
                 route: 'blur',
                 imageWidth: width,
                 imageHeight: height,
-                imageFormat: 'svg',
+                imageFormat: outputFormat,
               });
             } else if (firstSegment === 'gradient') {
               const svg = GRADIENT_TEMPLATE(width, height, '#7C3AED', '#3B82F6', '#FFFFFF');
-              return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+              return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
                 route: 'gradient',
                 imageWidth: width,
                 imageHeight: height,
-                imageFormat: 'svg',
+                imageFormat: outputFormat,
               });
             }
           }
@@ -461,6 +476,7 @@ export default {
     // Animated endpoints
     if (firstSegment === 'animated' && segments[1] && segments[2]) {
       const animationType = segments[1];
+      const outputFormat = extractFormatFromSegment(segments[2]);
       const dimensionStr = segments[2].replace(FORMAT_REGEX, '');
       const match = DIMENSION_REGEX.exec(dimensionStr);
       
@@ -498,17 +514,18 @@ export default {
                 errorMessage: 'Invalid animation type',
               });
           }
-          return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+          return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
             route: `animated-${animationType}`,
             imageWidth: width,
             imageHeight: height,
-            imageFormat: 'svg',
+            imageFormat: outputFormat,
           });
         }
       }
     }
 
     // Standard dimensions with special effects
+    const outputFormat = extractFormatFromSegment(firstSegment);
     const dimensionStr = firstSegment.replace(FORMAT_REGEX, '');
     const match = DIMENSION_REGEX.exec(dimensionStr);
     
@@ -560,21 +577,21 @@ export default {
       const color1 = normalizeColor(segments[2]) || '#7C3AED';
       const color2 = normalizeColor(segments[3]) || '#3B82F6';
       const svg = GRADIENT_TEMPLATE(width, height, color1, color2, '#FFFFFF');
-      return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+      return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
         route: 'gradient',
         imageWidth: width,
         imageHeight: height,
-        imageFormat: 'svg',
+        imageFormat: outputFormat,
       });
     }
 
     if (segments[1] === 'skeleton') {
       const svg = SKELETON_TEMPLATE(width, height);
-      return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+      return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
         route: 'skeleton',
         imageWidth: width,
         imageHeight: height,
-        imageFormat: 'svg',
+        imageFormat: outputFormat,
       });
     }
 
@@ -600,7 +617,7 @@ export default {
         userAgent: request.headers.get('user-agent'),
         imageWidth: dimensions.width,
         imageHeight: dimensions.height,
-        imageFormat: 'svg',
+        imageFormat: outputFormat,
         customText: !!url.searchParams.get('text'),
       }),
       telemetry.trackBusinessMetric('image_generated', 1, {
@@ -612,11 +629,11 @@ export default {
       })
     ]));
 
-    return trackWorkerResponse(new Response(svg, { headers: SVG_HEADERS }), {
+    return trackWorkerResponse(await createImageResponse(svg, outputFormat, env.IMAGES), {
       route,
       imageWidth: dimensions.width,
       imageHeight: dimensions.height,
-      imageFormat: 'svg',
+      imageFormat: outputFormat,
       customText: !!url.searchParams.get('text'),
     });
   }

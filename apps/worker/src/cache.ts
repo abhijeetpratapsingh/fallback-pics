@@ -1,18 +1,11 @@
+import { getContentType, isSupportedOutputFormat } from './raster';
+import { ImageParams } from './router';
+
 export function setCacheHeaders(format: string): Headers {
   const headers = new Headers();
-  
-  // Set content type based on format
-  const contentTypes: Record<string, string> = {
-    'svg': 'image/svg+xml; charset=utf-8',
-    'png': 'image/png',
-    'jpg': 'image/jpeg',
-    'jpeg': 'image/jpeg',
-    'webp': 'image/webp',
-    'avif': 'image/avif',
-    'gif': 'image/gif'
-  };
-  
-  headers.set('Content-Type', contentTypes[format] || contentTypes.svg);
+  const candidateFormat = format as ImageParams['format'];
+
+  headers.set('Content-Type', isSupportedOutputFormat(candidateFormat) ? getContentType(candidateFormat) : getContentType('svg'));
   
   // Aggressive caching for placeholder images - 1 year
   // This will be cached by Cloudflare's edge automatically

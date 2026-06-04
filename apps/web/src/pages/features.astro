@@ -18,9 +18,9 @@ const capabilities = [
     example: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
   },
   {
-    title: 'Deterministic SVG output',
-    detail: 'Generated SVGs are small, cacheable, inspectable, and safe to serve from an edge worker without a heavy image pipeline.',
-    example: 'Content-Type: image/svg+xml',
+    title: 'Deterministic image output',
+    detail: 'Generated images are small, cacheable, inspectable by URL, and available as default SVG or raster PNG, JPEG, and WebP.',
+    example: 'Content-Type: image/webp',
   },
   {
     title: 'Presets for product states',
@@ -47,7 +47,7 @@ const capabilities = [
 const comparisonRows = [
   { feature: 'No SDK required', fallback: 'Yes', generic: 'Usually' },
   { feature: 'Deterministic URL surface', fallback: 'Yes', generic: 'Varies' },
-  { feature: 'SVG generated at the edge', fallback: 'Yes', generic: 'Often raster' },
+  { feature: 'SVG plus raster formats', fallback: 'Yes', generic: 'Varies' },
   { feature: 'Avatar and state presets', fallback: 'Yes', generic: 'Partial' },
   { feature: 'Long-lived CDN caching', fallback: 'Yes', generic: 'Varies' },
   { feature: 'Enterprise custom domains', fallback: 'Available by agreement', generic: 'Rare' },
@@ -63,7 +63,7 @@ const useCases = [
 
 <DocsLayout
   title="Features | fallback.pics"
-  description="Explore fallback.pics infrastructure capabilities: URL-based SVG fallbacks, presets, edge delivery, caching, privacy-conscious integration, and enterprise options."
+  description="Explore fallback.pics infrastructure capabilities: URL-based image fallbacks, SVG and raster output, presets, edge delivery, caching, privacy-conscious integration, and enterprise options."
 >
   <div class="features-page">
     <section class="features-hero">
@@ -97,8 +97,8 @@ const useCases = [
           </div>
           <div class="features-metric-grid">
             <div>
-              <strong>SVG</strong>
-              <span>current output format</span>
+              <strong>4</strong>
+              <span>supported output formats</span>
             </div>
             <div>
               <strong>GET</strong>

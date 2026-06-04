@@ -227,7 +227,7 @@ export function ProductFallback() {
           <div class="docs-note-grid">
             <div>
               <h3>Headers</h3>
-              <p>Valid image routes return <code>image/svg+xml</code>, immutable cache headers, CORS for browser use, and <code>X-Content-Type-Options: nosniff</code>.</p>
+              <p>Valid image routes return SVG by default or matching PNG, JPEG, and WebP MIME types when a raster suffix is requested, along with immutable cache headers, CORS for browser use, and <code>X-Content-Type-Options: nosniff</code>.</p>
             </div>
             <div>
               <h3>API errors</h3>
