@@ -2,10 +2,12 @@ import { ImageParams } from './router';
 import { generateAISVG } from './ai-generator';
 import { generateAnimatedSVG } from './animated-generator';
 import { generateChartSVG } from './chart-generator';
+import { encodeSvg, getContentType, ImagesEncoder, isSupportedOutputFormat, SupportedOutputFormat } from './raster';
 
 export interface GeneratedImage {
-  content: string;
-  format: ImageParams['format'];
+  content: BodyInit;
+  format: SupportedOutputFormat;
+  contentType: string;
 }
 
 function escapeXml(str: string): string {
@@ -17,7 +19,7 @@ function escapeXml(str: string): string {
     .replace(/'/g, '&#39;');
 }
 
-export async function generateImage(params: ImageParams): Promise<GeneratedImage> {
+export async function generateImage(params: ImageParams, images?: ImagesEncoder): Promise<GeneratedImage> {
   const { width, height, bgColor, textColor, text, preset, format, font, fontSize, retina, context, mood, animationType, chartType, reducedMotion } = params;
   
   // Apply retina scaling if specified
@@ -25,13 +27,11 @@ export async function generateImage(params: ImageParams): Promise<GeneratedImage
   const scaledHeight = retina ? height * retina : height;
   const scaledFontSize = fontSize && retina ? fontSize * retina : fontSize;
 
-  // For now, we only support SVG
-  // PNG, JPG, WebP conversion would require a library or external service
-  if (format !== 'svg') {
-    // In production, you'd convert SVG to other formats here
-    // For MVP, we'll return SVG for all formats
-    console.warn(`Format ${format} requested but not yet implemented, returning SVG`);
+  if (!isSupportedOutputFormat(format)) {
+    throw new Error(`Unsupported image format: ${format}`);
   }
+
+  const outputFormat = format as SupportedOutputFormat;
 
   let svg: string;
 
@@ -66,9 +66,12 @@ export async function generateImage(params: ImageParams): Promise<GeneratedImage
       svg = generateStandardSVG(scaledWidth, scaledHeight, bgColor, textColor, text, font, scaledFontSize);
   }
 
+  const encoded = await encodeSvg(svg, outputFormat, images);
+
   return {
-    content: svg,
-    format: 'svg'
+    content: encoded.body,
+    format: outputFormat,
+    contentType: encoded.contentType || getContentType(outputFormat),
   };
 }
 

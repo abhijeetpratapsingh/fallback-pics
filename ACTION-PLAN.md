@@ -1,106 +1,123 @@
-# fallback.pics SEO Action Plan
+# fallback.pics SEO Re-Audit Action Plan
 
-Audit date: 2026-06-03
+Audit date: 2026-06-03  
+Context: refreshed action plan after comparing the current production site against the previous SEO baseline.
 
-## First 48 Hours
+## Immediate Fixes
 
-1. Fix soft 404 behavior.
-   - Ensure unknown URLs return a real 404 status.
-   - Add an Astro/Cloudflare Pages 404 page if missing.
-   - Verify `https://fallback.pics/not-a-real-seo-test-page` returns 404.
+1. Finalize sitemap URL consistency.
+   - Update `sitemap.xml` so every `<loc>` is the final URL that returns `200` without redirect.
+   - Confirm these are changed from non-trailing to trailing slash where production redirects:
+     - `https://fallback.pics/docs/`
+     - `https://fallback.pics/api/`
+     - `https://fallback.pics/features/`
+     - `https://fallback.pics/blog/`
+   - Check blog post URLs too. If production redirects them to trailing-slash versions, update sitemap entries to match.
+   - Re-run `curl -I -L` and verify the sitemap URLs do not require redirects.
 
-2. Resolve image route strategy.
-   - Decide whether short URLs like `/400x300` are production API routes.
-   - If yes, route root image patterns to the Worker and verify `content-type: image/svg+xml`.
-   - If no, remove short URL examples from the sitemap and docs, then standardize on `/api/v1/...`.
+2. Remove the remaining root-style API example.
+   - Current homepage HTML still contains:
+     - `GET /800x450/18181B/FFFFFF?text=Product+Image`
+   - Replace it with:
+     - `GET /api/v1/800x450/18181B/FFFFFF?text=Product+Image`
+   - Scan all web content for root image examples because `/400x300` and `/400x300.png` now correctly return 404.
 
-3. Fix canonical and sitemap URL consistency.
-   - In `apps/web/src/pages/[...slug].astro`, change canonical generation to match the final trailing-slash URL, or change site routing to non-trailing-slash URLs.
-   - Update `apps/web/public/sitemap.xml` so every `<loc>` is the final canonical URL.
-   - Remove `/400x300`, `/square/400`, and `/avatar/200` sitemap entries unless they return real indexable content or real image responses.
+3. Clean up structured data.
+   - Remove `FAQPage` JSON-LD from:
+     - `/placeholder-image-api/`
+     - `/placeholder-image-generator/`
+     - `/dummy-image-generator/`
+   - Keep the visible FAQ sections for users.
+   - Use safer schema types:
+     - `WebPage`
+     - `SoftwareApplication`
+     - `Organization`
+     - `BreadcrumbList`
+   - Do not add `HowTo` schema.
 
-4. Publish or intentionally 404 `/llms.txt`.
-   - If publishing, keep it short: product summary, docs URL, API reference URL, key guides, GitHub repo, support contact.
-   - If not publishing, make it return 404 instead of homepage HTML.
+4. Add missing security headers for web pages.
+   - Add these through Cloudflare Pages `_headers` or equivalent deployment config:
+     - `Strict-Transport-Security`
+     - `Content-Security-Policy`
+     - `frame-ancestors 'none'` in CSP, or `X-Frame-Options: DENY`
+     - Keep `X-Content-Type-Options: nosniff`
+     - Keep `Referrer-Policy: strict-origin-when-cross-origin`
+   - Make sure CSP allows the current required scripts, fonts, Cloudflare analytics, and images.
 
-## Week 1
+## Next SEO Pass
 
-1. Retarget the homepage for search demand.
-   - Suggested title direction: `Placeholder Image API for Reliable Fallback Images | fallback.pics`.
-   - Keep "Never show broken images again" as hero copy, but add `placeholder image API` and `placeholder image generator` in visible above-the-fold copy.
-   - Add direct internal links to `/placeholder-image-api/`, `/dummy-image-generator/`, `/broken-image-fallback/`, and `/guides/react-image-fallback/`.
+1. Recheck all priority landing pages.
+   - Homepage
+   - `/placeholder-image-api/`
+   - `/placeholder-image-generator/`
+   - `/dummy-image-generator/`
+   - `/broken-image-fallback/`
+   - `/guides/react-image-fallback/`
+   - `/guides/nextjs-image-fallback/`
+   - `/guides/img-onerror-fallback/`
 
-2. Strengthen `/placeholder-image-api/`.
-   - Make it the canonical commercial page for:
-     - `placeholder image api`
-     - `placeholder image`
-     - `image placeholder`
+2. Strengthen internal links.
+   - Use trailing-slash URLs consistently in nav, footer, body links, and related-page cards.
+   - Link from docs and API reference to:
+     - `/placeholder-image-api/`
+     - `/placeholder-image-generator/`
+     - `/dummy-image-generator/`
+     - `/broken-image-fallback/`
+   - Link from each guide back to the most relevant commercial page.
+
+3. Improve authority signals.
+   - Update the GitHub README with the exact keyword language now used on the site:
+     - `placeholder image API`
      - `placeholder image generator`
-   - Add a compact API comparison table against placehold.co, picsum.photos, dummyimage.com, and placeholderimage.dev.
-   - Add FAQ schema for "What is a placeholder image API?", "How do I create a placeholder image URL?", and "Can I use it in HTML/React/Next.js?".
+     - `dummy image generator`
+     - `broken image fallback`
+     - `Cloudflare Workers SVG placeholder API`
+   - Add GitHub repository topics for those same concepts.
+   - Add working `/api/v1/...` examples to README and docs.
 
-3. Strengthen `/dummy-image-generator/`.
-   - Target `dummy image generator`, `dummy image`, `dummy images`, and `dummy image url`.
-   - Add examples for fixed sizes, custom text, colors, avatars, and mock data.
-   - Include live examples that return image responses, not screenshots only.
+4. Start measurement checks.
+   - Track Google Search Console weekly for:
+     - `placeholder image`
+     - `placeholder image api`
+     - `placeholder image generator`
+     - `dummy image generator`
+     - `broken image placeholder`
+     - `react image fallback`
+     - `nextjs image fallback`
+   - Track indexed status of the new generator page and fixed SEO pages.
+   - Track crawl issues for soft 404s and redirects.
+   - Track referring domains and follow-link count.
 
-4. Make guides more search-actionable.
-   - Add concrete code-first sections to:
-     - `/guides/img-onerror-fallback/`
-     - `/guides/react-image-fallback/`
-     - `/guides/nextjs-image-fallback/`
-   - Add HowTo schema where the page is a step-by-step implementation guide.
+## Strategic Growth Work
 
-## Weeks 2-4
+1. Build links from developer-relevant surfaces.
+   - GitHub README and examples.
+   - Dev.to or engineering blog tutorial.
+   - Placeholder image API comparison post.
+   - Framework-specific guides for React, Next.js, Astro, and plain HTML.
+   - Developer tool directories and relevant curated lists.
 
-1. Build the link acquisition base.
-   - Improve the GitHub README title, description, examples, and topics around `placeholder-image`, `placeholder-image-api`, `dummy-image-generator`, `cloudflare-workers`, and `svg-placeholder`.
-   - Publish one technical article: `Building a Placeholder Image API on Cloudflare Workers`.
-   - Submit to developer tool directories and relevant "awesome" lists.
-   - Launch comparison/alternative pages only where there is a real differentiator, not generic "we are better" copy.
+2. Prioritize pages by reachable demand.
+   - First: `/placeholder-image-api/`
+   - Second: `/placeholder-image-generator/`
+   - Third: `/dummy-image-generator/`
+   - Fourth: implementation guides.
+   - Fifth: competitor alternative pages.
 
-2. Add a dedicated generator page if the product supports it.
-   - Create `/placeholder-image-generator/` if it does not exist.
-   - This page should be a usable generator first, with copy second.
-   - Target `placeholder image generator` and internally link it from homepage, docs, and API reference.
+3. Re-audit after indexing catches up.
+   - Semrush currently still reports 2 US organic keywords and 0 traffic.
+   - Do not treat that as implementation failure yet if the deployment is recent.
+   - Use Search Console as the first signal for impressions and indexing; Semrush ranking movement may lag.
 
-3. Improve trust signals.
-   - Add production guarantees carefully only where true.
-   - Show cache headers, content types, Cloudflare edge behavior, and privacy posture.
-   - Add examples for ecommerce, SaaS dashboards, design systems, and test fixtures.
+## Completed Since Previous Audit
 
-4. Clean backlink quality.
-   - Do not chase low-quality SEO domains.
-   - Prioritize follow links from GitHub, dev tutorials, product directories, framework examples, and real user projects.
+The following previous P0/P1 items are now materially improved:
 
-## 30-60 Day Measurement Plan
-
-Track weekly:
-
-- Google Search Console impressions and clicks for:
-  - `placeholder image`
-  - `placeholder image api`
-  - `placeholder image generator`
-  - `dummy image generator`
-  - `broken image placeholder`
-  - `react image fallback`
-  - `nextjs image fallback`
-- Indexed status of SEO pages.
-- Soft 404 count.
-- Referring domains and follow-link count.
-- Organic rankings for the five main competitors:
-  - placehold.co
-  - picsum.photos
-  - dummyimage.com
-  - placeholderimage.dev
-  - placehold.net
-
-Success targets:
-
-- 0 soft-404 warnings for invalid routes.
-- All sitemap URLs resolve directly to final canonical URLs.
-- 25+ quality referring domains.
-- Top 20 ranking for `placeholder image api`.
-- Top 20 ranking for `placeholder image generator`.
-- Top 10 ranking for at least one implementation guide query.
-
+- Unknown routes return `404` instead of homepage HTML.
+- Root image routes no longer return homepage HTML.
+- `/api/v1/400x300` still returns `200 image/svg+xml` with long-lived cache headers.
+- `/llms.txt` is a real `text/plain` file.
+- Core SEO page canonicals now use trailing-slash final URLs.
+- Homepage metadata now targets placeholder image demand.
+- `/placeholder-image-generator/` is live.
+- Sitemap no longer lists `/400x300` as an indexable page URL.

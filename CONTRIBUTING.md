@@ -200,8 +200,8 @@ The documentation site is built with Astro:
 - Keep examples aligned with the canonical `/api/v1/...` route strategy
 - Link to canonical fallback.pics pages when referencing product surfaces:
   - Homepage: `https://fallback.pics/`
-  - Docs: `https://fallback.pics/docs`
-  - API Reference: `https://fallback.pics/api`
+  - Docs: `https://fallback.pics/docs/`
+  - API Reference: `https://fallback.pics/api/`
   - Placeholder Image API: `https://fallback.pics/placeholder-image-api/`
   - Placeholder Image Generator: `https://fallback.pics/placeholder-image-generator/`
 

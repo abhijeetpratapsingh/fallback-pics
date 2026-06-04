@@ -37,3 +37,15 @@ UI refinement story command files:
 16. [Unify Navigation and Mobile Menu](./16-unify-navigation-and-mobile-menu.md)
 17. [Polish Live Builder Interactions](./17-polish-live-builder-interactions.md)
 18. [Create Visual QA Workflow](./18-create-visual-qa-workflow.md)
+
+SEO re-audit story command files:
+
+19. [Finalize Sitemap URL Consistency](./19-finalize-sitemap-url-consistency.md)
+20. [Correct API v1 Examples](./20-correct-api-v1-examples.md)
+21. [Remove FAQPage Schema](./21-remove-faqpage-schema.md)
+22. [Add Web Security Headers](./22-add-web-security-headers.md)
+23. [Add Priority SEO Page Recheck Workflow](./23-add-priority-seo-page-recheck-workflow.md)
+24. [Normalize Internal Link Trailing Slashes](./24-normalize-internal-link-trailing-slashes.md)
+25. [Refresh README Authority Signals](./25-refresh-readme-authority-signals.md)
+26. [Add SEO Measurement Workflow](./26-add-seo-measurement-workflow.md)
+27. [Build Developer Link Acquisition Package](./27-build-developer-link-acquisition-package.md)

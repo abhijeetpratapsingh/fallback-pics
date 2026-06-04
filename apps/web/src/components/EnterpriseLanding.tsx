@@ -32,7 +32,7 @@ const features = [
   {
     icon: 'timer',
     title: 'Sub-50ms latency target',
-    body: 'SVG-first generation keeps the response path small. Cached responses are built to behave like static assets, not application requests.',
+    body: 'SVG-first generation keeps the default response path small, with PNG, JPEG, and WebP available for clients that require raster assets. Cached responses are built to behave like static assets, not application requests.',
     snippet: 'Server-Timing: edge; dur=18',
     tone: 'green',
   },
@@ -93,7 +93,7 @@ const enterpriseRows = [
   },
   {
     title: 'High-volume scaling',
-    body: 'Stateless SVG generation and CDN-compatible caching are designed for product grids, marketplaces, CMS previews, transactional emails, and repeated UI fixtures.',
+    body: 'Stateless image generation and CDN-compatible caching are designed for product grids, marketplaces, CMS previews, transactional emails, and repeated UI fixtures.',
   },
   {
     title: 'Security and privacy',
@@ -105,7 +105,7 @@ const enterpriseRows = [
   },
 ];
 
-const trustLogos = ['Cloudflare Workers', 'Cloudflare CDN', 'SVG output', 'Immutable cache', 'No client SDK'];
+const trustLogos = ['Cloudflare Workers', 'Cloudflare CDN', 'SVG + raster output', 'Immutable cache', 'No client SDK'];
 
 function clampDimension(value: number, fallback: number) {
   if (!Number.isFinite(value)) return fallback;
@@ -259,6 +259,7 @@ function EnterpriseLanding() {
   const safeBg = sanitizeHex(bg, '18181B');
   const safeFg = sanitizeHex(fg, 'FFFFFF');
   const path = buildPath(preset, safeWidth, safeHeight, safeBg, safeFg, text);
+  const publicPath = `/api/v1${path}`;
   const generatedUrl = `${API_BASE}${path}`;
   const displayUrl = generatedUrl;
   const previewSvg = createPreviewSvg(safeWidth, safeHeight, safeBg, safeFg, text, preset);
@@ -314,7 +315,7 @@ function EnterpriseLanding() {
                   Open generator
                 </a>
                 <a
-                  href="/docs"
+                  href="/docs/"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero view docs"
@@ -593,7 +594,7 @@ function EnterpriseLanding() {
                 {[
                   ['1', 'Replace image URL', 'Use fallback.pics wherever a controlled image response is safer than a missing asset.'],
                   ['2', 'Add placeholder params', 'Set dimensions, background, text color, label, avatar, banner, skeleton, or blur behavior.'],
-                  ['3', 'Ship the response', 'The generated SVG is returned with deterministic output and cache-friendly headers.'],
+                  ['3', 'Ship the response', 'The generated image is returned with deterministic output and cache-friendly headers.'],
                 ].map(([step, title, body]) => (
                   <div key={step} className="grid gap-4 rounded-lg border border-zinc-200 bg-zinc-50 p-5 sm:grid-cols-[56px_1fr]">
                     <span className="grid h-12 w-12 place-items-center rounded-lg bg-zinc-950 font-mono text-sm font-bold text-white">{step}</span>
@@ -603,7 +604,7 @@ function EnterpriseLanding() {
                     </div>
                   </div>
                 ))}
-                <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-5 text-sm leading-6 text-zinc-100"><code>{`GET ${path}\nHTTP/2 200\ncontent-type: image/svg+xml\ncache-control: public, max-age=31536000, immutable`}</code></pre>
+                <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-5 text-sm leading-6 text-zinc-100"><code>{`GET ${publicPath}.webp\nHTTP/2 200\ncontent-type: image/webp\ncache-control: public, max-age=31536000, immutable`}</code></pre>
               </div>
             </div>
           </div>
@@ -678,7 +679,7 @@ function EnterpriseLanding() {
                   Contact sales
                 </a>
                 <a
-                  href="/api"
+                  href="/api/"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Enterprise review infrastructure details"
@@ -781,7 +782,7 @@ function EnterpriseLanding() {
                 Generate your first URL
               </a>
               <a
-                href="/docs"
+                href="/docs/"
                 data-analytics-event="cta_click"
                 data-analytics-category="conversion"
                 data-analytics-label="Final read docs"

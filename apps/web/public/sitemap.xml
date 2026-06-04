@@ -17,7 +17,7 @@
 
   <!-- Documentation -->
   <url>
-    <loc>https://fallback.pics/docs</loc>
+    <loc>https://fallback.pics/docs/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -25,7 +25,7 @@
 
   <!-- API Reference -->
   <url>
-    <loc>https://fallback.pics/api</loc>
+    <loc>https://fallback.pics/api/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -33,7 +33,7 @@
 
   <!-- Features -->
   <url>
-    <loc>https://fallback.pics/features</loc>
+    <loc>https://fallback.pics/features/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -133,7 +133,7 @@
 
   <!-- Blog -->
   <url>
-    <loc>https://fallback.pics/blog</loc>
+    <loc>https://fallback.pics/blog/</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -146,7 +146,7 @@
 
   <!-- Blog Posts -->
   <url>
-    <loc>https://fallback.pics/blog/complete-guide-to-image-placeholders-in-web-development</loc>
+    <loc>https://fallback.pics/blog/complete-guide-to-image-placeholders-in-web-development/</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -158,7 +158,7 @@
   </url>
 
   <url>
-    <loc>https://fallback.pics/blog/why-every-developer-needs-fallback-images-case-studies</loc>
+    <loc>https://fallback.pics/blog/why-every-developer-needs-fallback-images-case-studies/</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -170,7 +170,7 @@
   </url>
 
   <url>
-    <loc>https://fallback.pics/blog/image-loading-best-practices-for-better-ux</loc>
+    <loc>https://fallback.pics/blog/image-loading-best-practices-for-better-ux/</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

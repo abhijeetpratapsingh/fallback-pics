@@ -18,6 +18,9 @@ workers_dev = true
 ENVIRONMENT = "production"
 GOOGLE_ANALYTICS_ENABLED = "false"
 
+[images]
+binding = "IMAGES"
+
 # routes = [
 #   { pattern = "fallback.pics/*", zone_name = "fallback.pics" }
 # ]

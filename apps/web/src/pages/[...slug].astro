@@ -34,36 +34,6 @@ const structuredData = {
 
 const structuredDataItems = [structuredData];
 
-if (page.faqs?.length) {
-  structuredDataItems.push({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: page.faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
-  });
-}
-
-if (page.howToSteps?.length) {
-  structuredDataItems.push({
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: page.h1,
-    description: page.description,
-    step: page.howToSteps.map((step, index) => ({
-      '@type': 'HowToStep',
-      position: index + 1,
-      name: step.name,
-      text: step.text
-    }))
-  });
-}
-
 function sectionId(heading: string) {
   return heading
     .toLowerCase()
@@ -199,7 +169,7 @@ function codeLanguage(code: string) {
     <div class="content-cta__code">
       <code>{page.exampleUrl}</code>
     </div>
-    <a href="/api">View API Reference</a>
+    <a href="/api/">View API Reference</a>
   </Fragment>
 
   {structuredDataItems.map((item) => (

@@ -1,226 +1,170 @@
-# fallback.pics SEO, Competitor, and Keyword Audit
+# fallback.pics SEO Re-Audit and Improvement Check
 
 Audit date: 2026-06-03  
-Primary market: United States desktop search  
-Data used: Semrush domain overview, organic research, keyword research, backlink analytics, and live HTTP checks against `https://fallback.pics`.
+Scope: full-site SEO re-audit of `https://fallback.pics/` with comparison against the previous 2026-06-03 baseline.  
+Primary market: United States desktop search.  
+Data used: Semrush domain overview, organic research, keyword research, backlink analytics, live HTTP header checks, live HTML checks, sitemap review, `robots.txt`, `llms.txt`, and the previous `FULL-AUDIT-REPORT.md` baseline.
 
-## Executive Summary
+## Audit Summary
 
-fallback.pics has the product surface needed to compete in the placeholder image market, but it has almost no current organic footprint. Semrush reports only 2 US organic keywords, 0 estimated organic traffic, and 0 paid traffic for fallback.pics. The site is ranking only for branded or near-branded fallback terms, not for the higher-volume placeholder terms where demand exists.
+Overall rating: Good technical progress, but organic visibility has not improved yet.  
+Directional SEO health score: 72/100.  
+Score confidence: Medium. Semrush and live technical checks were available, but the bundled SEO scripts for PageSpeed, parser, robots, `llms.txt`, social meta, and security headers could not run because this Python environment is missing `requests` and `beautifulsoup4`.
 
-The market is not huge, but it is very winnable if the technical routing issues are fixed and the site concentrates around "placeholder image", "image placeholder", "placeholder image generator", "dummy image generator", and "placeholder image API". The strongest competitors win with simple utility pages, clean API examples, exact-match intent, and strong backlink profiles.
+Top improvements:
 
-The biggest blockers are technical:
+1. Unknown web paths now return a real `404` instead of homepage HTML.
+2. `/llms.txt` now returns `text/plain` with product, docs, API, and core topic links.
+3. Core SEO pages now use trailing-slash canonicals that match their final URLs.
+4. `/placeholder-image-generator/` is live and indexable with targeted title, description, H1, examples, and internal links.
+5. Homepage title and meta description now target `placeholder image API` and `placeholder image generator`.
 
-- Non-existent web paths return `200 text/html`, creating soft-404 risk.
-- Short image URLs like `/400x300` and `/400x300.png` return the homepage HTML instead of an image, while `/api/v1/400x300` works correctly.
-- Several SEO pages redirect to trailing-slash URLs while their canonical tags point to non-trailing-slash URLs.
-- `/llms.txt` returns the homepage HTML instead of a real `llms.txt` or 404.
-- Backlink authority is weak: 28 backlinks, 21 referring domains, authority score 2, and 0 follow links reported by Semrush.
+Top remaining issues:
 
-## Current Organic Visibility
+1. Semrush still reports only 2 US organic keywords, 0 estimated organic traffic, and no rankings for the core placeholder-image terms.
+2. Sitemap still includes some non-final URLs, such as `/docs`, `/api`, `/features`, and `/blog`, which redirect to trailing-slash URLs.
+3. Homepage copy still contains at least one root-style API example, `GET /800x450/18181B/FFFFFF?text=Product+Image`, while root image routes now return 404 and the canonical API route is `/api/v1/...`.
+4. API, generator, and dummy-image pages include `FAQPage` JSON-LD. For a commercial developer SaaS page, this is no longer a useful Google rich-result target and should be removed or replaced with safer structured data.
+5. Security headers are still incomplete on the web surface: live homepage headers show `X-Content-Type-Options` and `Referrer-Policy`, but not HSTS, CSP, or frame-ancestor protection.
 
-Semrush current snapshot for `fallback.pics` in the US:
+## What Improved Since the Previous Audit
 
-| Metric | Value |
-|---|---:|
-| Semrush rank | 26,036,061 |
-| Organic keywords | 2 |
-| Estimated organic traffic | 0 |
-| Organic traffic cost | 0 |
-| Paid keywords | 0 |
-| Paid traffic | 0 |
+| Previous finding | Previous evidence | Current evidence | Status |
+|---|---|---|---|
+| Soft 404s | `/not-a-real-seo-test-page` returned `200 text/html` | `/not-a-real-seo-test-page` now returns `HTTP/2 404`, `cache-control: no-store` | Improved |
+| Short image routes returned homepage HTML | `/400x300` and `/400x300.png` returned `200 text/html` | `/400x300` and `/400x300.png` now return `HTTP/2 404`; `/api/v1/400x300` returns `200 image/svg+xml` | Improved, strategy now appears to be `/api/v1/...` only |
+| `/llms.txt` was a soft fallback | `/llms.txt` returned homepage HTML | `/llms.txt` returns `200 text/plain` with primary pages, topics, and canonical API route guidance | Improved |
+| Canonicals conflicted on core SEO pages | `/placeholder-image-api/` declared non-trailing canonical | `/placeholder-image-api/`, `/placeholder-image-generator/`, `/dummy-image-generator/`, `/broken-image-fallback/`, and `/docs/` declare trailing-slash canonicals | Improved |
+| Homepage was weak for search-demand terms | Title was `Fallback Image Infrastructure for Production Apps | fallback.pics` | Homepage title is `Placeholder Image API and Fallback Image Generator | fallback.pics`; meta description includes `placeholder images`, `fallback images`, `placeholder image API`, and `generator` | Improved |
+| Missing generator page | `/placeholder-image-generator/` was recommended | `/placeholder-image-generator/` is live with targeted title, description, H1, examples, FAQ content, and related links | Improved |
+| Sitemap included short image endpoint URLs | Prior sitemap listed `/400x300` as a URL | Current sitemap no longer lists `/400x300` as a page URL; image sitemap entries point to `/api/v1/...` | Improved |
 
-Historical Semrush trend:
+## Current Semrush Visibility
 
-- The domain first appears with non-zero organic keyword counts in November 2025.
-- It peaked at 6 organic keywords in December 2025.
-- It dropped to 2 organic keywords by May 2026.
-- Estimated traffic remained 0 throughout the available history.
+Semrush current US snapshot for `fallback.pics`:
+
+| Metric | Current value | Previous baseline | Change |
+|---|---:|---:|---:|
+| Semrush rank | 26,036,061 | 26,036,061 | No meaningful change |
+| Organic keywords | 2 | 2 | No change |
+| Estimated organic traffic | 0 | 0 | No change |
+| Organic traffic cost | 0 | 0 | No change |
+| Paid keywords | 0 | 0 | No change |
+| Paid traffic | 0 | 0 | No change |
 
 Current ranking keywords:
 
-| Keyword | Position | Search Volume | Ranking URL | Traffic |
-|---|---:|---:|---|---:|
-| fallback img | 27 | 210 | `https://fallback.pics/` | 0 |
-| fallback image | 32 | 90 | `https://fallback.pics/` | 0 |
+| Keyword | Position | Previous position | Search volume | Ranking URL | Traffic |
+|---|---:|---:|---:|---|---:|
+| fallback img | 27 | 27 | 210 | `https://fallback.pics/` | 0 |
+| fallback image | 32 | 32 | 90 | `https://fallback.pics/` | 0 |
 
-Interpretation: Google currently understands the homepage around "fallback image" terms, but not around the broader "placeholder image" market where most search volume sits.
+Historical Semrush trend remains unchanged in direction:
+
+- 0 organic keywords through October 2025.
+- 2 organic keywords in November 2025.
+- Peak of 6 organic keywords in December 2025.
+- 2 organic keywords by April and May 2026.
+- Estimated traffic remains 0 for every available month.
+
+Interpretation: implementation quality has improved, but Semrush has not yet observed ranking gains. That is normal if fixes were deployed recently, because crawl, indexing, and ranking updates lag production changes.
 
 ## Competitor Benchmark
 
-Semrush's organic competitor overlap report returned no meaningful competitors for fallback.pics because the site ranks for too few keywords. I used Semrush SERP reports for `placeholder image api` and `dummy image generator`, then benchmarked the domains that actually appear in those SERPs.
+Semrush still shows fallback.pics far behind the active placeholder-image market.
 
-| Competitor | US Organic Keywords | Est. Organic Traffic | Traffic Cost | Backlinks | Ref. Domains | Authority Score |
+| Competitor | US Organic Keywords | Est. Organic Traffic | Traffic Cost | Backlinks | Ref. Domains | Follow Links |
 |---|---:|---:|---:|---:|---:|---:|
-| placehold.co | 1,002 | 10,868 | 22,189 | 2,379,792 | 3,531 | 40 |
-| picsum.photos | 2,066 | 7,465 | 7,043 | 1,609,122 | 8,018 | 45 |
-| placehold.net | 193 | 2,043 | 6,669 | 454 | 131 | 13 |
-| placeholderimage.dev | 204 | 1,094 | 2,690 | 548 | 187 | 19 |
-| dummyimage.com | 477 | 449 | 10 | 476,745 | 3,604 | 39 |
-| fallback.pics | 2 | 0 | 0 | 28 | 21 | 2 |
+| placehold.co | 1,002 | 10,868 | 22,189 | 2,379,861 | 3,531 | 2,378,312 |
+| picsum.photos | 2,066 | 7,465 | 7,043 | 1,609,747 | 8,021 | 1,602,348 |
+| placehold.net | 193 | 2,043 | 6,669 | 454 | 131 | 290 |
+| placeholderimage.dev | 204 | 1,094 | 2,690 | 548 | 187 | 341 |
+| dummyimage.com | 477 | 449 | 10 | 476,745 | 3,604 | 472,524 |
+| fallback.pics | 2 | 0 | 0 | 28 | 21 | 0 |
 
-What competitors are winning:
+Current SERP checks from Semrush:
 
-- placehold.co owns broad head terms: position 1 for `placeholder`, `placeholder image`, `image placeholder`, `placeholder images`, and related variants.
-- picsum.photos wins the random/test image angle: position 1 for `test image`, `lorem picsum`, `picsum`, plus position 4 for `random image`.
-- dummyimage.com owns the exact "dummy image" cluster: position 1 for `dummy image`, `dummy image generator`, `dummy images`, and `dummy image creator`.
-- placeholderimage.dev and placehold.net rank well despite smaller backlink profiles because their domain and page targeting are exact-match for "placeholder image".
+- `placeholder image api`: top 20 includes placehold.co, picsum.photos, dev.me, Reddit, OpenReplay, loremipsum.io, placehold.net, placeholderimage.dev, pravatar.cc, placeholders.dev, TwicPics, Apify, and others. fallback.pics is not in the top 20.
+- `placeholder image generator`: top 20 includes placehold.co, placeholderimage.dev, picsum.photos, betterbugs.io, dummyimage.com, customer.io, loremipsum.io, fpoimg.com, WebsitePlanet, TestingBot, PicPerf, and others. fallback.pics is not in the top 20.
+- `dummy image generator`: top 20 includes dummyimage.com, dummy-image-generator.com, picsum.photos, placeholderimage.dev, WebsitePlanet, dummyimg.in, testdatahub.com, dummyimage.web.app, Image Elf, 24toolbox, ToolCookie, GitHub, and others. fallback.pics is not in the top 20.
 
-## Keyword Research
+## Keyword Research Snapshot
 
-Seed keyword metrics from Semrush US:
+Semrush US keyword metrics remain the same core opportunity set:
 
-| Keyword | Volume | CPC | Competition | Notes |
+| Keyword | Volume | CPC | Competition | Current fallback.pics ranking |
 |---|---:|---:|---:|---|
-| placeholder image | 8,100 | 4.57 | 0.00 | Core head term. Competitors rank with simple utility pages. |
-| image placeholder | 4,400 | 4.57 | 0.00 | Same intent as above; should be covered on the main generator/API page. |
-| placeholder images | 1,900 | 4.57 | 0.00 | Plural variant with meaningful volume. |
-| placeholder image generator | 320 | 0.00 | 0.01 | High product fit; fallback.pics does not currently rank. |
-| dummy images | 210 | 0.00 | 0.00 | Supports dummy image generator cluster. |
-| placeholder image api | 140 | 0.00 | 0.33 | Best B2B/developer-fit keyword. |
-| dummy image generator | 140 | 0.00 | 0.00 | Competitor-owned by dummyimage.com. |
-| broken image placeholder | 110 | 0.00 | 0.00 | Lower volume, highly aligned with brand positioning. |
-| fallback image | 90 | 0.00 | 0.00 | Current ranking keyword, but lower demand. |
-| image fallback | 20 | 0.00 | 0.33 | Low volume but product-relevant. |
+| placeholder image | 8,100 | 4.57 | 0.00 | Not top 100 |
+| image placeholder | 4,400 | 4.57 | 0.00 | Not top 100 |
+| placeholder images | 1,900 | 4.57 | 0.00 | Not top 100 |
+| placeholder image generator | 320 | 0.00 | 0.01 | Not top 100 |
+| dummy images | 210 | 0.00 | 0.00 | Not top 100 |
+| fallback img | 210 | 0.00 | 0.00 | Position 27 |
+| placeholder image api | 140 | 0.00 | 0.33 | Not top 100 |
+| dummy image generator | 140 | 0.00 | 0.00 | Not top 100 |
+| broken image placeholder | 110 | 0.00 | 0.00 | Not top 100 |
+| fallback image | 90 | 0.00 | 0.00 | Position 32 |
+| image fallback | 20 | 0.00 | 0.33 | Not top 100 |
+| react image fallback | 20 | 0.00 | 0.33 | Not top 100 |
+| nextjs image fallback | 20 | 0.00 | 0.33 | Not top 100 |
 
-Question terms from Semrush are mostly low-volume but useful for guides and FAQ content:
+Recommended priority remains:
 
-| Keyword | Volume |
-|---|---:|
-| what is placeholder image | 50 |
-| how to use placeholder image in html | 20 |
-| what are placeholder images | 20 |
-| what is a placeholder image | 20 |
-| how to add placeholder image in html | 10 |
+1. `placeholder image API`
+2. `placeholder image generator`
+3. `dummy image generator`
+4. `broken image fallback`
+5. `react image fallback` and `nextjs image fallback`
 
-Recommended keyword clusters:
+## Findings Table
 
-1. Core generator/API cluster
-   - `placeholder image`
-   - `image placeholder`
-   - `placeholder images`
-   - `placeholder image generator`
-   - `placeholder image api`
+| Area | Severity | Confidence | Finding | Evidence | Fix |
+|---|---|---|---|---|---|
+| Crawlability | Pass | Confirmed | Soft 404 behavior is fixed for unknown paths. | Live `curl -I -L https://fallback.pics/not-a-real-seo-test-page` returned `HTTP/2 404` with `cache-control: no-store`. | Keep a regression check for unknown routes returning 404. |
+| API routing | Pass with cleanup | Confirmed | The public strategy now appears standardized on `/api/v1/...`. | `/api/v1/400x300` returns `200 image/svg+xml`; `/400x300` and `/400x300.png` return 404. | Update every visible docs/code example to use `/api/v1/...`. |
+| API routing | Warning | Confirmed | Homepage still contains one root-style API example. | Live homepage HTML contains `GET /800x450/18181B/FFFFFF?text=Product+Image`; root image routes return 404. | Change this example to `GET /api/v1/800x450/18181B/FFFFFF?text=Product+Image`. Scan all content for the same pattern. |
+| Sitemap | Warning | Confirmed | Sitemap still includes redirecting non-final URLs. | Sitemap lists `https://fallback.pics/docs`, `/api`, `/features`, and `/blog`; live checks show each returns `308` to trailing-slash versions. | Make all sitemap `<loc>` values final 200 URLs, e.g. `/docs/`, `/api/`, `/features/`, `/blog/`, and trailing-slash blog posts if those routes redirect. |
+| Canonicals | Pass | Confirmed | Core SEO page canonicals now match trailing-slash final URLs. | Live HTML for `/placeholder-image-api/`, `/placeholder-image-generator/`, `/dummy-image-generator/`, `/broken-image-fallback/`, and `/docs/` declares trailing-slash canonicals. | Keep canonical generation aligned with final URLs. |
+| `llms.txt` | Pass | Confirmed | `llms.txt` is now real and useful. | Live `/llms.txt` returns `text/plain` and lists homepage, docs, API reference, GitHub, topic pages, and canonical API route guidance. | Keep it updated when docs/routes change. |
+| Robots and AI crawling | Info | Confirmed | AI search readiness is mixed by design. | `robots.txt` allows general crawling, lists sitemap, but disallows GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, Bytespider, and CCBot. | Keep if this is the intended rights/privacy posture. Revisit only if AI crawler discovery is a growth priority. |
+| Homepage on-page SEO | Pass | Confirmed | Homepage metadata now targets broader search demand. | Title: `Placeholder Image API and Fallback Image Generator | fallback.pics`; description includes `placeholder images`, `fallback images`, `placeholder image API`, and `generator`. | Keep "Never show broken images again" as brand H1, but continue reinforcing exact-match terms in supporting copy and internal links. |
+| New generator page | Pass | Confirmed | Dedicated generator page is live and targeted. | `/placeholder-image-generator/` returns 200; title, description, H1, copy, examples, and links all target the generator cluster. | Build links to this page from README, docs, guides, and external developer content. |
+| Structured data | Warning | Confirmed | `FAQPage` JSON-LD is present on commercial pages where Google rich results are generally restricted. | Live HTML for `/placeholder-image-api/`, `/placeholder-image-generator/`, and `/dummy-image-generator/` contains `FAQPage` schema. | Remove `FAQPage` JSON-LD. Keep visible FAQ content, and use `WebPage`, `SoftwareApplication`, `Organization`, and `BreadcrumbList` where appropriate. Do not add `HowTo` schema. |
+| Security headers | Warning | Confirmed | Web pages are missing several common security headers. | Homepage headers include `X-Content-Type-Options: nosniff` and `Referrer-Policy`, but no `Strict-Transport-Security`, `Content-Security-Policy`, or frame-ancestor protection. | Add headers through Cloudflare Pages `_headers` or equivalent deployment config. |
+| Backlinks | Warning | Confirmed | Authority remains too weak to compete for head terms. | Semrush backlink overview: 28 backlinks, 21 referring domains, 0 follow links, authority score 2, trust score 2. | Prioritize developer-relevant follow links from GitHub, docs, tutorials, directories, examples, and comparison content. |
+| Organic visibility | Warning | Confirmed | Ranking impact has not appeared yet. | Semrush still reports 2 US organic keywords and 0 estimated traffic; current rankings are only `fallback img` position 27 and `fallback image` position 32. | Track Google Search Console weekly after deployment; do not expect Semrush movement immediately. |
+| Performance | Unknown | Hypothesis | Core Web Vitals were not measured in this pass. | PageSpeed/script checks could not run because local SEO script dependencies were unavailable. | Run PageSpeed Insights or install audit dependencies before the next full technical report. |
 
-2. Dummy image cluster
-   - `dummy image generator`
-   - `dummy image`
-   - `dummy images`
-   - `dummy image url`
+## Score Notes
 
-3. Broken image/fallback cluster
-   - `broken image placeholder`
-   - `broken image fallback`
-   - `fallback image`
-   - `image fallback`
-   - `react image fallback`
-   - `nextjs image fallback`
+Technical SEO: 78/100  
+Positive signals: real 404s, live SVG API route, correct `/llms.txt`, robots sitemap entry, core SEO canonicals fixed.  
+Deficits: redirecting sitemap URLs, one incorrect root-style API example, incomplete security headers.
 
-4. Competitor alternative cluster
-   - `placehold.co alternative`
-   - `dummyimage alternative`
-   - `picsum alternative`
+Content and on-page SEO: 80/100  
+Positive signals: stronger homepage metadata, dedicated generator page, targeted API/dummy/broken pages, visible examples, internal links.  
+Deficits: Semrush still shows no rankings for the core keyword cluster, and external authority is low.
 
-## On-Site SEO Findings
+Schema and structured data: 55/100  
+Positive signals: `SoftwareApplication`, `Organization`, and `WebPage` schema are present.  
+Deficits: `FAQPage` is now used on commercial pages where it is not a practical rich-result opportunity; breadcrumb structured data is not visible in checked pages.
 
-### 1. Soft 404s Are Confirmed
+AI search readiness: 75/100  
+Positive signals: `llms.txt` exists and is product-specific.  
+Deficits: robots policy blocks major AI crawlers, which may be intentional but limits AI crawler exposure.
 
-Evidence: `https://fallback.pics/not-a-real-seo-test-page` returned `HTTP/2 200` and `content-type: text/html; charset=utf-8`.
+Authority and off-site SEO: 20/100  
+Positive signals: GitHub is present as a high-authority referring domain.  
+Deficits: Semrush reports 0 follow links and a backlink gap of two to four orders of magnitude versus the main competitors.
 
-Impact: Search engines may crawl and index invalid paths as duplicate homepage-like pages. This dilutes crawl quality and makes it harder for the real SEO pages to establish trust.
+## Environment Limitations
 
-Fix: Add a real 404 response for unknown web paths. If using Cloudflare Pages/Astro static output, add a proper 404 page and make sure wildcard routing does not serve `index.html` for every unknown URL.
+The SEO skill scripts were attempted but did not run because the local Python environment is missing required packages:
 
-### 2. Short Image Routes Do Not Match the Advertised Product
+- `parse_html.py`: missing `beautifulsoup4`
+- `security_headers.py`: missing `requests`
+- `robots_checker.py`: missing `requests`
+- `llms_txt_checker.py`: missing `requests`
+- `social_meta.py`: missing `requests`
 
-Evidence:
-
-- `https://fallback.pics/api/v1/400x300` returns `HTTP/2 200`, `content-type: image/svg+xml`, and `cache-control: public, max-age=31536000, immutable`.
-- `https://fallback.pics/400x300` returns `HTTP/2 200`, `content-type: text/html; charset=utf-8`, and the homepage canonical.
-- `https://fallback.pics/400x300.png` also returns `text/html`.
-- The sitemap includes `https://fallback.pics/400x300` as a URL.
-
-Impact: This creates a trust gap between product messaging, sitemap URLs, and actual production behavior. It also blocks rankings for utility-style searches where users expect the URL itself to generate an image.
-
-Fix options:
-
-- Preferred: route root image patterns like `/400x300`, `/square/400`, `/avatar/200`, and `/banner/1200x400` to the Worker while reserving web page slugs for Astro.
-- Alternative: make `/api/v1/...` the only supported public API path, update all docs and sitemap entries, and do not list short image routes as indexable pages.
-
-### 3. Canonicals Conflict With Trailing-Slash Redirects
-
-Evidence:
-
-- `https://fallback.pics/placeholder-image-api` returns `308` to `/placeholder-image-api/`.
-- The fetched `/placeholder-image-api/` page declares canonical `https://fallback.pics/placeholder-image-api`.
-- The same pattern appears on `dummy-image-generator`, `broken-image-fallback`, and `alternatives/placehold-co-alternative`.
-- Source likely location: `apps/web/src/pages/[...slug].astro`, where `canonical` is built as `https://fallback.pics/${page.slug}`.
-
-Impact: Google can resolve this, but it is an unnecessary canonical signal conflict on exactly the pages that need maximum clarity.
-
-Fix: Choose one URL style. Given production redirects to trailing slash, set SEO page canonicals and sitemap URLs to the trailing-slash versions.
-
-### 4. Sitemap Is Useful but Needs Cleanup
-
-Evidence: `apps/web/public/sitemap.xml` lists 23 URLs, including SEO landing pages, guides, alternatives, blog pages, and image examples.
-
-Issues:
-
-- Several sitemap URLs redirect to trailing-slash versions.
-- `/400x300` is listed as a sitemap URL but serves homepage HTML, not an image or useful page.
-- API example URLs should not be indexed as thin HTML pages unless they serve a genuine indexable page with unique content.
-
-Fix: Update sitemap URLs to the canonical final URLs. Remove or correct short API endpoint entries until those routes return the intended response.
-
-### 5. `llms.txt` Is a Soft Fallback
-
-Evidence: `https://fallback.pics/llms.txt` returns `HTTP/2 200` with `content-type: text/html; charset=utf-8`.
-
-Impact: If AI search/GEO readiness matters, this is a poor signal. A crawler requesting `llms.txt` receives the homepage instead of a structured file or a clear 404.
-
-Fix: Publish a real `/llms.txt` with concise product, docs, API, and support links, or return a clean 404 if not supporting it yet.
-
-### 6. Homepage Positioning Is Strong for Brand, Weak for Search Demand
-
-Evidence:
-
-- Title: `Fallback Image Infrastructure for Production Apps | fallback.pics`
-- H1: `Never show broken images again.`
-- Semrush current rankings are `fallback img` and `fallback image`, not `placeholder image`, `placeholder image API`, or `placeholder image generator`.
-
-Impact: The homepage differentiates the product, but it does not directly align with the largest available demand. Competitors ranking for the head terms use direct page titles and H1s around placeholder images.
-
-Fix: Make the homepage and/or a primary product page explicitly target "placeholder image API" and "placeholder image generator" without losing the fallback positioning. Example title direction: `Placeholder Image API for Reliable Fallback Images | fallback.pics`.
-
-### 7. Backlink Profile Is Too Weak To Compete Yet
-
-Evidence: Semrush reports 28 backlinks from 21 referring domains, authority score 2, trust score 2, 0 follow links, and 28 nofollow links. GitHub is the strongest referring domain with 3 links; many other referring domains have very low authority scores.
-
-Impact: The site is trying to compete against domains with 131 to 8,018 referring domains. Content and technical fixes are required, but they will not be enough without links from developer-relevant sources.
-
-Fix: Prioritize developer distribution that creates real references: GitHub README/docs, npm/package examples if relevant, dev.to tutorials, comparison posts, webdev tool directories, "awesome" lists, Product Hunt, Hacker News, Reddit, and framework-specific fallback image examples.
-
-## Recommended SEO Strategy
-
-The most practical path is to own a narrow developer wedge first, then broaden:
-
-1. Win `placeholder image API` and `placeholder image generator`.
-2. Use `/dummy-image-generator/` to compete for dummy-image terms.
-3. Use guides to capture implementation intent: React, Next.js, HTML `onerror`, ecommerce placeholders.
-4. Use alternative pages for competitor-aware users.
-5. Build links through open-source and developer education, not generic directory spam.
-
-## Priority Findings
-
-| Priority | Finding | Severity | Confidence |
-|---|---|---|---|
-| P0 | Unknown paths return 200 HTML soft 404s | High | Confirmed |
-| P0 | Short image routes return homepage HTML instead of images | High | Confirmed |
-| P1 | SEO page canonicals conflict with trailing-slash redirects | Medium | Confirmed |
-| P1 | Sitemap includes redirecting and currently misleading endpoint URLs | Medium | Confirmed |
-| P1 | Homepage search intent does not match highest-volume keywords | Medium | Confirmed |
-| P1 | Backlink profile is far behind competitors | High | Confirmed |
-| P2 | `llms.txt` returns homepage HTML | Low/Medium | Confirmed |
-| P2 | Security headers are incomplete for a production SaaS surface | Low | Confirmed |
-
+The report therefore uses Semrush data, direct `curl` header/body checks, sitemap inspection, and targeted markup extraction from the fetched live HTML.

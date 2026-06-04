@@ -51,8 +51,11 @@ Recommended environment variables:
 | `NODE_VERSION` | `20` |
 | `PNPM_VERSION` | `8.12.0` |
 | `PUBLIC_GA_MEASUREMENT_ID` | Your GA4 measurement ID, for example `G-XXXXXXXXXX` |
+| `WORKER_ORIGIN` | Worker origin for the Pages `/api/v1/*` proxy, for example `https://fallback-pics.billing-04f.workers.dev` |
 
 Cloudflare will install dependencies, run the build command, and deploy `apps/web/dist`.
+
+`WORKER_ORIGIN` is read by Cloudflare Pages Functions at request time. Do not include the `/api/v1` prefix in this value; the Pages proxy appends the incoming API path and preserves query strings.
 
 ## Production Domain Cutover
 
@@ -88,6 +91,32 @@ The Worker account ID configured locally is:
 ```
 
 If you later want the Worker to deploy from GitHub too, set up Cloudflare Workers Builds or a GitHub Action with a scoped Cloudflare API token.
+
+## Pages API Proxy Configuration
+
+The public `https://fallback.pics/api/v1/*` route is served by a Pages Function that forwards requests to the Worker configured by `WORKER_ORIGIN`.
+
+Production example:
+
+```text
+WORKER_ORIGIN=https://fallback-pics.billing-04f.workers.dev
+```
+
+Local development example:
+
+```bash
+cp apps/web/.dev.vars.example apps/web/.dev.vars
+pnpm worker:dev
+pnpm web:dev
+```
+
+For Direct Upload deployments, set the runtime variable with Wrangler:
+
+```bash
+wrangler pages secret put WORKER_ORIGIN --project-name fallback-pics
+```
+
+The proxy handles `OPTIONS` preflight directly, proxies `HEAD` as a Worker `GET` while returning an empty response body, and preserves the full query string on forwarded image requests.
 
 ### Worker Google Analytics
 

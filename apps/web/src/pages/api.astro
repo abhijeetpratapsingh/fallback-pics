@@ -17,25 +17,25 @@ const navItems = [
 const routes = [
   {
     title: 'Standard fallback',
-    path: '/640x360',
-    description: 'Create a deterministic SVG placeholder from dimensions alone.',
+    path: '/api/v1/640x360',
+    description: 'Create a deterministic placeholder from dimensions alone. SVG is the default output.',
     image: `${baseUrl}/640x360`,
   },
   {
     title: 'Custom color and label',
-    path: '/800x450/18181B/FFFFFF?text=Product+Image',
+    path: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
     description: 'Set visible fallback copy and brand-safe colors from the URL.',
     image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
   },
   {
     title: 'Avatar initials',
-    path: '/avatar/160?text=JD',
+    path: '/api/v1/avatar/160?text=JD',
     description: 'Generate compact initials for user, team, or organization avatars.',
     image: `${baseUrl}/avatar/160?text=JD`,
   },
   {
     title: 'Skeleton state',
-    path: '/animated/skeleton/640x360',
+    path: '/api/v1/animated/skeleton/640x360',
     description: 'Reserve the final image box while asynchronous media loads.',
     image: `${baseUrl}/animated/skeleton/640x360`,
   },
@@ -46,16 +46,16 @@ const parameters = [
   { name: 'height', type: 'number', description: 'Image height in pixels. Omit for square and avatar presets.' },
   { name: 'bgColor', type: 'path hex', description: 'Optional background color as a path segment after dimensions, without the # prefix.' },
   { name: 'textColor', type: 'path hex', description: 'Optional foreground/text color as the next path segment, without the # prefix.' },
-  { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated SVG.' },
-  { name: 'extension', type: 'path suffix', description: 'Optional route suffix such as .png or .webp. The current worker still returns SVG output.' },
+  { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated image.' },
+  { name: 'extension', type: 'path suffix', description: 'Optional route suffix: .svg, .png, .jpg, .jpeg, or .webp. SVG is the default when omitted.' },
 ];
 
 const headers = [
-  { name: 'Content-Type', value: 'image/svg+xml', detail: 'The production worker currently returns SVG for generated images.' },
+  { name: 'Content-Type', value: 'image/svg+xml, image/png, image/jpeg, or image/webp', detail: 'The response MIME type matches the requested output suffix. Routes without a suffix return SVG.' },
   { name: 'Cache-Control', value: 'public, max-age=31536000, immutable', detail: 'Deterministic URLs are designed for long-lived CDN caching.' },
   { name: 'CDN-Cache-Control', value: 'max-age=31536000', detail: 'Cloudflare can cache deterministic image responses close to users.' },
   { name: 'Access-Control-Allow-Origin', value: '*', detail: 'Generated fallbacks can be used from browser, server, email, and native surfaces.' },
-  { name: 'X-Content-Type-Options', value: 'nosniff', detail: 'The worker declares image content explicitly for SVG responses.' },
+  { name: 'X-Content-Type-Options', value: 'nosniff', detail: 'The worker declares image content explicitly for generated image responses.' },
 ];
 
 const errorRows = [
@@ -94,7 +94,7 @@ const reactExample = `export function ProductImageFallback() {
 
 <DocsLayout
   title="API Reference | fallback.pics"
-  description="Production API reference for fallback.pics SVG fallback image infrastructure, including URL routes, parameters, headers, and framework examples."
+  description="Production API reference for fallback.pics fallback image infrastructure, including URL routes, output formats, parameters, headers, and framework examples."
 >
   <div class="api-page">
     <section class="api-hero" id="base-url">
@@ -168,7 +168,7 @@ const reactExample = `export function ProductImageFallback() {
           </div>
           <div class="api-callout">
             <strong>Format note:</strong>
-            The current edge implementation returns SVG responses. File extensions are parsed for route compatibility, but PNG, JPEG, WebP, AVIF, and GIF conversion should not be advertised until conversion is implemented in the worker.
+            Routes without a suffix return SVG. Add <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, or <code>.webp</code> to receive raster output encoded by the Cloudflare Images binding.
           </div>
         </section>
 
@@ -245,8 +245,8 @@ const reactExample = `export function ProductImageFallback() {
             </div>
             <div>
               <h3>Output</h3>
-              <code>image/svg+xml</code>
-              <p>The worker parses common image extensions for URL compatibility, while SVG remains the active response format.</p>
+              <code>SVG, PNG, JPEG, WebP</code>
+              <p>The default response is SVG. Raster suffixes return the matching image MIME type for clients that require bitmap assets.</p>
             </div>
             <div>
               <h3>Cache policy</h3>
@@ -259,7 +259,7 @@ const reactExample = `export function ProductImageFallback() {
               <h2>Ready to ship image fallbacks?</h2>
               <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through a separate enterprise agreement.</p>
             </div>
-            <a href="/docs">Read the Docs</a>
+            <a href="/docs/">Read the Docs</a>
           </div>
         </section>
       </article>

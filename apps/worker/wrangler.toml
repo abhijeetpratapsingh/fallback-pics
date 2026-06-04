@@ -12,6 +12,9 @@ command = "npm install"
 port = 8787
 local_protocol = "http"
 
+[images]
+binding = "IMAGES"
+
 # Custom domains (configured via dashboard)
 # Production URL: https://fallback.pics/api/v1
 # Fallback URL: https://fallback-pics.billing-04f.workers.dev
