@@ -64,10 +64,9 @@
 
 /* ==================== TYPOGRAPHY ENHANCEMENTS ==================== */
 
-/* Modern font stack with better weights */
+/* Shared web font stack */
 body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  font-family: var(--font-web);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -108,7 +107,7 @@ h3, .h3 {
   border-radius: var(--ds-radius);
   background: #18181b;
   color: #e4e4e7;
-  font: 0.875rem/1.65 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, monospace;
+  font: 0.875rem/1.65 var(--font-web);
 }
 
 :not(pre) > code {

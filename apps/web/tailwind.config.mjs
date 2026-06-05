@@ -16,8 +16,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['Geist Mono', 'JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['var(--font-web)'],
+        mono: ['var(--font-web)'],
       },
       backgroundImage: {
         'gradient-primary': 'linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%)',

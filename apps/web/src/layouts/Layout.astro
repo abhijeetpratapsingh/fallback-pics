@@ -1,4 +1,5 @@
 ---
+import '../../../../theme.css';
 import '../styles/modern-ui.css';
 import '../styles/accessibility.css';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -79,7 +80,7 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400..800&display=swap" rel="stylesheet" />
 
     <GoogleAnalytics />
   </head>
@@ -96,11 +97,11 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
 
 <style is:global>
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-web);
     background: #ffffff;
   }
   
   code {
-    font-family: 'Geist Mono', 'JetBrains Mono', Menlo, Monaco, Lucida Console, Liberation Mono, monospace;
+    font-family: var(--font-web);
   }
 </style>
