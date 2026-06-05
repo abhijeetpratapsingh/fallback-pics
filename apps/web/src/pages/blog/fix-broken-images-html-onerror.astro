@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['fix-broken-images-html-onerror'];
+---
+
+<BlogArticle post={post} />

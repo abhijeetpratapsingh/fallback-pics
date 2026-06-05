@@ -1,170 +1,151 @@
-# fallback.pics SEO Re-Audit and Improvement Check
+# fallback.pics SEO Audit, Keyword Research, and Competitor Analysis
 
-Audit date: 2026-06-03  
-Scope: full-site SEO re-audit of `https://fallback.pics/` with comparison against the previous 2026-06-03 baseline.  
-Primary market: United States desktop search.  
-Data used: Semrush domain overview, organic research, keyword research, backlink analytics, live HTTP header checks, live HTML checks, sitemap review, `robots.txt`, `llms.txt`, and the previous `FULL-AUDIT-REPORT.md` baseline.
+Audit date: 2026-06-05  
+Scope: `https://fallback.pics/`, priority SEO pages, generated-image API route, competitor SERP context, and six-month blog topic planning.  
+Primary market: United States developer/search audience.
 
-## Audit Summary
+## Executive Summary
 
-Overall rating: Good technical progress, but organic visibility has not improved yet.  
-Directional SEO health score: 72/100.  
-Score confidence: Medium. Semrush and live technical checks were available, but the bundled SEO scripts for PageSpeed, parser, robots, `llms.txt`, social meta, and security headers could not run because this Python environment is missing `requests` and `beautifulsoup4`.
+Overall rating: Needs improvement because a production API configuration issue is breaking generated-image URLs.
 
-Top improvements:
+Directional SEO score: 61/100
 
-1. Unknown web paths now return a real `404` instead of homepage HTML.
-2. `/llms.txt` now returns `text/plain` with product, docs, API, and core topic links.
-3. Core SEO pages now use trailing-slash canonicals that match their final URLs.
-4. `/placeholder-image-generator/` is live and indexable with targeted title, description, H1, examples, and internal links.
-5. Homepage title and meta description now target `placeholder image API` and `placeholder image generator`.
+The site has a solid SEO foundation: homepage positioning, product SEO pages, sitemap, `robots.txt`, `llms.txt`, security headers on HTML pages, comparison pages, and framework-specific guide pages are already in place. The biggest current issue is not content architecture. The biggest issue is that the canonical generated-image API route returns an error in production.
 
-Top remaining issues:
+## Critical Production Finding
 
-1. Semrush still reports only 2 US organic keywords, 0 estimated organic traffic, and no rankings for the core placeholder-image terms.
-2. Sitemap still includes some non-final URLs, such as `/docs`, `/api`, `/features`, and `/blog`, which redirect to trailing-slash URLs.
-3. Homepage copy still contains at least one root-style API example, `GET /800x450/18181B/FFFFFF?text=Product+Image`, while root image routes now return 404 and the canonical API route is `/api/v1/...`.
-4. API, generator, and dummy-image pages include `FAQPage` JSON-LD. For a commercial developer SaaS page, this is no longer a useful Google rich-result target and should be removed or replaced with safer structured data.
-5. Security headers are still incomplete on the web surface: live homepage headers show `X-Content-Type-Options` and `Referrer-Policy`, but not HSTS, CSP, or frame-ancestor protection.
-
-## What Improved Since the Previous Audit
-
-| Previous finding | Previous evidence | Current evidence | Status |
-|---|---|---|---|
-| Soft 404s | `/not-a-real-seo-test-page` returned `200 text/html` | `/not-a-real-seo-test-page` now returns `HTTP/2 404`, `cache-control: no-store` | Improved |
-| Short image routes returned homepage HTML | `/400x300` and `/400x300.png` returned `200 text/html` | `/400x300` and `/400x300.png` now return `HTTP/2 404`; `/api/v1/400x300` returns `200 image/svg+xml` | Improved, strategy now appears to be `/api/v1/...` only |
-| `/llms.txt` was a soft fallback | `/llms.txt` returned homepage HTML | `/llms.txt` returns `200 text/plain` with primary pages, topics, and canonical API route guidance | Improved |
-| Canonicals conflicted on core SEO pages | `/placeholder-image-api/` declared non-trailing canonical | `/placeholder-image-api/`, `/placeholder-image-generator/`, `/dummy-image-generator/`, `/broken-image-fallback/`, and `/docs/` declare trailing-slash canonicals | Improved |
-| Homepage was weak for search-demand terms | Title was `Fallback Image Infrastructure for Production Apps | fallback.pics` | Homepage title is `Placeholder Image API and Fallback Image Generator | fallback.pics`; meta description includes `placeholder images`, `fallback images`, `placeholder image API`, and `generator` | Improved |
-| Missing generator page | `/placeholder-image-generator/` was recommended | `/placeholder-image-generator/` is live with targeted title, description, H1, examples, FAQ content, and related links | Improved |
-| Sitemap included short image endpoint URLs | Prior sitemap listed `/400x300` as a URL | Current sitemap no longer lists `/400x300` as a page URL; image sitemap entries point to `/api/v1/...` | Improved |
-
-## Current Semrush Visibility
-
-Semrush current US snapshot for `fallback.pics`:
-
-| Metric | Current value | Previous baseline | Change |
-|---|---:|---:|---:|
-| Semrush rank | 26,036,061 | 26,036,061 | No meaningful change |
-| Organic keywords | 2 | 2 | No change |
-| Estimated organic traffic | 0 | 0 | No change |
-| Organic traffic cost | 0 | 0 | No change |
-| Paid keywords | 0 | 0 | No change |
-| Paid traffic | 0 | 0 | No change |
-
-Current ranking keywords:
-
-| Keyword | Position | Previous position | Search volume | Ranking URL | Traffic |
-|---|---:|---:|---:|---|---:|
-| fallback img | 27 | 27 | 210 | `https://fallback.pics/` | 0 |
-| fallback image | 32 | 32 | 90 | `https://fallback.pics/` | 0 |
-
-Historical Semrush trend remains unchanged in direction:
-
-- 0 organic keywords through October 2025.
-- 2 organic keywords in November 2025.
-- Peak of 6 organic keywords in December 2025.
-- 2 organic keywords by April and May 2026.
-- Estimated traffic remains 0 for every available month.
-
-Interpretation: implementation quality has improved, but Semrush has not yet observed ranking gains. That is normal if fixes were deployed recently, because crawl, indexing, and ranking updates lag production changes.
-
-## Competitor Benchmark
-
-Semrush still shows fallback.pics far behind the active placeholder-image market.
-
-| Competitor | US Organic Keywords | Est. Organic Traffic | Traffic Cost | Backlinks | Ref. Domains | Follow Links |
-|---|---:|---:|---:|---:|---:|---:|
-| placehold.co | 1,002 | 10,868 | 22,189 | 2,379,861 | 3,531 | 2,378,312 |
-| picsum.photos | 2,066 | 7,465 | 7,043 | 1,609,747 | 8,021 | 1,602,348 |
-| placehold.net | 193 | 2,043 | 6,669 | 454 | 131 | 290 |
-| placeholderimage.dev | 204 | 1,094 | 2,690 | 548 | 187 | 341 |
-| dummyimage.com | 477 | 449 | 10 | 476,745 | 3,604 | 472,524 |
-| fallback.pics | 2 | 0 | 0 | 28 | 21 | 0 |
-
-Current SERP checks from Semrush:
-
-- `placeholder image api`: top 20 includes placehold.co, picsum.photos, dev.me, Reddit, OpenReplay, loremipsum.io, placehold.net, placeholderimage.dev, pravatar.cc, placeholders.dev, TwicPics, Apify, and others. fallback.pics is not in the top 20.
-- `placeholder image generator`: top 20 includes placehold.co, placeholderimage.dev, picsum.photos, betterbugs.io, dummyimage.com, customer.io, loremipsum.io, fpoimg.com, WebsitePlanet, TestingBot, PicPerf, and others. fallback.pics is not in the top 20.
-- `dummy image generator`: top 20 includes dummyimage.com, dummy-image-generator.com, picsum.photos, placeholderimage.dev, WebsitePlanet, dummyimg.in, testdatahub.com, dummyimage.web.app, Image Elf, 24toolbox, ToolCookie, GitHub, and others. fallback.pics is not in the top 20.
-
-## Keyword Research Snapshot
-
-Semrush US keyword metrics remain the same core opportunity set:
-
-| Keyword | Volume | CPC | Competition | Current fallback.pics ranking |
-|---|---:|---:|---:|---|
-| placeholder image | 8,100 | 4.57 | 0.00 | Not top 100 |
-| image placeholder | 4,400 | 4.57 | 0.00 | Not top 100 |
-| placeholder images | 1,900 | 4.57 | 0.00 | Not top 100 |
-| placeholder image generator | 320 | 0.00 | 0.01 | Not top 100 |
-| dummy images | 210 | 0.00 | 0.00 | Not top 100 |
-| fallback img | 210 | 0.00 | 0.00 | Position 27 |
-| placeholder image api | 140 | 0.00 | 0.33 | Not top 100 |
-| dummy image generator | 140 | 0.00 | 0.00 | Not top 100 |
-| broken image placeholder | 110 | 0.00 | 0.00 | Not top 100 |
-| fallback image | 90 | 0.00 | 0.00 | Position 32 |
-| image fallback | 20 | 0.00 | 0.33 | Not top 100 |
-| react image fallback | 20 | 0.00 | 0.33 | Not top 100 |
-| nextjs image fallback | 20 | 0.00 | 0.33 | Not top 100 |
-
-Recommended priority remains:
-
-1. `placeholder image API`
-2. `placeholder image generator`
-3. `dummy image generator`
-4. `broken image fallback`
-5. `react image fallback` and `nextjs image fallback`
-
-## Findings Table
-
-| Area | Severity | Confidence | Finding | Evidence | Fix |
+| Severity | Confidence | Finding | Evidence | Impact | Fix |
 |---|---|---|---|---|---|
-| Crawlability | Pass | Confirmed | Soft 404 behavior is fixed for unknown paths. | Live `curl -I -L https://fallback.pics/not-a-real-seo-test-page` returned `HTTP/2 404` with `cache-control: no-store`. | Keep a regression check for unknown routes returning 404. |
-| API routing | Pass with cleanup | Confirmed | The public strategy now appears standardized on `/api/v1/...`. | `/api/v1/400x300` returns `200 image/svg+xml`; `/400x300` and `/400x300.png` return 404. | Update every visible docs/code example to use `/api/v1/...`. |
-| API routing | Warning | Confirmed | Homepage still contains one root-style API example. | Live homepage HTML contains `GET /800x450/18181B/FFFFFF?text=Product+Image`; root image routes return 404. | Change this example to `GET /api/v1/800x450/18181B/FFFFFF?text=Product+Image`. Scan all content for the same pattern. |
-| Sitemap | Warning | Confirmed | Sitemap still includes redirecting non-final URLs. | Sitemap lists `https://fallback.pics/docs`, `/api`, `/features`, and `/blog`; live checks show each returns `308` to trailing-slash versions. | Make all sitemap `<loc>` values final 200 URLs, e.g. `/docs/`, `/api/`, `/features/`, `/blog/`, and trailing-slash blog posts if those routes redirect. |
-| Canonicals | Pass | Confirmed | Core SEO page canonicals now match trailing-slash final URLs. | Live HTML for `/placeholder-image-api/`, `/placeholder-image-generator/`, `/dummy-image-generator/`, `/broken-image-fallback/`, and `/docs/` declares trailing-slash canonicals. | Keep canonical generation aligned with final URLs. |
-| `llms.txt` | Pass | Confirmed | `llms.txt` is now real and useful. | Live `/llms.txt` returns `text/plain` and lists homepage, docs, API reference, GitHub, topic pages, and canonical API route guidance. | Keep it updated when docs/routes change. |
-| Robots and AI crawling | Info | Confirmed | AI search readiness is mixed by design. | `robots.txt` allows general crawling, lists sitemap, but disallows GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, Bytespider, and CCBot. | Keep if this is the intended rights/privacy posture. Revisit only if AI crawler discovery is a growth priority. |
-| Homepage on-page SEO | Pass | Confirmed | Homepage metadata now targets broader search demand. | Title: `Placeholder Image API and Fallback Image Generator | fallback.pics`; description includes `placeholder images`, `fallback images`, `placeholder image API`, and `generator`. | Keep "Never show broken images again" as brand H1, but continue reinforcing exact-match terms in supporting copy and internal links. |
-| New generator page | Pass | Confirmed | Dedicated generator page is live and targeted. | `/placeholder-image-generator/` returns 200; title, description, H1, copy, examples, and links all target the generator cluster. | Build links to this page from README, docs, guides, and external developer content. |
-| Structured data | Warning | Confirmed | `FAQPage` JSON-LD is present on commercial pages where Google rich results are generally restricted. | Live HTML for `/placeholder-image-api/`, `/placeholder-image-generator/`, and `/dummy-image-generator/` contains `FAQPage` schema. | Remove `FAQPage` JSON-LD. Keep visible FAQ content, and use `WebPage`, `SoftwareApplication`, `Organization`, and `BreadcrumbList` where appropriate. Do not add `HowTo` schema. |
-| Security headers | Warning | Confirmed | Web pages are missing several common security headers. | Homepage headers include `X-Content-Type-Options: nosniff` and `Referrer-Policy`, but no `Strict-Transport-Security`, `Content-Security-Policy`, or frame-ancestor protection. | Add headers through Cloudflare Pages `_headers` or equivalent deployment config. |
-| Backlinks | Warning | Confirmed | Authority remains too weak to compete for head terms. | Semrush backlink overview: 28 backlinks, 21 referring domains, 0 follow links, authority score 2, trust score 2. | Prioritize developer-relevant follow links from GitHub, docs, tutorials, directories, examples, and comparison content. |
-| Organic visibility | Warning | Confirmed | Ranking impact has not appeared yet. | Semrush still reports 2 US organic keywords and 0 estimated traffic; current rankings are only `fallback img` position 27 and `fallback image` position 32. | Track Google Search Console weekly after deployment; do not expect Semrush movement immediately. |
-| Performance | Unknown | Hypothesis | Core Web Vitals were not measured in this pass. | PageSpeed/script checks could not run because local SEO script dependencies were unavailable. | Run PageSpeed Insights or install audit dependencies before the next full technical report. |
+| Critical | Confirmed | Canonical `/api/v1/...` image URLs return an error in production. | `curl -L 'https://fallback.pics/api/v1/800x450/18181B/FFFFFF?text=Product+Image'` returned `WORKER_ORIGIN is not configured` with a 31-byte text response. `curl -I` on the same URL returned `HTTP/2 500`. | Homepage preview images, OG images, sitemap image entries, blog images, docs examples, and the core product promise are affected. Search crawlers and users may see broken generated-image assets. | Configure `WORKER_ORIGIN` for Cloudflare Pages production, or replace the proxy dependency with a direct worker route that cannot deploy without origin config. Add a production smoke test for `/api/v1/400x300`. |
 
-## Score Notes
+## Current Site Evidence
 
-Technical SEO: 78/100  
-Positive signals: real 404s, live SVG API route, correct `/llms.txt`, robots sitemap entry, core SEO canonicals fixed.  
-Deficits: redirecting sitemap URLs, one incorrect root-style API example, incomplete security headers.
+| Area | Status | Evidence |
+|---|---|---|
+| Homepage | Pass with issue | Live homepage presents the core value proposition, uses `/api/v1/...` in most examples, and internally links to docs, API, guides, GitHub, use-case pages, and blog. It still displays one root-style generated URL in the live builder (`https://fallback.pics/800x450/...`) and one root-style code block (`GET /800x450/...`). |
+| HTML security headers | Pass | Homepage, `/placeholder-image-api/`, and `/blog/` return HSTS, CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, and `Referrer-Policy: strict-origin-when-cross-origin`. |
+| Sitemap | Pass | `https://fallback.pics/sitemap.xml` returns `HTTP/2 200` and lists priority pages, SEO pages, comparison pages, and blog posts with trailing slash URLs. |
+| robots.txt | Pass | `https://fallback.pics/robots.txt` returns `HTTP/2 200`, allows crawling, and references the sitemap. |
+| llms.txt | Pass | `https://fallback.pics/llms.txt` returns `HTTP/2 200`, `text/plain`, and lists primary pages, topic pages, API route guidance, and blog posts. |
+| Blog depth | Warning | Current blog content has only three posts, all dated 2025-01-15. The product pages cover core terms, but the blog does not yet cover enough implementation, comparison, and problem-intent searches. |
+| SEO script limitations | Info | The bundled SEO scripts could not run because the available Python environments lacked `requests`; direct `curl`, local source inspection, live web fetches, and search/competitor page evidence were used instead. |
+| Semrush limitation | Info | Semrush connector access is active, but current API units were insufficient to run fresh keyword/domain reports. Existing local baseline from 2026-06-03 is retained as historical context only. |
 
-Content and on-page SEO: 80/100  
-Positive signals: stronger homepage metadata, dedicated generator page, targeted API/dummy/broken pages, visible examples, internal links.  
-Deficits: Semrush still shows no rankings for the core keyword cluster, and external authority is low.
+## Competitor Analysis
 
-Schema and structured data: 55/100  
-Positive signals: `SoftwareApplication`, `Organization`, and `WebPage` schema are present.  
-Deficits: `FAQPage` is now used on commercial pages where it is not a practical rich-result opportunity; breadcrumb structured data is not visible in checked pages.
+The placeholder-image market splits into four practical competitor groups.
 
-AI search readiness: 75/100  
-Positive signals: `llms.txt` exists and is product-specific.  
-Deficits: robots policy blocks major AI crawlers, which may be intentional but limits AI crawler exposure.
+| Competitor | Positioning | Strengths | Gap fallback.pics can exploit |
+|---|---|---|---|
+| placehold.co | Simple default placeholder URLs for developers. | Strong category familiarity and likely high organic authority. | Compete with production fallback reliability, not just mockup placeholders. Publish migration and alternative content. |
+| picsum.photos | Random photo placeholders. | Clear docs for random, seeded, grayscale, blur, JPG/WebP, list and info endpoints. | Differentiate on deterministic branded fallbacks for production UIs, where random photos are often the wrong state. |
+| dummyimage.com | Classic dummy image URL syntax. | Long-lived docs for dimensions, colors, text, common sizes, and formats. | Create modern framework guides and production-safe fallback examples; dummyimage is strong but older in UX/content style. |
+| MockImg | Modern feature-rich generator. | SVG/PNG/JPEG/WebP/AVIF, multilingual fonts, icons, gradients, effects, and presets. | Avoid feature checklist competition. Win on reliability, broken-image handling, and team fallback policy. |
+| PlaceholdPicsum | Broad all-in-one placeholder and Lorem Picsum API. | Solid colors, photos, avatars, filters, 6 formats, retina, fonts, JSON API, category images. | Publish focused comparisons: branded SVG fallback vs photo placeholders, cacheable deterministic fallbacks, and privacy/no-upload flows. |
+| placehold.jp | Utility generator with common square, banner, web, favicon, OGP, PNG/JPG, colors, and text. | Practical preset coverage and mature route syntax. | Cover English developer/framework queries and production broken-image flows. |
+| placeholdr.dev | AI placeholder API. | AI prompt-based images, deterministic outputs, Cloudflare edge/R2 caching, style and seed parameters. | Position fallback.pics as faster, simpler, non-AI, privacy-first, and safer for repeated product error states. |
 
-Authority and off-site SEO: 20/100  
-Positive signals: GitHub is present as a high-authority referring domain.  
-Deficits: Semrush reports 0 follow links and a backlink gap of two to four orders of magnitude versus the main competitors.
+## Keyword Research Summary
 
-## Environment Limitations
+Fresh exact volumes could not be pulled because Semrush API units were unavailable. Based on live SERP/competitor evidence and the existing 2026-06-03 local baseline, the highest-potential clusters remain:
 
-The SEO skill scripts were attempted but did not run because the local Python environment is missing required packages:
+| Cluster | Demand potential | Business fit | Notes |
+|---|---|---|---|
+| Placeholder image / image placeholder | Very high | Medium | Broad head terms. Harder to rank, but useful as pillar/supporting content. |
+| Placeholder image generator | High | High | Core commercial intent; already has a landing page, needs blog support and links. |
+| Placeholder image API | High | Very high | Best fit for developers and product-led acquisition. |
+| Dummy image generator / dummy image URL | Medium-high | High | Classic developer intent; needs modern examples and comparisons. |
+| Broken image fallback / img onerror fallback | Medium | Very high | Lower volume, higher relevance, easier to own through implementation guides. |
+| React / Next.js image fallback | Medium | Very high | Framework-specific intent; strong conversion value. |
+| Skeleton / blur / avatar placeholder | Medium | High | Feature-led posts can link back to generator and API pages. |
+| Product image placeholder / ecommerce missing images | Medium | Very high | Best monetization fit for production teams. |
+| Lorem Picsum / placehold.co / dummyimage alternatives | Medium | High | Competitive pages and blog comparisons can capture switching intent. |
+| OG image / social placeholder / docs image placeholders | Medium | Medium-high | Adjacent developer/content workflows. |
 
-- `parse_html.py`: missing `beautifulsoup4`
-- `security_headers.py`: missing `requests`
-- `robots_checker.py`: missing `requests`
-- `llms_txt_checker.py`: missing `requests`
-- `social_meta.py`: missing `requests`
+## Existing Content Coverage
 
-The report therefore uses Semrush data, direct `curl` header/body checks, sitemap inspection, and targeted markup extraction from the fetched live HTML.
+Already covered by product/SEO pages:
+
+- `/placeholder-image-api/`
+- `/placeholder-image-generator/`
+- `/dummy-image-generator/`
+- `/broken-image-fallback/`
+- `/product-image-placeholder/`
+- `/avatar-placeholder-generator/`
+- `/skeleton-placeholder-generator/`
+- `/guides/img-onerror-fallback/`
+- `/guides/react-image-fallback/`
+- `/guides/nextjs-image-fallback/`
+- `/alternatives/placehold-co-alternative/`
+- `/alternatives/dummyimage-alternative/`
+- `/self-hosted-placeholder-image-api/`
+
+Existing blog posts:
+
+- Complete Guide to Image Placeholders in Web Development
+- Why Every Developer Needs Fallback Images
+- Image Loading Best Practices for Better UX
+
+Main content gap: the blog needs implementation depth, comparison depth, and use-case depth. The existing SEO landing pages should remain the canonical commercial pages; blog posts should support them with long-tail search and internal links.
+
+## 25 High-Potential Blog Topics for the Next 6 Months
+
+| Priority | Topic | Primary keyword target | Intent | Internal link target |
+|---:|---|---|---|---|
+| 1 | Placeholder Image API: Complete URL Syntax Guide for Developers | placeholder image api | API reference / commercial | `/placeholder-image-api/` |
+| 2 | How to Fix Broken Images in HTML with `onerror` | img onerror fallback | Implementation | `/guides/img-onerror-fallback/` |
+| 3 | React Image Fallback Patterns: Missing Src, Failed Loads, and Placeholders | react image fallback | Framework guide | `/guides/react-image-fallback/` |
+| 4 | Next.js Image Fallbacks Without Layout Shift | nextjs image fallback | Framework guide | `/guides/nextjs-image-fallback/` |
+| 5 | Placeholder Image Generator vs Dummy Image Generator: What Developers Actually Need | placeholder image generator | Comparison / education | `/placeholder-image-generator/` |
+| 6 | Best Placeholder Image APIs for Developers: Feature-by-Feature Comparison | placeholder image api | Competitive comparison | `/placeholder-image-api/` |
+| 7 | placehold.co Alternatives for Production Placeholder Images | placehold.co alternative | Competitor alternative | `/alternatives/placehold-co-alternative/` |
+| 8 | DummyImage Alternatives: Modern Dummy Image URLs for Web Apps | dummyimage alternative | Competitor alternative | `/alternatives/dummyimage-alternative/` |
+| 9 | Lorem Picsum vs SVG Placeholder Images: When Random Photos Hurt UX | lorem picsum alternative | Competitor comparison | `/placeholder-image-api/` |
+| 10 | Product Image Placeholder Strategy for Ecommerce Catalogs | product image placeholder | Use case / commercial | `/product-image-placeholder/` |
+| 11 | How to Prevent Layout Shift from Missing Images | image layout shift | Performance / UX | `/broken-image-fallback/` |
+| 12 | Skeleton Placeholder Images: When to Use Skeletons vs Static Fallbacks | skeleton placeholder generator | Feature guide | `/skeleton-placeholder-generator/` |
+| 13 | Avatar Placeholder Generator: Initials, Colors, and Accessibility | avatar placeholder generator | Feature guide | `/avatar-placeholder-generator/` |
+| 14 | SVG Placeholder Images: Why They Are Fast, Cacheable, and Scalable | svg placeholder image | Technical explainer | `/placeholder-image-api/` |
+| 15 | Cache-Control for Placeholder Images: CDN and Browser Best Practices | cache placeholder images | Technical / ops | `/placeholder-image-api/` |
+| 16 | Building a Self-Hosted Placeholder Image API with Cloudflare Workers | self hosted placeholder image api | Developer tutorial | `/self-hosted-placeholder-image-api/` |
+| 17 | Placeholder Images in Storybook, Playwright, and Visual Regression Tests | test placeholder images | Testing / developer workflow | `/dummy-image-generator/` |
+| 18 | CSS Background Image Fallbacks: Practical Patterns and Limitations | css background image fallback | Implementation | `/broken-image-fallback/` |
+| 19 | Responsive Placeholder Images for Cards, Banners, and Grids | responsive placeholder image | Implementation / UX | `/placeholder-image-generator/` |
+| 20 | OG Image Placeholders for Blogs, Docs, and Social Sharing | og image placeholder | Adjacent workflow | `/placeholder-image-generator/` |
+| 21 | Placeholder Images for CMS Previews and Missing Media Fields | cms image placeholder | Use case | `/product-image-placeholder/` |
+| 22 | Mobile App Image Fallbacks: Avatars, Cards, and Offline States | mobile image fallback | Use case | `/broken-image-fallback/` |
+| 23 | Privacy-Safe Placeholder Images: Why URL Text and Uploads Matter | privacy placeholder image api | Trust / technical | `/placeholder-image-api/` |
+| 24 | Branded Fallback Images for SaaS Dashboards and Internal Tools | fallback image service | Commercial use case | `/features/` |
+| 25 | From Broken Image Icon to Branded Fallback: A Production Rollout Checklist | broken image fallback | Conversion / checklist | `/broken-image-fallback/` |
+
+## Recommended Six-Month Publishing Sequence
+
+Month 1: Fix API production blocker, then publish topics 1-4.  
+Month 2: Publish comparison topics 5-9.  
+Month 3: Publish ecommerce, layout shift, skeleton, and avatar topics 10-13.  
+Month 4: Publish technical infrastructure topics 14-17.  
+Month 5: Publish CSS, responsive, OG, and CMS topics 18-21.  
+Month 6: Publish mobile, privacy, SaaS dashboard, and rollout checklist topics 22-25.
+
+## Priority Recommendations
+
+1. Fix `WORKER_ORIGIN` production configuration before publishing new SEO content.
+2. Add a CI or deployment smoke check that verifies `GET /api/v1/400x300` returns `200` and `image/svg+xml`.
+3. Update visible homepage/builder root-style examples to the canonical `/api/v1/...` route.
+4. Publish blog posts as supporting assets, not replacements for existing landing pages.
+5. Build internal links from every blog post to one primary commercial page and one implementation guide.
+6. Add comparison tables and copy-paste code snippets to posts; competitor pages win partly because their examples are immediately usable.
+7. Use Google Search Console as the primary ranking/impression signal until Semrush API units are available again.
+
+## Sources
+
+- fallback.pics live homepage: https://fallback.pics/
+- fallback.pics sitemap: https://fallback.pics/sitemap.xml
+- fallback.pics robots.txt: https://fallback.pics/robots.txt
+- fallback.pics llms.txt: https://fallback.pics/llms.txt
+- MockImg: https://mockimg.dev/
+- PlaceholdPicsum: https://placeholdpicsum.dev/
+- placehold.jp: https://placehold.jp/
+- placeholdr.dev: https://placeholdr.dev/
+- DummyImage: https://dummyimage.com/
+- Lorem Picsum: https://picsum.photos/

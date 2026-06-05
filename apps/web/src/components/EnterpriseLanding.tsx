@@ -25,35 +25,35 @@ const features = [
   {
     icon: 'network',
     title: 'Global CDN delivery',
-    body: 'Deterministic fallback URLs are designed for edge caching, so repeat requests stay close to users instead of depending on your app origin.',
-    snippet: 'Cache-Control: public, max-age=31536000, immutable',
+    body: 'Deterministic URLs cache at the edge. Repeat requests stay close to users instead of depending on your app origin.',
+    snippet: 'Cache-Control: immutable',
     tone: 'blue',
   },
   {
     icon: 'timer',
     title: 'Sub-50ms latency target',
-    body: 'SVG-first generation keeps the default response path small, with PNG, JPEG, and WebP available for clients that require raster assets. Cached responses are built to behave like static assets, not application requests.',
+    body: 'SVG-first generation keeps responses small. Cached fallbacks behave like static assets, not application requests.',
     snippet: 'Server-Timing: edge; dur=18',
     tone: 'green',
   },
   {
     icon: 'shield',
     title: 'Privacy-first architecture',
-    body: 'Standard placeholders are generated from URL parameters. No source image uploads, no client SDK, and no cookies are required for delivery.',
-    snippet: 'GET /api/v1/640x360?text=Preview',
+    body: 'Placeholders are generated from URL parameters. No uploads, client SDK, or cookies are required for delivery.',
+    snippet: '/api/v1/640x360?text=Preview',
     tone: 'ink',
   },
   {
     icon: 'route',
     title: 'URL-based API',
-    body: 'Dimensions, colors, labels, and presets are visible in the URL, which makes fallbacks easy to review, copy, test, and standardize.',
-    snippet: '/api/v1/800x450/18181B/FFFFFF?text=Product',
+    body: 'Dimensions, colors, labels, and presets stay visible in the URL. Teams can review, copy, test, and standardize them.',
+    snippet: '/api/v1/800x450?text=Product',
     tone: 'violet',
   },
   {
     icon: 'image',
     title: 'Custom fallback generation',
-    body: 'Create branded product placeholders, initials avatars, banners, skeleton states, and empty media frames without storing throwaway assets.',
+    body: 'Create product placeholders, initials avatars, banners, and skeleton states. Avoid storing one-off media assets.',
     snippet: '/api/v1/avatar/128?text=JD',
     tone: 'orange',
   },
@@ -338,8 +338,8 @@ function EnterpriseLanding() {
                   <span className="text-sm font-semibold text-zinc-950">Production fallback URL</span>
                   <span className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">200 OK</span>
                 </div>
-                <div className="flex items-start gap-3 rounded-lg bg-zinc-950 p-4">
-                  <code className="min-w-0 flex-1 break-all font-mono text-sm leading-6 text-emerald-300">{generatedUrl}</code>
+                <div className="flex items-start gap-3 rounded-lg border border-zinc-200 bg-white p-3">
+                  <code className="min-w-0 flex-1 break-all font-mono text-sm font-semibold leading-6 text-zinc-950">{generatedUrl}</code>
                   <CopyButton value={generatedUrl} label="Copy" />
                 </div>
               </div>
@@ -478,7 +478,7 @@ function EnterpriseLanding() {
                       <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Shareable URL</span>
                       <CopyButton value={generatedUrl} label="Copy URL" />
                     </div>
-                    <code className="block break-all font-mono text-xs leading-5 text-zinc-700">{displayUrl}</code>
+                    <code className="block break-all font-mono text-xs font-semibold leading-5 text-zinc-950">{displayUrl}</code>
                   </div>
                 </div>
               </div>

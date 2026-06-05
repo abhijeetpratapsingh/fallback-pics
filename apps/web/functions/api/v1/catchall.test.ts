@@ -67,13 +67,25 @@ describe('Pages API proxy', () => {
     expect(await response.text()).toBe('');
   });
 
-  it('returns a clear configuration error when WORKER_ORIGIN is missing', async () => {
+  it('falls back to the production worker origin when WORKER_ORIGIN is missing', async () => {
+    let forwardedRequest: Request | undefined;
+    globalThis.fetch = vi.fn(async (request: Request) => {
+      forwardedRequest = request;
+
+      return new Response('<svg></svg>', {
+        headers: {
+          'Content-Type': 'image/svg+xml',
+        },
+      });
+    }) as typeof fetch;
+
     const response = await onRequest({
       request: new Request('https://fallback.pics/api/v1/400x300'),
       env: {},
     });
 
-    expect(response.status).toBe(500);
-    expect(await response.text()).toBe('WORKER_ORIGIN is not configured');
+    expect(forwardedRequest?.url).toBe('https://fallback-pics.billing-04f.workers.dev/400x300');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
   });
 });

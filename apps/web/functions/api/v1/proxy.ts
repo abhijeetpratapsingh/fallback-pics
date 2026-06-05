@@ -12,13 +12,11 @@ const CORS_HEADERS = {
   "Access-Control-Max-Age": "86400",
 };
 
+export const DEFAULT_WORKER_ORIGIN =
+  "https://fallback-pics.billing-04f.workers.dev";
+
 function getWorkerOrigin(env: PagesFunctionContext["env"]): string | null {
-  const workerOrigin = env.WORKER_ORIGIN?.trim();
-
-  if (!workerOrigin) {
-    return null;
-  }
-
+  const workerOrigin = env.WORKER_ORIGIN?.trim() || DEFAULT_WORKER_ORIGIN;
   return workerOrigin.replace(/\/+$/, "");
 }
 
@@ -39,13 +37,6 @@ export async function onRequest(context: PagesFunctionContext) {
   }
 
   const workerOrigin = getWorkerOrigin(context.env);
-
-  if (!workerOrigin) {
-    return new Response("WORKER_ORIGIN is not configured", {
-      status: 500,
-      headers: CORS_HEADERS,
-    });
-  }
 
   const workerUrl = buildWorkerUrl(context.request.url, workerOrigin);
   const workerRequest = new Request(workerUrl, {

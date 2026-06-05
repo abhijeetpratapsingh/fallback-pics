@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import * as appEntrypoint from "./[[catchall]]";
-import { buildWorkerUrl, onRequest, type PagesFunctionContext } from "./proxy";
+import {
+  DEFAULT_WORKER_ORIGIN,
+  buildWorkerUrl,
+  onRequest,
+  type PagesFunctionContext,
+} from "./proxy";
 import * as rootEntrypoint from "../../../../../functions/api/v1/[[catchall]]";
 
 function contextFor(
@@ -57,8 +62,17 @@ describe("Pages API v1 proxy", () => {
     );
   });
 
-  it("fails clearly when WORKER_ORIGIN is not configured", async () => {
-    const fetchMock = vi.fn();
+  it("falls back to the production worker origin when WORKER_ORIGIN is not configured", async () => {
+    let forwardedRequest: Request | undefined;
+    const fetchMock = vi.fn(async (request: Request) => {
+      forwardedRequest = request;
+
+      return new Response("<svg></svg>", {
+        headers: {
+          "Content-Type": "image/svg+xml",
+        },
+      });
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     const response = await onRequest({
@@ -66,9 +80,10 @@ describe("Pages API v1 proxy", () => {
       env: {},
     });
 
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.status).toBe(500);
-    expect(await response.text()).toBe("WORKER_ORIGIN is not configured");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(forwardedRequest?.url).toBe(`${DEFAULT_WORKER_ORIGIN}/400x300`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("image/svg+xml");
     expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 
