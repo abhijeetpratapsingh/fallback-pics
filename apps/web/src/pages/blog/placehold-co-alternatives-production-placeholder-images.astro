@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['placehold-co-alternatives-production-placeholder-images'];
+---
+
+<BlogArticle post={post} />

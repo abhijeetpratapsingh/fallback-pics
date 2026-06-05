@@ -21,6 +21,7 @@ export const footerSections = [
     heading: 'Product',
     links: [
       { label: 'Features', href: '/features/' },
+      { label: 'Showcase', href: '/showcase/' },
       { label: 'Placeholder image generator', href: '/placeholder-image-generator/' },
       { label: 'Enterprise', href: '/#enterprise' },
       { label: 'Status', href: 'https://status.fallback.pics', external: true },

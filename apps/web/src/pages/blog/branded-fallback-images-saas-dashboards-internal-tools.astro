@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['branded-fallback-images-saas-dashboards-internal-tools'];
+---
+
+<BlogArticle post={post} />

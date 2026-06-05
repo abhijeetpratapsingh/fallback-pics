@@ -36,6 +36,18 @@
   </url>
 
   <url>
+    <loc>https://fallback.pics/showcase/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=fallback.pics+Showcase</image:loc>
+      <image:title>fallback.pics Showcase - Visual fallback image examples</image:title>
+      <image:caption>A visual gallery of generated fallback images, avatars, banners, skeleton states, and missing-media placeholders</image:caption>
+    </image:image>
+  </url>
+
+  <url>
     <loc>https://fallback.pics/privacy/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>yearly</changefreq>
@@ -185,6 +197,270 @@
       <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=React+Image+Fallback</image:loc>
       <image:title>React Image Fallback Patterns: Missing Src, Failed Loads, and Placeholders</image:title>
       <image:caption>Build a React image fallback component that handles missing src values, failed image loads, layout-safe placeholders, and production-safe fallback.pics URLs.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/nextjs-image-fallbacks-without-layout-shift/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Next.js+Image+Fallback</image:loc>
+      <image:title>Next.js Image Fallbacks Without Layout Shift</image:title>
+      <image:caption>Build Next.js image fallbacks that handle missing src values, failed remote images, SVG placeholders, width and height, fill layouts, and CLS-safe fallback URLs.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/placeholder-image-generator-vs-dummy-image-generator/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Placeholder+vs+Dummy+Image</image:loc>
+      <image:title>Placeholder Image Generator vs Dummy Image Generator: What Developers Actually Need</image:title>
+      <image:caption>Compare placeholder image generators and dummy image generators, then choose the right URL pattern for mockups, layout testing, production fallbacks, and missing media.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/best-placeholder-image-apis-for-developers/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Best+Placeholder+Image+APIs</image:loc>
+      <image:title>Best Placeholder Image APIs for Developers: Feature-by-Feature Comparison</image:title>
+      <image:caption>Compare placeholder image APIs by route syntax, output type, custom text, colors, deterministic behavior, production fallback use, and developer workflow.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/placehold-co-alternatives-production-placeholder-images/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=placehold.co+Alternatives</image:loc>
+      <image:title>placehold.co Alternatives for Production Placeholder Images</image:title>
+      <image:caption>Compare placehold.co alternatives for production placeholder images, broken-image fallbacks, deterministic SVG URLs, avatars, skeletons, and framework workflows.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/dummyimage-alternatives-modern-dummy-image-urls/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=DummyImage+Alternatives</image:loc>
+      <image:title>DummyImage Alternatives: Modern Dummy Image URLs for Web Apps</image:title>
+      <image:caption>Compare DummyImage alternatives for modern web apps, including SVG dummy image URLs, branded placeholders, avatars, skeletons, and production fallbacks.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/lorem-picsum-vs-svg-placeholder-images/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Lorem+Picsum+vs+SVG</image:loc>
+      <image:title>Lorem Picsum vs SVG Placeholder Images: When Random Photos Hurt UX</image:title>
+      <image:caption>Compare Lorem Picsum random photo placeholders with deterministic SVG placeholder images for product cards, docs, dashboards, screenshots, and fallback states.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/product-image-placeholder-ecommerce-catalogs/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Product+Image+Placeholder</image:loc>
+      <image:title>Product Image Placeholder Strategy for Ecommerce Catalogs</image:title>
+      <image:caption>A practical ecommerce image placeholder strategy for missing supplier photos, failed CDN URLs, incomplete product imports, and stable product catalog layouts.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/prevent-layout-shift-missing-images/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Prevent+Image+Layout+Shift</image:loc>
+      <image:title>How to Prevent Layout Shift from Missing Images</image:title>
+      <image:caption>A practical performance guide for preventing image layout shift with dimensions, aspect ratios, placeholders, and stable fallback image URLs.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/skeleton-placeholder-images-vs-static-fallbacks/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Skeleton+vs+Fallback</image:loc>
+      <image:title>Skeleton Placeholder Images: When to Use Skeletons vs Static Fallbacks</image:title>
+      <image:caption>A developer guide to skeleton placeholder images, loading placeholders, and static fallback images, with practical rules for choosing the right UI state.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/avatar-placeholder-generator-initials-colors-accessibility/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Avatar+Placeholder+Guide</image:loc>
+      <image:title>Avatar Placeholder Generator: Initials, Colors, and Accessibility</image:title>
+      <image:caption>A practical guide to initials-based avatar placeholders, readable colors, alt text, privacy-safe labels, and profile image fallback behavior.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/svg-placeholder-images-fast-cacheable-scalable/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=SVG+Placeholder+Images</image:loc>
+      <image:title>SVG Placeholder Images: Why They Are Fast, Cacheable, and Scalable</image:title>
+      <image:caption>A technical guide to SVG placeholder images, deterministic URLs, CDN caching, browser caching, and when SVG placeholders beat raster or photo placeholders.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/cache-control-placeholder-images-cdn-browser/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Cache-Control+for+Placeholders</image:loc>
+      <image:title>Cache-Control for Placeholder Images: CDN and Browser Best Practices</image:title>
+      <image:caption>A technical guide to Cache-Control for placeholder images, covering immutable URLs, CDN caching, browser caching, cache keys, and production debugging.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/self-hosted-placeholder-image-api-cloudflare-workers/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Self-Hosted+Placeholder+API</image:loc>
+      <image:title>Building a Self-Hosted Placeholder Image API with Cloudflare Workers</image:title>
+      <image:caption>A practical tutorial for building a self-hosted SVG placeholder image API on Cloudflare Workers, with routing, escaping, cache headers, and production tradeoffs.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/placeholder-images-storybook-playwright-visual-regression/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Test+Placeholder+Images</image:loc>
+      <image:title>Placeholder Images in Storybook, Playwright, and Visual Regression Tests</image:title>
+      <image:caption>A testing workflow guide for deterministic placeholder image URLs in Storybook stories, Playwright screenshots, visual regression tests, fixtures, and CI.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/css-background-image-fallbacks/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=CSS+Background+Fallbacks</image:loc>
+      <image:title>CSS Background Image Fallbacks: Practical Patterns and Limitations</image:title>
+      <image:caption>A practical guide to CSS background image fallbacks, including layered backgrounds, placeholder URLs, JavaScript detection, component state, and when to use img instead.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/responsive-placeholder-images-cards-banners-grids/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Responsive+Placeholders</image:loc>
+      <image:title>Responsive Placeholder Images for Cards, Banners, and Grids</image:title>
+      <image:caption>Use responsive placeholder images for cards, banners, hero slots, and grids without causing layout shift or inconsistent media boxes.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/og-image-placeholders-blogs-docs-social-sharing/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=OG+Image+Placeholders</image:loc>
+      <image:title>OG Image Placeholders for Blogs, Docs, and Social Sharing</image:title>
+      <image:caption>Use generated OG image placeholders for blog posts, documentation pages, changelogs, and social previews while final artwork is unavailable.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/placeholder-images-cms-previews-missing-media/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=CMS+Media+Placeholders</image:loc>
+      <image:title>Placeholder Images for CMS Previews and Missing Media Fields</image:title>
+      <image:caption>Use placeholder images for CMS previews, empty media fields, draft content, editorial cards, and broken remote assets without blocking publication.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/mobile-app-image-fallbacks-avatars-cards-offline/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Mobile+Image+Fallbacks</image:loc>
+      <image:title>Mobile App Image Fallbacks: Avatars, Cards, and Offline States</image:title>
+      <image:caption>Design mobile image fallbacks for avatars, feed cards, thumbnails, unavailable media, and offline states without collapsing the app UI.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/privacy-safe-placeholder-images-url-text-uploads/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Privacy-Safe+Placeholders</image:loc>
+      <image:title>Privacy-Safe Placeholder Images: Why URL Text and Uploads Matter</image:title>
+      <image:caption>A practical privacy guide for placeholder image URLs, URL text parameters, no-upload placeholders, logs, referrers, caching, and safe production examples.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/branded-fallback-images-saas-dashboards-internal-tools/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Branded+Fallbacks</image:loc>
+      <image:title>Branded Fallback Images for SaaS Dashboards and Internal Tools</image:title>
+      <image:caption>Use branded fallback images in dashboards, report previews, avatars, workspaces, admin panels, and internal tools without breaking layout or leaking private data.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/broken-image-icon-to-branded-fallback-checklist/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Fallback+Rollout+Checklist</image:loc>
+      <image:title>From Broken Image Icon to Branded Fallback: A Production Rollout Checklist</image:title>
+      <image:caption>Audit broken image states, choose branded fallback URLs, update shared components, test image failures, and monitor rollout quality.</image:caption>
     </image:image>
   </url>
 

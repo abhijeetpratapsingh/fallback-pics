@@ -8,6 +8,7 @@ fallback.pics is a developer-focused placeholder image API and fallback image se
 - Documentation: https://fallback.pics/docs/
 - API Reference: https://fallback.pics/api/
 - Features: https://fallback.pics/features/
+- Showcase: https://fallback.pics/showcase/
 - Blog: https://fallback.pics/blog/
 
 ## Core topics
@@ -34,6 +35,28 @@ fallback.pics is a developer-focused placeholder image API and fallback image se
 - Placeholder Image API: Complete URL Syntax Guide for Developers: https://fallback.pics/blog/placeholder-image-api-url-syntax-guide/
 - How to Fix Broken Images in HTML with onerror: https://fallback.pics/blog/fix-broken-images-html-onerror/
 - React Image Fallback Patterns: Missing Src, Failed Loads, and Placeholders: https://fallback.pics/blog/react-image-fallback-patterns/
+- Next.js Image Fallbacks Without Layout Shift: https://fallback.pics/blog/nextjs-image-fallbacks-without-layout-shift/
+- Placeholder Image Generator vs Dummy Image Generator: What Developers Actually Need: https://fallback.pics/blog/placeholder-image-generator-vs-dummy-image-generator/
+- Best Placeholder Image APIs for Developers: Feature-by-Feature Comparison: https://fallback.pics/blog/best-placeholder-image-apis-for-developers/
+- placehold.co Alternatives for Production Placeholder Images: https://fallback.pics/blog/placehold-co-alternatives-production-placeholder-images/
+- DummyImage Alternatives: Modern Dummy Image URLs for Web Apps: https://fallback.pics/blog/dummyimage-alternatives-modern-dummy-image-urls/
+- Lorem Picsum vs SVG Placeholder Images: When Random Photos Hurt UX: https://fallback.pics/blog/lorem-picsum-vs-svg-placeholder-images/
+- Product Image Placeholder Strategy for Ecommerce Catalogs: https://fallback.pics/blog/product-image-placeholder-ecommerce-catalogs/
+- How to Prevent Layout Shift from Missing Images: https://fallback.pics/blog/prevent-layout-shift-missing-images/
+- Skeleton Placeholder Images: When to Use Skeletons vs Static Fallbacks: https://fallback.pics/blog/skeleton-placeholder-images-vs-static-fallbacks/
+- Avatar Placeholder Generator: Initials, Colors, and Accessibility: https://fallback.pics/blog/avatar-placeholder-generator-initials-colors-accessibility/
+- SVG Placeholder Images: Why They Are Fast, Cacheable, and Scalable: https://fallback.pics/blog/svg-placeholder-images-fast-cacheable-scalable/
+- Cache-Control for Placeholder Images: CDN and Browser Best Practices: https://fallback.pics/blog/cache-control-placeholder-images-cdn-browser/
+- Building a Self-Hosted Placeholder Image API with Cloudflare Workers: https://fallback.pics/blog/self-hosted-placeholder-image-api-cloudflare-workers/
+- Placeholder Images in Storybook, Playwright, and Visual Regression Tests: https://fallback.pics/blog/placeholder-images-storybook-playwright-visual-regression/
+- CSS Background Image Fallbacks: Practical Patterns and Limitations: https://fallback.pics/blog/css-background-image-fallbacks/
+- Responsive Placeholder Images for Cards, Banners, and Grids: https://fallback.pics/blog/responsive-placeholder-images-cards-banners-grids/
+- OG Image Placeholders for Blogs, Docs, and Social Sharing: https://fallback.pics/blog/og-image-placeholders-blogs-docs-social-sharing/
+- Placeholder Images for CMS Previews and Missing Media Fields: https://fallback.pics/blog/placeholder-images-cms-previews-missing-media/
+- Mobile App Image Fallbacks: Avatars, Cards, and Offline States: https://fallback.pics/blog/mobile-app-image-fallbacks-avatars-cards-offline/
+- Privacy-Safe Placeholder Images: Why URL Text and Uploads Matter: https://fallback.pics/blog/privacy-safe-placeholder-images-url-text-uploads/
+- Branded Fallback Images for SaaS Dashboards and Internal Tools: https://fallback.pics/blog/branded-fallback-images-saas-dashboards-internal-tools/
+- From Broken Image Icon to Branded Fallback: A Production Rollout Checklist: https://fallback.pics/blog/broken-image-icon-to-branded-fallback-checklist/
 - Complete Guide to Image Placeholders in Web Development: https://fallback.pics/blog/complete-guide-to-image-placeholders-in-web-development/
 - Why Every Developer Needs Fallback Images: https://fallback.pics/blog/why-every-developer-needs-fallback-images-case-studies/
 - Image Loading Best Practices for Better UX: https://fallback.pics/blog/image-loading-best-practices-for-better-ux/

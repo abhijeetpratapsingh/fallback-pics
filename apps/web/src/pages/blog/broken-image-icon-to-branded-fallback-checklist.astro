@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['broken-image-icon-to-branded-fallback-checklist'];
+---
+
+<BlogArticle post={post} />

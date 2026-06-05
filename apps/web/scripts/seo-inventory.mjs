@@ -50,6 +50,20 @@ const staticPages = [
     llmsSection: 'Primary pages'
   },
   {
+    path: '/showcase/',
+    title: 'Showcase',
+    description: 'Visual showcase of fallback.pics generated placeholder, avatar, skeleton, banner, and fallback image examples.',
+    lastmod: '2026-06-05',
+    changefreq: 'monthly',
+    priority: '0.8',
+    llmsSection: 'Primary pages',
+    image: {
+      loc: 'https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=fallback.pics+Showcase',
+      title: 'fallback.pics Showcase - Visual fallback image examples',
+      caption: 'A visual gallery of generated fallback images, avatars, banners, skeleton states, and missing-media placeholders'
+    }
+  },
+  {
     path: '/privacy/',
     title: 'Privacy Policy',
     description: 'Privacy terms for fallback.pics.',
