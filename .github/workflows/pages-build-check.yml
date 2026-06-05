@@ -30,3 +30,27 @@ jobs:
 
       - name: Build website
         run: pnpm web:build
+
+      - name: Serve built website and run SEO regression checks
+        env:
+          SEO_CHECK_BASE_URL: http://127.0.0.1:4321
+          SEO_CHECK_PUBLIC_ORIGIN: https://fallback.pics
+          SEO_CHECK_API_BASE_URL: https://fallback.pics
+          SEO_RECHECK_BASE_URL: http://127.0.0.1:4321
+          SEO_RECHECK_PUBLIC_ORIGIN: https://fallback.pics
+        run: |
+          pnpm --dir apps/web preview --host 127.0.0.1 --port 4321 > /tmp/fallback-pics-web-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" || true' EXIT
+
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:4321/ > /dev/null; then
+              pnpm web:seo:smoke
+              pnpm web:seo:priority
+              exit 0
+            fi
+            sleep 1
+          done
+
+          cat /tmp/fallback-pics-web-preview.log
+          exit 1

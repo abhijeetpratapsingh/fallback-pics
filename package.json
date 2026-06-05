@@ -13,6 +13,8 @@
     "worker:deploy": "pnpm --filter @fallback-pics/worker deploy",
     "web:dev": "pnpm --filter @fallback-pics/web dev",
     "web:build": "pnpm --filter @fallback-pics/web build",
+    "web:seo:generate": "pnpm --filter @fallback-pics/web seo:generate",
+    "web:seo:files": "pnpm --filter @fallback-pics/web seo:files",
     "web:seo:smoke": "pnpm --filter @fallback-pics/web seo:smoke",
     "web:seo:priority": "pnpm --filter @fallback-pics/web seo:priority",
     "web:visual:qa": "pnpm --filter @fallback-pics/web visual:qa",

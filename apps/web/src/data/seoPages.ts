@@ -7,6 +7,7 @@ export interface SeoSection {
 
 export interface SeoPage {
   slug: string;
+  updated: string;
   title: string;
   description: string;
   h1: string;
@@ -26,6 +27,7 @@ export interface SeoPage {
 export const seoPages: SeoPage[] = [
   {
     slug: 'placeholder-image-api',
+    updated: '2026-04-27',
     title: 'Placeholder Image API and Generator for Developers | fallback.pics',
     description:
       'Generate production-safe SVG placeholder images from simple API URLs. Compare placeholder image tools, copy examples, and use fallback.pics in HTML, React, and Next.js.',
@@ -143,6 +145,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'broken-image-fallback',
+    updated: '2026-04-27',
     title: 'Broken Image Fallback API | Stop Showing Missing Images',
     description:
       'Replace broken images with production-safe SVG fallbacks. fallback.pics helps frontend teams keep layouts clean when product, avatar, CMS, or remote images fail.',
@@ -183,6 +186,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'dummy-image-generator',
+    updated: '2026-04-27',
     title: 'Dummy Image Generator with URL Examples | fallback.pics',
     description:
       'Create dummy images with custom sizes, text, colors, avatars, and product-card examples. Copy working dummy image URLs from fallback.pics.',
@@ -271,6 +275,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'placeholder-image-generator',
+    updated: '2026-06-03',
     title: 'Placeholder Image Generator with Copyable URLs | fallback.pics',
     description:
       'Use a placeholder image generator with size, text, background color, and text color examples. Copy working fallback.pics image URLs and HTML snippets.',
@@ -354,6 +359,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'product-image-placeholder',
+    updated: '2026-04-27',
     title: 'Product Image Placeholder API for Ecommerce Teams | fallback.pics',
     description:
       'Use fallback.pics to generate clean SVG product image placeholders for ecommerce catalogs, product cards, staging data, and missing product media.',
@@ -393,6 +399,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'avatar-placeholder-generator',
+    updated: '2026-04-27',
     title: 'Avatar Placeholder Generator for User Profiles | fallback.pics',
     description:
       'Generate SVG avatar placeholders and initials-based profile images with simple URLs. Use fallback.pics for apps, dashboards, comments, teams, and account pages.',
@@ -432,6 +439,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'skeleton-placeholder-generator',
+    updated: '2026-04-27',
     title: 'Skeleton Placeholder Generator for Loading States | fallback.pics',
     description:
       'Create SVG skeleton placeholders for loading UI, docs, demos, and design-system examples. Use fallback.pics for predictable skeleton image states from simple URLs.',
@@ -471,6 +479,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'guides/img-onerror-fallback',
+    updated: '2026-04-27',
     title: 'img onerror Fallback Guide | fallback.pics',
     description:
       'Copy-paste HTML examples for using fallback.pics as an img onerror fallback when product, avatar, CMS, or remote images fail to load.',
@@ -522,6 +531,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'guides/react-image-fallback',
+    updated: '2026-04-27',
     title: 'React Image Fallback Guide | Handle Broken Images with fallback.pics',
     description:
       'Learn how to handle broken images in React with a simple onError fallback. Use fallback.pics SVG placeholders for product images, avatars, cards, and docs.',
@@ -610,6 +620,7 @@ export function FallbackImage({
   },
   {
     slug: 'guides/nextjs-image-fallback',
+    updated: '2026-04-27',
     title: 'Next.js Image Fallback Guide | Missing Image Placeholders',
     description:
       'Handle missing images in Next.js with fallback.pics. Learn practical patterns for fallback placeholders in product cards, avatars, CMS pages, and app UI.',
@@ -685,6 +696,7 @@ export function SafeImage({ src, alt }) {
   },
   {
     slug: 'alternatives/placehold-co-alternative',
+    updated: '2026-04-27',
     title: 'Placehold.co Alternative for Production Fallback Images | fallback.pics',
     description:
       'Looking for a Placehold.co alternative? fallback.pics focuses on production-safe SVG placeholders, broken image fallbacks, ecommerce states, avatars, and developer-friendly URLs.',
@@ -724,6 +736,7 @@ export function SafeImage({ src, alt }) {
   },
   {
     slug: 'alternatives/dummyimage-alternative',
+    updated: '2026-04-27',
     title: 'DummyImage Alternative for Modern Placeholder Images | fallback.pics',
     description:
       'Need a DummyImage alternative? Generate SVG placeholders, avatars, product image fallbacks, skeleton states, and branded dummy images with fallback.pics.',
@@ -763,6 +776,7 @@ export function SafeImage({ src, alt }) {
   },
   {
     slug: 'self-hosted-placeholder-image-api',
+    updated: '2026-04-27',
     title: 'Self-Hosted Placeholder Image API on Cloudflare Workers | fallback.pics',
     description:
       'Deploy a self-hosted SVG placeholder image API with fallback.pics and Cloudflare Workers. Keep fallback URLs simple while controlling your own infrastructure.',

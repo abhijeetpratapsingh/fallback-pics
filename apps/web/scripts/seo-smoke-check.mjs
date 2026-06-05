@@ -40,6 +40,7 @@ for (const route of apiRoutes) {
 }
 
 await checkSitemap();
+await checkLlmsTxt();
 
 if (failures.length > 0) {
   console.error(`SEO smoke check failed with ${failures.length} issue(s):`);
@@ -78,6 +79,33 @@ async function checkSitemap() {
     const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
     if (canonical) {
       expect(new URL(loc).pathname, 'sitemap canonical', canonical, loc);
+    }
+  }
+}
+
+async function checkLlmsTxt() {
+  const llmsUrl = new URL('/llms.txt', baseUrl);
+  const response = await fetchNoRedirect(llmsUrl);
+  expect('/llms.txt', 'status', response.status, 200);
+  expectIncludes('/llms.txt', 'content-type', response.headers.get('content-type') || '', 'text/plain');
+
+  if (!response.ok) return;
+  const text = await response.text();
+  const urls = [...text.matchAll(/https:\/\/fallback\.pics\/[^\s)]+/g)].map((match) => match[0]);
+
+  for (const url of urls) {
+    if (url.includes('/api/v1/')) continue;
+    const parsed = new URL(url);
+    if (parsed.pathname !== '/' && !parsed.pathname.endsWith('/')) {
+      failures.push(`llms.txt URL ${url} must use the final trailing-slash URL`);
+      continue;
+    }
+
+    const localUrl = new URL(parsed.pathname, baseUrl);
+    const urlResponse = await fetchNoRedirect(localUrl);
+    expect(parsed.pathname, 'llms.txt URL status', urlResponse.status, 200);
+    if (urlResponse.status >= 300 && urlResponse.status < 400) {
+      failures.push(`${url} redirects; llms.txt entries must resolve directly`);
     }
   }
 }
