@@ -1,23 +1,17 @@
 export type NavItem = {
   label: string;
   href: string;
+  homeHref?: string;
   active?: string | string[];
   external?: boolean;
 };
 
-export const primaryNav: NavItem[] = [
+export const siteNav: NavItem[] = [
+  { label: 'Generator', href: '/placeholder-image-generator/', homeHref: '#hero-demo', active: '/placeholder-image-generator' },
   { label: 'Docs', href: '/docs/', active: ['/docs', '/guides'] },
   { label: 'API', href: '/api/', active: '/api' },
-  { label: 'Generator', href: '/placeholder-image-generator/', active: '/placeholder-image-generator' },
   { label: 'Features', href: '/features/', active: '/features' },
   { label: 'Blog', href: '/blog/', active: '/blog' },
-];
-
-export const landingNav: NavItem[] = [
-  { label: 'Generator', href: '#hero-demo' },
-  { label: 'Docs', href: '/docs/', active: ['/docs', '/guides'] },
-  { label: 'API', href: '/api/', active: '/api' },
-  { label: 'Features', href: '/features/', active: '/features' },
   { label: 'GitHub', href: 'https://github.com/abhijeetpratapsingh/fallback-pics', external: true },
   { label: 'Status', href: 'https://status.fallback.pics', external: true },
 ];

@@ -10,7 +10,7 @@ export interface Props {
   eyebrow: string;
   heading: string;
   intro: string;
-  header?: 'default' | 'landing' | 'docs' | false;
+  header?: boolean;
 }
 
 const {
@@ -22,7 +22,7 @@ const {
   eyebrow,
   heading,
   intro,
-  header = 'default',
+  header = true,
 } = Astro.props;
 
 const hasHeroPanel = Astro.slots.has('hero-panel');

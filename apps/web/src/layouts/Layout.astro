@@ -12,7 +12,7 @@ export interface Props {
   keywords?: string;
   canonical?: string;
   ogImage?: string;
-  header?: 'default' | 'landing' | 'docs' | false;
+  header?: boolean;
   footer?: boolean;
   robots?: string;
 }
@@ -23,7 +23,7 @@ const {
   keywords = "placeholder images, image placeholder api, dummy images, developer tools, web development, mockup images, fallback images, svg placeholder, png placeholder",
   canonical,
   ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics",
-  header = 'default',
+  header = true,
   footer = true,
   robots = 'index, follow',
 } = Astro.props;
@@ -89,7 +89,7 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
     <a href="#main-content" class="skip-link">
       Skip to main content
     </a>
-    {header !== false && <SiteHeader variant={header} />}
+    {header && <SiteHeader />}
     <slot />
     {footer && <SiteFooter />}
   </body>

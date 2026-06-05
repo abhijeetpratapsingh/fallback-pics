@@ -16,7 +16,6 @@ interface Props {
 
 const { page } = Astro.props;
 const canonical = `https://fallback.pics/${page.slug}/`;
-const header = page.slug.startsWith('guides/') ? 'docs' : 'default';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -58,7 +57,6 @@ function codeLanguage(code: string) {
   eyebrow={page.eyebrow}
   heading={page.h1}
   intro={page.intro}
-  header={header}
 >
   <div slot="hero-panel" id="example" class="content-preview-card">
     <div class="content-preview-card__code">

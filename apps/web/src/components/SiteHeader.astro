@@ -1,23 +1,16 @@
 ---
 import SiteBrand from './SiteBrand.astro';
-import { landingNav, primaryNav, type NavItem } from '../navigation';
+import { siteNav, type NavItem } from '../navigation';
 
-type HeaderVariant = 'default' | 'landing' | 'docs';
-
-export interface Props {
-  variant?: HeaderVariant;
-}
-
-const { variant = 'default' } = Astro.props;
-const items = variant === 'landing' ? landingNav : primaryNav;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const secondaryAction = variant === 'landing'
-  ? null
-  : { label: 'GitHub', href: 'https://github.com/abhijeetpratapsingh/fallback-pics', external: true };
 
 function normalize(path: string) {
   if (!path || path === '/') return '/';
   return path.replace(/\/$/, '');
+}
+
+function resolveHref(item: NavItem) {
+  return currentPath === '/' && item.homeHref ? item.homeHref : item.href;
 }
 
 function isActive(item: NavItem) {
@@ -33,7 +26,7 @@ function isActive(item: NavItem) {
 const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 ---
 
-<header class="site-header" data-site-header data-variant={variant}>
+<header class="site-header" data-site-header>
   <div class="site-header__inner">
     <a
       href="/"
@@ -47,37 +40,29 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     </a>
 
     <nav class="site-header__nav" aria-label="Primary navigation">
-      {items.map((item) => (
-        <a
-          href={item.href}
-          class:list={['site-header__link', { 'site-header__link--active': isActive(item) }]}
-          data-section-link={item.href.startsWith('#') ? item.href.slice(1) : undefined}
-          data-analytics-event="nav_click"
-          data-analytics-category="navigation"
-          data-analytics-label={item.label}
-          aria-current={isActive(item) ? 'page' : undefined}
-          target={item.external ? '_blank' : undefined}
-          rel={item.external ? 'noopener noreferrer' : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
+      {siteNav.map((item) => {
+        const href = resolveHref(item);
+        const active = isActive(item);
+
+        return (
+          <a
+            href={href}
+            class:list={['site-header__link', { 'site-header__link--active': active }]}
+            data-section-link={href.startsWith('#') ? href.slice(1) : undefined}
+            data-analytics-event="nav_click"
+            data-analytics-category="navigation"
+            data-analytics-label={item.label}
+            aria-current={active ? 'page' : undefined}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noopener noreferrer' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })}
     </nav>
 
     <div class="site-header__actions">
-      {secondaryAction && (
-        <a
-          href={secondaryAction.href}
-          class="site-header__secondary"
-          data-analytics-event="nav_click"
-          data-analytics-category="navigation"
-          data-analytics-label={secondaryAction.label}
-          target={secondaryAction.external ? '_blank' : undefined}
-          rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
-        >
-          {secondaryAction.label}
-        </a>
-      )}
       <a
         href={primaryHref}
         class="site-header__primary"
@@ -98,32 +83,26 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 
   <div id="site-mobile-menu" class="site-header__mobile" hidden>
     <div class="site-header__mobile-inner">
-      {items.map((item) => (
-        <a
-          href={item.href}
-          class:list={['site-header__mobile-link', { 'site-header__mobile-link--active': isActive(item) }]}
-          data-analytics-event="nav_click"
-          data-analytics-category="navigation"
-          data-analytics-label={`Mobile ${item.label}`}
-          target={item.external ? '_blank' : undefined}
-          rel={item.external ? 'noopener noreferrer' : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
-      {secondaryAction && (
-        <a
-          href={secondaryAction.href}
-          class="site-header__mobile-link"
-          data-analytics-event="nav_click"
-          data-analytics-category="navigation"
-          data-analytics-label={`Mobile ${secondaryAction.label}`}
-          target={secondaryAction.external ? '_blank' : undefined}
-          rel={secondaryAction.external ? 'noopener noreferrer' : undefined}
-        >
-          {secondaryAction.label}
-        </a>
-      )}
+      {siteNav.map((item) => {
+        const href = resolveHref(item);
+        const active = isActive(item);
+
+        return (
+          <a
+            href={href}
+            class:list={['site-header__mobile-link', { 'site-header__mobile-link--active': active }]}
+            data-section-link={href.startsWith('#') ? href.slice(1) : undefined}
+            data-analytics-event="nav_click"
+            data-analytics-category="navigation"
+            data-analytics-label={`Mobile ${item.label}`}
+            aria-current={active ? 'page' : undefined}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noopener noreferrer' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })}
       <div class="site-header__mobile-actions">
         <a
           href={primaryHref}
@@ -166,32 +145,30 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     if (event.key === 'Escape') setMenu(false);
   });
 
-  if (header?.dataset.variant === 'landing') {
-    const links = Array.from(header.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
-    const sections = links
-      .map((link) => document.getElementById(link.dataset.sectionLink || ''))
-      .filter((section): section is HTMLElement => Boolean(section));
+  const sectionLinks = Array.from(header?.querySelectorAll<HTMLAnchorElement>('[data-section-link]') ?? []);
+  const sections = sectionLinks
+    .map((link) => document.getElementById(link.dataset.sectionLink || ''))
+    .filter((section): section is HTMLElement => Boolean(section));
 
-    const setActiveSection = (id: string) => {
-      links.forEach((link) => {
-        link.toggleAttribute('data-active', link.dataset.sectionLink === id);
-      });
-    };
+  const setActiveSection = (id: string) => {
+    sectionLinks.forEach((link) => {
+      link.toggleAttribute('data-active', link.dataset.sectionLink === id);
+    });
+  };
 
-    if (sections.length > 0) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  if (sections.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-          if (visible?.target instanceof HTMLElement) setActiveSection(visible.target.id);
-        },
-        { rootMargin: '-30% 0px -55% 0px', threshold: [0.12, 0.35, 0.6] },
-      );
+        if (visible?.target instanceof HTMLElement) setActiveSection(visible.target.id);
+      },
+      { rootMargin: '-30% 0px -55% 0px', threshold: [0.12, 0.35, 0.6] },
+    );
 
-      sections.forEach((section) => observer.observe(section));
-    }
+    sections.forEach((section) => observer.observe(section));
   }
 </script>
 
@@ -219,7 +196,6 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 
   .site-header__brand,
   .site-header__link,
-  .site-header__secondary,
   .site-header__primary,
   .site-header__mobile-link,
   .site-header__mobile-cta {
@@ -233,16 +209,15 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   .site-header__nav {
     display: flex;
     justify-content: center;
-    gap: 0.25rem;
+    gap: 0.125rem;
   }
 
-  .site-header__link,
-  .site-header__secondary {
+  .site-header__link {
     display: inline-flex;
     min-height: 2.5rem;
     align-items: center;
     border-radius: 0.5rem;
-    padding: 0 0.75rem;
+    padding: 0 0.625rem;
     color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
@@ -251,7 +226,6 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   }
 
   .site-header__link:hover,
-  .site-header__secondary:hover,
   .site-header__link--active,
   .site-header__link[data-active] {
     background: var(--color-surface-muted);
@@ -288,7 +262,6 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   .site-header__primary:focus-visible,
   .site-header__mobile-cta:focus-visible,
   .site-header__link:focus-visible,
-  .site-header__secondary:focus-visible,
   .site-header__mobile-link:focus-visible,
   .site-header__menu-button:focus-visible {
     outline: 2px solid var(--color-brand);
@@ -356,13 +329,12 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     padding: 0 0.85rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 980px) {
     .site-header__inner {
       grid-template-columns: auto auto;
     }
 
     .site-header__nav,
-    .site-header__secondary,
     .site-header__primary {
       display: none;
     }
