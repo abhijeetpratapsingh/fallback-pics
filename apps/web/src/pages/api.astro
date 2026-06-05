@@ -279,7 +279,7 @@ const reactExample = `export function ProductImageFallback() {
     grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
     gap: 2rem;
     align-items: end;
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 3rem;
   }
 
@@ -287,7 +287,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-section__header p,
   .api-sidebar span {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -297,7 +297,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-hero h1 {
     max-width: 56rem;
     margin: 1rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.75rem, 6vw, 5.75rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -307,7 +307,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-hero p:not(.api-eyebrow) {
     max-width: 45rem;
     margin: 1.25rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.125rem;
     line-height: 1.75;
   }
@@ -318,9 +318,9 @@ const reactExample = `export function ProductImageFallback() {
   .api-callout,
   .api-header-grid > div,
   .api-final-cta {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
@@ -331,7 +331,7 @@ const reactExample = `export function ProductImageFallback() {
   }
 
   .api-hero__panel span {
-    color: #71717a;
+    color: var(--color-text-soft);
     font-size: 0.8125rem;
     font-weight: 700;
   }
@@ -341,8 +341,8 @@ const reactExample = `export function ProductImageFallback() {
     display: block;
     overflow-wrap: anywhere;
     border-radius: 0.5rem;
-    background: #18181b;
-    color: #86efac;
+    background: var(--color-text);
+    color: var(--color-code-accent);
     font-size: 0.9375rem;
     line-height: 1.6;
     padding: 1rem;
@@ -361,9 +361,9 @@ const reactExample = `export function ProductImageFallback() {
     top: 5.5rem;
     display: grid;
     gap: 0.25rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 0.75rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
@@ -374,7 +374,7 @@ const reactExample = `export function ProductImageFallback() {
 
   .api-sidebar a {
     border-radius: 0.5rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
     padding: 0.625rem 0.75rem;
@@ -382,8 +382,8 @@ const reactExample = `export function ProductImageFallback() {
   }
 
   .api-sidebar a:hover {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .api-content {
@@ -403,7 +403,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-section__header h2,
   .api-final-cta h2 {
     margin: 0.625rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(1.75rem, 3vw, 2.75rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -442,15 +442,15 @@ const reactExample = `export function ProductImageFallback() {
     display: grid;
     min-height: 12rem;
     place-items: center;
-    border-bottom: 1px solid #e4e4e7;
-    background: #f4f4f5;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-muted);
     padding: 1rem;
   }
 
   .api-route-card img {
     width: 100%;
     max-height: 11rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     object-fit: contain;
   }
@@ -464,7 +464,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-route-card h3,
   .api-header-grid h3 {
     margin: 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
   }
@@ -473,7 +473,7 @@ const reactExample = `export function ProductImageFallback() {
   .api-header-grid p,
   .api-callout,
   .api-final-cta p {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.7;
   }
@@ -482,7 +482,7 @@ const reactExample = `export function ProductImageFallback() {
     display: block;
     margin: 0.75rem 0;
     overflow-wrap: anywhere;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 0.8125rem;
     font-weight: 700;
   }
@@ -499,15 +499,15 @@ const reactExample = `export function ProductImageFallback() {
 
   .api-table th,
   .api-table td {
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding: 1rem;
     text-align: left;
     vertical-align: top;
   }
 
   .api-table th {
-    background: #f4f4f5;
-    color: #52525b;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -519,13 +519,13 @@ const reactExample = `export function ProductImageFallback() {
   }
 
   .api-table td {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.6;
   }
 
   .api-table code {
-    color: #18181b;
+    color: var(--color-text);
     font-weight: 700;
   }
 
@@ -536,7 +536,7 @@ const reactExample = `export function ProductImageFallback() {
   }
 
   .api-callout strong {
-    color: #4c1d95;
+    color: var(--color-brand-text-strong);
   }
 
   .api-final-cta {
@@ -545,17 +545,17 @@ const reactExample = `export function ProductImageFallback() {
     justify-content: space-between;
     gap: 2rem;
     padding: 1.5rem;
-    background: #18181b;
+    background: var(--color-text);
   }
 
   .api-final-cta h2 {
-    color: #ffffff;
+    color: var(--color-inverse-text);
     font-size: clamp(1.5rem, 3vw, 2rem);
   }
 
   .api-final-cta p {
     margin: 0.75rem 0 0;
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
   }
 
   .api-final-cta a {
@@ -565,8 +565,8 @@ const reactExample = `export function ProductImageFallback() {
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
     padding: 0 1rem;

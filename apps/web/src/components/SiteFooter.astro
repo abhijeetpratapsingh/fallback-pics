@@ -54,9 +54,9 @@ import { footerSections } from '../navigation';
 
 <style>
   .site-footer {
-    border-top: 1px solid #27272a;
-    background: #18181b;
-    color: #ffffff;
+    border-top: 1px solid var(--color-code-surface-border);
+    background: var(--color-text);
+    color: var(--color-inverse-text);
   }
 
   .site-footer__inner,
@@ -74,14 +74,14 @@ import { footerSections } from '../navigation';
 
   .site-footer__brand {
     display: inline-flex;
-    color: #ffffff;
+    color: var(--color-inverse-text);
     text-decoration: none;
   }
 
   .site-footer__intro p {
     max-width: 23rem;
     margin: 1.25rem 0 0;
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
     font-size: 0.9375rem;
     line-height: 1.7;
   }
@@ -94,7 +94,7 @@ import { footerSections } from '../navigation';
 
   .site-footer h2 {
     margin: 0;
-    color: #ffffff;
+    color: var(--color-inverse-text);
     font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0;
@@ -109,7 +109,7 @@ import { footerSections } from '../navigation';
   }
 
   .site-footer a {
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
     font-size: 0.875rem;
     line-height: 1.4;
     text-decoration: none;
@@ -117,7 +117,7 @@ import { footerSections } from '../navigation';
   }
 
   .site-footer a:hover {
-    color: #ffffff;
+    color: var(--color-inverse-text);
   }
 
   .site-footer a:focus-visible {
@@ -131,7 +131,7 @@ import { footerSections } from '../navigation';
     gap: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1.5rem 0;
-    color: #71717a;
+    color: var(--color-text-soft);
     font-size: 0.875rem;
   }
 

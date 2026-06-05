@@ -2,40 +2,40 @@
 
 /* ==================== ROOT VARIABLES ==================== */
 :root {
-  --ds-bg: #ffffff;
-  --ds-bg-subtle: #fafafa;
-  --ds-bg-muted: #f4f4f5;
-  --ds-text: #18181b;
-  --ds-text-muted: #52525b;
-  --ds-text-soft: #71717a;
-  --ds-border: #e4e4e7;
-  --ds-brand: #7c3aed;
-  --ds-brand-hover: #6d28d9;
-  --ds-info: #2563eb;
-  --ds-success: #059669;
-  --ds-warning: #d97706;
-  --ds-danger: #dc2626;
+  --ds-bg: var(--color-surface);
+  --ds-bg-subtle: var(--color-surface-subtle);
+  --ds-bg-muted: var(--color-surface-muted);
+  --ds-text: var(--color-text);
+  --ds-text-muted: var(--color-text-muted);
+  --ds-text-soft: var(--color-text-soft);
+  --ds-border: var(--color-border);
+  --ds-brand: var(--color-brand);
+  --ds-brand-hover: var(--color-brand-hover);
+  --ds-info: var(--color-info);
+  --ds-success: var(--color-success);
+  --ds-warning: var(--color-warning);
+  --ds-danger: var(--color-danger);
   --ds-radius: 8px;
   --ds-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   --ds-container: 80rem;
   --ds-prose: 48rem;
 
   /* Enhanced Color Palette */
-  --primary: #7C3AED;
-  --primary-dark: #6D28D9;
-  --primary-light: #8B5CF6;
-  --primary-ultralight: #A78BFA;
+  --primary: var(--color-brand);
+  --primary-dark: var(--color-brand-hover);
+  --primary-light: var(--primary-500);
+  --primary-ultralight: var(--primary-400);
   
-  --accent-blue: #3B82F6;
-  --accent-green: #10B981;
-  --accent-orange: #F97316;
-  --accent-pink: #EC4899;
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-orange: #f97316;
+  --accent-pink: #ec4899;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%);
-  --gradient-hover: linear-gradient(135deg, #6D28D9 0%, #2563EB 100%);
-  --gradient-vibrant: linear-gradient(90deg, #7C3AED, #3B82F6, #10B981);
-  --gradient-sunset: linear-gradient(135deg, #F97316 0%, #EC4899 100%);
+  --gradient-primary: linear-gradient(135deg, var(--color-brand) 0%, var(--accent-blue) 100%);
+  --gradient-hover: linear-gradient(135deg, var(--color-brand-hover) 0%, var(--color-info) 100%);
+  --gradient-vibrant: linear-gradient(90deg, var(--color-brand), var(--accent-blue), var(--accent-green));
+  --gradient-sunset: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-pink) 100%);
   
   /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -55,10 +55,10 @@
 /* Dark mode variables */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #0F0F0F;
-    --bg-secondary: #1A1A1A;
-    --text-primary: #FFFFFF;
-    --text-secondary: #A1A1AA;
+    --bg-primary: var(--color-code-surface);
+    --bg-secondary: var(--color-text);
+    --text-primary: var(--color-inverse-text);
+    --text-secondary: var(--color-code-muted);
   }
 }
 
@@ -103,10 +103,10 @@ h3, .h3 {
 
 .ds-code-block {
   overflow-x: auto;
-  border: 1px solid #27272a;
+  border: 1px solid var(--color-code-surface-border);
   border-radius: var(--ds-radius);
-  background: #18181b;
-  color: #e4e4e7;
+  background: var(--color-code-surface);
+  color: var(--color-code-text);
   font: 0.875rem/1.65 var(--font-web);
 }
 
@@ -215,13 +215,13 @@ h3, .h3 {
 
 /* Neumorphism cards */
 .neo-card {
-  background: linear-gradient(145deg, #ffffff, #f0f0f0);
-  box-shadow: 20px 20px 60px #d1d1d1, -20px -20px 60px #ffffff;
+  background: linear-gradient(145deg, var(--color-inverse-text), #f0f0f0);
+  box-shadow: 20px 20px 60px #d1d1d1, -20px -20px 60px var(--color-inverse-text);
   transition: all var(--transition-base);
 }
 
 .neo-card:hover {
-  box-shadow: 10px 10px 30px #d1d1d1, -10px -10px 30px #ffffff;
+  box-shadow: 10px 10px 30px #d1d1d1, -10px -10px 30px var(--color-inverse-text);
 }
 
 /* 3D tilt card */

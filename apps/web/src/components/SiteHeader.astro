@@ -202,7 +202,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     z-index: 50;
     border-bottom: 1px solid rgba(228, 228, 231, 0.88);
     background: rgba(255, 255, 255, 0.9);
-    color: #18181b;
+    color: var(--color-text);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -227,7 +227,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   }
 
   .site-header__brand {
-    color: #18181b;
+    color: var(--color-text);
   }
 
   .site-header__nav {
@@ -243,7 +243,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     align-items: center;
     border-radius: 0.5rem;
     padding: 0 0.75rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
     letter-spacing: 0;
@@ -254,8 +254,8 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   .site-header__secondary:hover,
   .site-header__link--active,
   .site-header__link[data-active] {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .site-header__actions {
@@ -272,8 +272,8 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: #6d28d9;
-    color: #ffffff;
+    background: var(--color-brand-hover);
+    color: var(--color-inverse-text);
     font-size: 0.875rem;
     font-weight: 700;
     padding: 0 1rem;
@@ -282,7 +282,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
 
   .site-header__primary:hover,
   .site-header__mobile-cta:hover {
-    background: #5b21b6;
+    background: var(--color-brand-strong);
   }
 
   .site-header__primary:focus-visible,
@@ -291,7 +291,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   .site-header__secondary:focus-visible,
   .site-header__mobile-link:focus-visible,
   .site-header__menu-button:focus-visible {
-    outline: 2px solid #7c3aed;
+    outline: 2px solid var(--color-brand);
     outline-offset: 2px;
   }
 
@@ -302,10 +302,10 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     cursor: pointer;
     font-size: 0.8125rem;
     font-weight: 750;
@@ -318,7 +318,7 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
   }
 
   .site-header__mobile {
-    border-top: 1px solid #e4e4e7;
+    border-top: 1px solid var(--color-border);
     background: rgba(255, 255, 255, 0.98);
   }
 
@@ -334,15 +334,15 @@ const primaryHref = currentPath === '/' ? '#hero-demo' : '/#hero-demo';
     min-height: 2.5rem;
     border-radius: 0.5rem;
     padding: 0.625rem 0.75rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     font-weight: 650;
   }
 
   .site-header__mobile-link:hover,
   .site-header__mobile-link--active {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .site-header__mobile-actions {

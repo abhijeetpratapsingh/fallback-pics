@@ -264,14 +264,14 @@ export function ProductFallback() {
     gap: 2rem;
     align-items: end;
     padding-bottom: 3rem;
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .docs-eyebrow,
   .docs-section__header p,
   .docs-sidebar span {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -281,7 +281,7 @@ export function ProductFallback() {
   .docs-hero h1 {
     max-width: 54rem;
     margin: 1rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.35rem, 5vw, 5.4rem);
     font-weight: 650;
     line-height: 0.98;
@@ -291,7 +291,7 @@ export function ProductFallback() {
   .docs-hero p:not(.docs-eyebrow) {
     max-width: 45rem;
     margin: 1.25rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.125rem;
     line-height: 1.75;
   }
@@ -299,15 +299,15 @@ export function ProductFallback() {
   .docs-hero__panel {
     display: grid;
     gap: 0.75rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 1.25rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
   .docs-hero__panel span {
-    color: #71717a;
+    color: var(--color-text-soft);
     font-size: 0.8125rem;
     font-weight: 700;
   }
@@ -316,8 +316,8 @@ export function ProductFallback() {
     display: block;
     overflow-wrap: anywhere;
     border-radius: 0.5rem;
-    background: #18181b;
-    color: #86efac;
+    background: var(--color-text);
+    color: var(--color-code-accent);
     font-size: 0.9375rem;
     line-height: 1.6;
     padding: 1rem;
@@ -336,9 +336,9 @@ export function ProductFallback() {
     top: 5.5rem;
     display: grid;
     gap: 0.25rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 0.75rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
@@ -349,7 +349,7 @@ export function ProductFallback() {
 
   .docs-sidebar a {
     border-radius: 0.5rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
     padding: 0.625rem 0.75rem;
@@ -357,8 +357,8 @@ export function ProductFallback() {
   }
 
   .docs-sidebar a:hover {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .docs-content {
@@ -378,7 +378,7 @@ export function ProductFallback() {
   .docs-section__header h2,
   .docs-final-cta h2 {
     margin: 0.625rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(1.75rem, 3vw, 2.75rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -403,9 +403,9 @@ export function ProductFallback() {
   .docs-final-cta,
   .docs-callout,
   .docs-table-wrap {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
@@ -417,15 +417,15 @@ export function ProductFallback() {
     display: grid;
     min-height: 11rem;
     place-items: center;
-    border-bottom: 1px solid #e4e4e7;
-    background: #f4f4f5;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-muted);
     padding: 1rem;
   }
 
   .docs-example-card img {
     width: 100%;
     max-height: 10rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     object-fit: contain;
   }
@@ -441,7 +441,7 @@ export function ProductFallback() {
   .docs-preset-card h3,
   .docs-note-grid h3 {
     margin: 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
   }
@@ -451,7 +451,7 @@ export function ProductFallback() {
   .docs-note-grid p,
   .docs-final-cta p,
   .docs-callout {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.7;
   }
@@ -461,7 +461,7 @@ export function ProductFallback() {
     display: block;
     margin: 0.75rem 0;
     overflow-wrap: anywhere;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 0.8125rem;
   }
 
@@ -472,7 +472,7 @@ export function ProductFallback() {
   }
 
   .docs-callout strong {
-    color: #4c1d95;
+    color: var(--color-brand-text-strong);
   }
 
   .docs-table-wrap {
@@ -487,15 +487,15 @@ export function ProductFallback() {
 
   .docs-table th,
   .docs-table td {
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding: 1rem;
     text-align: left;
     vertical-align: top;
   }
 
   .docs-table th {
-    background: #f4f4f5;
-    color: #52525b;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -507,13 +507,13 @@ export function ProductFallback() {
   }
 
   .docs-table td {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.6;
   }
 
   .docs-table code {
-    color: #18181b;
+    color: var(--color-text);
     font-weight: 700;
   }
 
@@ -534,17 +534,17 @@ export function ProductFallback() {
     gap: 2rem;
     margin-top: 1rem;
     padding: 1.5rem;
-    background: #18181b;
+    background: var(--color-text);
   }
 
   .docs-final-cta h2 {
-    color: #ffffff;
+    color: var(--color-inverse-text);
     font-size: clamp(1.5rem, 3vw, 2rem);
   }
 
   .docs-final-cta p {
     margin: 0.75rem 0 0;
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
   }
 
   .docs-final-cta a {
@@ -554,8 +554,8 @@ export function ProductFallback() {
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
     padding: 0 1rem;

@@ -50,3 +50,4 @@ SEO re-audit story command files:
 26. [Add SEO Measurement Workflow](./26-add-seo-measurement-workflow.md)
 27. [Build Developer Link Acquisition Package](./27-build-developer-link-acquisition-package.md)
 28. [Migrate Web to Roboto Slab Font](./28-migrate-web-to-roboto-slab-font.md)
+29. [Centralize Web Color Tokens](./29-centralize-web-color-tokens.md)

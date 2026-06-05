@@ -195,7 +195,7 @@ const useCases = [
     grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.46fr);
     gap: 2rem;
     align-items: end;
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 3rem;
   }
 
@@ -203,7 +203,7 @@ const useCases = [
   .features-section__header p,
   .features-sidebar span {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -213,7 +213,7 @@ const useCases = [
   .features-hero h1 {
     max-width: 58rem;
     margin: 1rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.75rem, 6vw, 5.75rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -223,7 +223,7 @@ const useCases = [
   .features-hero p:not(.features-eyebrow) {
     max-width: 45rem;
     margin: 1.25rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.125rem;
     line-height: 1.75;
   }
@@ -234,9 +234,9 @@ const useCases = [
   .features-table-wrap,
   .features-usecase-grid > div,
   .features-final-cta {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
@@ -247,16 +247,16 @@ const useCases = [
   }
 
   .features-hero__panel span {
-    color: #71717a;
+    color: var(--color-text-soft);
     font-size: 0.8125rem;
     font-weight: 700;
   }
 
   .features-hero__panel img {
     width: 100%;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #f4f4f5;
+    background: var(--color-surface-muted);
   }
 
   .features-hero__panel code,
@@ -264,8 +264,8 @@ const useCases = [
     display: block;
     overflow-wrap: anywhere;
     border-radius: 0.5rem;
-    background: #18181b;
-    color: #86efac;
+    background: var(--color-text);
+    color: var(--color-code-accent);
     font-size: 0.8125rem;
     line-height: 1.6;
     padding: 0.875rem;
@@ -284,9 +284,9 @@ const useCases = [
     top: 5.5rem;
     display: grid;
     gap: 0.25rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 0.75rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
@@ -297,7 +297,7 @@ const useCases = [
 
   .features-sidebar a {
     border-radius: 0.5rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
     padding: 0.625rem 0.75rem;
@@ -305,8 +305,8 @@ const useCases = [
   }
 
   .features-sidebar a:hover {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .features-content {
@@ -326,7 +326,7 @@ const useCases = [
   .features-section__header h2,
   .features-final-cta h2 {
     margin: 0.625rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(1.75rem, 3vw, 2.75rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -357,7 +357,7 @@ const useCases = [
 
   .features-metric-grid strong {
     display: block;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2rem, 4vw, 3.25rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -368,7 +368,7 @@ const useCases = [
   .features-card-grid p,
   .features-usecase-grid p,
   .features-final-cta p {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.7;
   }
@@ -376,7 +376,7 @@ const useCases = [
   .features-card-grid h3,
   .features-usecase-grid h3 {
     margin: 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
   }
@@ -393,15 +393,15 @@ const useCases = [
 
   .features-table th,
   .features-table td {
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding: 1rem;
     text-align: left;
     vertical-align: top;
   }
 
   .features-table th {
-    background: #f4f4f5;
-    color: #52525b;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -413,14 +413,14 @@ const useCases = [
   }
 
   .features-table td {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.6;
   }
 
   .features-table td:first-child,
   .features-table td:nth-child(2) {
-    color: #18181b;
+    color: var(--color-text);
     font-weight: 700;
   }
 
@@ -430,17 +430,17 @@ const useCases = [
     justify-content: space-between;
     gap: 2rem;
     padding: 1.5rem;
-    background: #18181b;
+    background: var(--color-text);
   }
 
   .features-final-cta h2 {
-    color: #ffffff;
+    color: var(--color-inverse-text);
     font-size: clamp(1.5rem, 3vw, 2rem);
   }
 
   .features-final-cta p {
     margin: 0.75rem 0 0;
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
   }
 
   .features-final-cta a {
@@ -450,8 +450,8 @@ const useCases = [
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
     padding: 0 1rem;

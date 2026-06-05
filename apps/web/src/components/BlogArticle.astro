@@ -149,8 +149,8 @@ const structuredData = {
 <style>
   .blog-article {
     overflow-x: clip;
-    background: #fafafa;
-    color: #18181b;
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
   }
 
   .blog-hero,
@@ -177,10 +177,10 @@ const structuredData = {
   .blog-hero__meta span,
   .blog-hero__meta time,
   .blog-hero__tags span {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: #ffffff;
-    color: #52525b;
+    background: var(--color-inverse-text);
+    color: var(--color-text-muted);
     font-size: 0.8125rem;
     font-weight: 700;
     padding: 0.375rem 0.625rem;
@@ -188,13 +188,13 @@ const structuredData = {
   }
 
   .blog-hero__meta a {
-    color: #6d28d9;
+    color: var(--color-brand-hover);
   }
 
   .blog-hero h1 {
     max-width: 58rem;
     margin: 1.5rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.75rem, 6vw, 5.75rem);
     font-weight: 650;
     line-height: 0.98;
@@ -204,7 +204,7 @@ const structuredData = {
   .blog-hero > p {
     max-width: 47rem;
     margin: 1.5rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.1875rem;
     line-height: 1.75;
   }
@@ -215,9 +215,9 @@ const structuredData = {
 
   .blog-cover {
     overflow: hidden;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #18181b;
+    background: var(--color-text);
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
@@ -241,9 +241,9 @@ const structuredData = {
     top: 5.5rem;
     display: grid;
     gap: 0.25rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 0.75rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
@@ -251,7 +251,7 @@ const structuredData = {
   .blog-toc span,
   .blog-eyebrow {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -264,7 +264,7 @@ const structuredData = {
 
   .blog-toc a {
     border-radius: 0.5rem;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 0.875rem;
     font-weight: 650;
     line-height: 1.4;
@@ -273,8 +273,8 @@ const structuredData = {
   }
 
   .blog-toc a:hover {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
   }
 
   .blog-prose {
@@ -285,7 +285,7 @@ const structuredData = {
   .blog-section,
   .blog-takeaways,
   .blog-cta {
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 3rem;
     margin-bottom: 3rem;
   }
@@ -295,13 +295,13 @@ const structuredData = {
   .blog-takeaways li,
   .blog-cta p,
   .blog-related p {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1rem;
     line-height: 1.8;
   }
 
   .blog-summary p:first-child {
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1.1875rem;
     line-height: 1.75;
   }
@@ -311,7 +311,7 @@ const structuredData = {
   .blog-cta h2,
   .blog-related h2 {
     margin: 0.75rem 0 1rem;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(1.875rem, 3vw, 2.75rem);
     font-weight: 650;
     line-height: 1.08;
@@ -330,9 +330,9 @@ const structuredData = {
 
   .blog-card-grid > div,
   .blog-related__grid a {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 1.25rem;
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
@@ -340,7 +340,7 @@ const structuredData = {
   .blog-card-grid h3,
   .blog-related h3 {
     margin: 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.35;
@@ -355,9 +355,9 @@ const structuredData = {
   }
 
   .blog-takeaways li {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     padding: 1rem;
   }
 
@@ -366,19 +366,19 @@ const structuredData = {
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    border: 1px solid #27272a;
+    border: 1px solid var(--color-code-surface-border);
     border-radius: 0.5rem;
-    background: #18181b;
+    background: var(--color-text);
     padding: 1.5rem;
   }
 
   .blog-cta h2,
   .blog-cta p {
-    color: #ffffff;
+    color: var(--color-inverse-text);
   }
 
   .blog-cta p:last-child {
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
   }
 
   .blog-cta a {
@@ -388,8 +388,8 @@ const structuredData = {
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
     padding: 0 1rem;
@@ -397,7 +397,7 @@ const structuredData = {
   }
 
   .blog-related {
-    border-top: 1px solid #e4e4e7;
+    border-top: 1px solid var(--color-border);
     padding: 4rem 0 6rem;
   }
 
@@ -423,7 +423,7 @@ const structuredData = {
   .blog-related__grid span {
     display: inline-flex;
     margin-bottom: 0.75rem;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.12em;

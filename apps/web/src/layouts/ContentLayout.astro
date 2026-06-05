@@ -77,8 +77,8 @@ const hasCta = Astro.slots.has('cta');
   .content-layout {
     min-height: 100vh;
     overflow-x: clip;
-    background: #fafafa;
-    color: #18181b;
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
   }
 
   .content-hero,
@@ -93,7 +93,7 @@ const hasCta = Astro.slots.has('cta');
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.46fr);
     gap: 2rem;
     align-items: end;
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid var(--color-border);
     padding: 5rem 0 3rem;
   }
 
@@ -105,7 +105,7 @@ const hasCta = Astro.slots.has('cta');
   .content-layout :global(.content-section__eyebrow),
   .content-sidebar :global(h2) {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -115,7 +115,7 @@ const hasCta = Astro.slots.has('cta');
   .content-hero h1 {
     max-width: 58rem;
     margin: 1rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.35rem, 5vw, 5.4rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -125,7 +125,7 @@ const hasCta = Astro.slots.has('cta');
   .content-hero > div > p:not(.content-eyebrow) {
     max-width: 45rem;
     margin: 1.25rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.125rem;
     line-height: 1.75;
   }
@@ -167,9 +167,9 @@ const hasCta = Astro.slots.has('cta');
     box-sizing: border-box;
     max-width: 100%;
     min-width: 0;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
     box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
@@ -184,7 +184,7 @@ const hasCta = Astro.slots.has('cta');
 
   .content-layout :global(.content-section h2) {
     margin: 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -193,7 +193,7 @@ const hasCta = Astro.slots.has('cta');
 
   .content-layout :global(.content-section h3) {
     margin: 1.5rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.25;
@@ -203,7 +203,7 @@ const hasCta = Astro.slots.has('cta');
   .content-layout :global(.content-section li),
   .content-sidebar :global(p),
   .content-sidebar :global(li) {
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1rem;
     line-height: 1.75;
   }
@@ -213,13 +213,13 @@ const hasCta = Astro.slots.has('cta');
   }
 
   .content-layout :global(.content-section a) {
-    color: #4c1d95;
+    color: var(--color-brand-text-strong);
     font-weight: 700;
     text-decoration: none;
   }
 
   .content-layout :global(.content-section a:hover) {
-    color: #6d28d9;
+    color: var(--color-brand-hover);
   }
 
   .content-layout :global(.content-section > .code-block) {
@@ -227,10 +227,10 @@ const hasCta = Astro.slots.has('cta');
   }
 
   .content-layout :global(.content-section p code) {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.375rem;
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
     font-size: 0.875em;
     padding: 0.1rem 0.3rem;
   }
@@ -258,19 +258,19 @@ const hasCta = Astro.slots.has('cta');
   .content-layout :global(.content-example-card) {
     display: grid;
     gap: 1rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #fafafa;
+    background: var(--color-surface-subtle);
     padding: 1rem;
   }
 
   .content-layout :global(.content-example-card img) {
     width: 100%;
     aspect-ratio: 4 / 3;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     object-fit: cover;
-    background: #ffffff;
+    background: var(--color-inverse-text);
   }
 
   .content-layout :global(.content-example-card code),
@@ -278,8 +278,8 @@ const hasCta = Astro.slots.has('cta');
     display: block;
     overflow-wrap: anywhere;
     border-radius: 0.5rem;
-    background: #18181b;
-    color: #86efac;
+    background: var(--color-text);
+    color: var(--color-code-accent);
     font-size: 0.8125rem;
     line-height: 1.6;
     padding: 0.85rem;
@@ -299,22 +299,22 @@ const hasCta = Astro.slots.has('cta');
 
   .content-layout :global(.content-comparison-table th),
   .content-layout :global(.content-comparison-table td) {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     padding: 0.9rem;
     text-align: left;
     vertical-align: top;
   }
 
   .content-layout :global(.content-comparison-table th) {
-    background: #f4f4f5;
-    color: #18181b;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
     font-weight: 800;
   }
 
   .content-layout :global(.content-bullet-grid li) {
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #f4f4f5;
+    background: var(--color-surface-muted);
     color: #3f3f46;
     font-size: 0.9375rem;
     font-weight: 650;
@@ -329,14 +329,14 @@ const hasCta = Astro.slots.has('cta');
 
   .content-layout :global(.content-preview-card__code) {
     border-radius: 0.5rem;
-    background: #18181b;
+    background: var(--color-text);
     padding: 1rem;
   }
 
   .content-layout :global(.content-preview-card__code span) {
     display: block;
     margin-bottom: 0.5rem;
-    color: #a1a1aa;
+    color: var(--color-text-disabled);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -347,7 +347,7 @@ const hasCta = Astro.slots.has('cta');
   .content-cta :global(code) {
     display: block;
     overflow-wrap: anywhere;
-    color: #86efac;
+    color: var(--color-code-accent);
     font-size: 0.875rem;
     line-height: 1.6;
   }
@@ -355,9 +355,9 @@ const hasCta = Astro.slots.has('cta');
   .content-layout :global(.content-preview-card img) {
     width: 100%;
     margin-top: 1rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: var(--color-inverse-text);
   }
 
   .content-sidebar :global(.content-sidebar-card ul) {
@@ -369,7 +369,7 @@ const hasCta = Astro.slots.has('cta');
   }
 
   .content-sidebar :global(.content-sidebar-card a) {
-    color: #4c1d95;
+    color: var(--color-brand-text-strong);
     font-size: 0.9375rem;
     font-weight: 700;
     line-height: 1.5;
@@ -377,13 +377,13 @@ const hasCta = Astro.slots.has('cta');
   }
 
   .content-sidebar :global(.content-sidebar-card a:hover) {
-    color: #6d28d9;
+    color: var(--color-brand-hover);
   }
 
   .content-cta {
-    border-top: 1px solid #27272a;
-    background: #18181b;
-    color: #ffffff;
+    border-top: 1px solid var(--color-code-surface-border);
+    background: var(--color-text);
+    color: var(--color-inverse-text);
     padding: 4rem 0;
   }
 
@@ -396,7 +396,7 @@ const hasCta = Astro.slots.has('cta');
 
   .content-cta :global(h2) {
     margin: 0;
-    color: #ffffff;
+    color: var(--color-inverse-text);
     font-size: clamp(1.75rem, 4vw, 3rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -417,8 +417,8 @@ const hasCta = Astro.slots.has('cta');
     justify-content: center;
     justify-self: center;
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
     padding: 0 1rem;

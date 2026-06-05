@@ -30,8 +30,8 @@ import Layout from '../layouts/Layout.astro';
     min-height: 72vh;
     display: grid;
     place-items: center;
-    background: #fafafa;
-    color: #18181b;
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
     padding: 4rem 1rem;
   }
 
@@ -41,7 +41,7 @@ import Layout from '../layouts/Layout.astro';
 
   .not-found__eyebrow {
     margin: 0;
-    color: #6d28d9;
+    color: var(--color-brand-hover);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -50,7 +50,7 @@ import Layout from '../layouts/Layout.astro';
 
   .not-found h1 {
     margin: 1rem 0 0;
-    color: #18181b;
+    color: var(--color-text);
     font-size: clamp(2.5rem, 8vw, 5rem);
     font-weight: 650;
     letter-spacing: 0;
@@ -60,7 +60,7 @@ import Layout from '../layouts/Layout.astro';
   .not-found p:not(.not-found__eyebrow) {
     max-width: 40rem;
     margin: 1.25rem 0 0;
-    color: #52525b;
+    color: var(--color-text-muted);
     font-size: 1.125rem;
     line-height: 1.75;
   }
@@ -77,10 +77,10 @@ import Layout from '../layouts/Layout.astro';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #d4d4d8;
+    border: 1px solid var(--color-border-strong);
     border-radius: 0.5rem;
-    background: #ffffff;
-    color: #18181b;
+    background: var(--color-inverse-text);
+    color: var(--color-text);
     font-size: 0.9375rem;
     font-weight: 700;
     text-decoration: none;
@@ -89,8 +89,8 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .not-found__links a:first-child {
-    border-color: #6d28d9;
-    background: #7c3aed;
-    color: #ffffff;
+    border-color: var(--color-brand-hover);
+    background: var(--color-brand);
+    color: var(--color-inverse-text);
   }
 </style>
