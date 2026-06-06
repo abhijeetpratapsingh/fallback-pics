@@ -16,6 +16,12 @@ const sideNav = [
 
 const endpointExamples = [
   {
+    title: 'Blog thumbnail',
+    path: '/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images&label=Guide',
+    description: 'Generate a featured-image style thumbnail from a blog title with safe-zone background decoration.',
+    image: `${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&label=Guide`,
+  },
+  {
     title: 'Basic fallback',
     path: '/api/v1/640x360',
     description: 'Generate a deterministic image from dimensions alone.',
@@ -41,9 +47,13 @@ const parameters = [
   { name: 'bgColor', type: 'path hex', detail: 'Optional path segment after dimensions, without the # prefix.' },
   { name: 'textColor', type: 'path hex', detail: 'Optional foreground path segment after background color, without the # prefix.' },
   { name: 'text', type: 'query', detail: 'Optional URL-encoded label rendered into the fallback.' },
+  { name: 'style', type: 'query', detail: 'Thumbnail decoration style: soft, rings, lines, or pattern.' },
+  { name: 'theme', type: 'query', detail: 'Thumbnail color theme: purple, blue, green, orange, or dark.' },
+  { name: 'label', type: 'query', detail: 'Short thumbnail category label such as Blog Post, Guide, Tutorial, or Performance.' },
 ];
 
 const presets = [
+  { name: 'thumbnail', route: '/api/v1/thumbnail/1200x630?text=Blog+Post+Title&style=soft&label=Guide', use: 'Blog featured images, CMS fallbacks, Open Graph thumbnails' },
   { name: 'avatar', route: '/api/v1/avatar/128?text=JD', use: 'Initials, teams, people, organizations' },
   { name: 'banner', route: '/api/v1/banner/1200x400?text=Campaign', use: 'Marketing cards, CMS hero images, social previews' },
   { name: 'skeleton', route: '/api/v1/animated/skeleton/640x360', use: 'Loading states that preserve layout dimensions' },
@@ -76,6 +86,13 @@ export function ProductFallback() {
     />
   );
 }`;
+
+const thumbnailExample = `<img
+  src="${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide"
+  width="1200"
+  height="630"
+  alt="How to Fix Broken Images featured image"
+/>`;
 ---
 
 <DocsLayout
@@ -138,6 +155,11 @@ export function ProductFallback() {
             language="text"
             code={`${baseUrl}/[width]x[height]/[bgColor]/[textColor]?text=[label]`}
           />
+          <CodeBlock
+            label="Blog thumbnail route"
+            language="text"
+            code={`${baseUrl}/thumbnail/1200x630?text=[post-title]&style=soft&theme=purple&label=Guide`}
+          />
           <div class="docs-callout">
             <strong>Production behavior:</strong>
             Deterministic URLs are designed for long-lived CDN caching. Use stable dimensions and labels in product surfaces where layout shift matters.
@@ -195,6 +217,7 @@ export function ProductFallback() {
           <div class="docs-code-stack">
             <CodeBlock label="React component" language="tsx" code={reactExample} />
             <CodeBlock label="Next.js Image" language="tsx" code={nextExample} />
+            <CodeBlock label="Blog featured image" language="html" code={thumbnailExample} />
           </div>
         </section>
 

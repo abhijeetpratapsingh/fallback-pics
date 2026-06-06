@@ -32,6 +32,7 @@ fallback.pics is a developer-focused placeholder image API and fallback image se
 
 ## Blog posts
 
+- Generate Blog Thumbnails from Text When Featured Images Are Missing: https://fallback.pics/blog/generate-blog-thumbnails-from-text/
 - Placeholder Image API: Complete URL Syntax Guide for Developers: https://fallback.pics/blog/placeholder-image-api-url-syntax-guide/
 - How to Fix Broken Images in HTML with onerror: https://fallback.pics/blog/fix-broken-images-html-onerror/
 - React Image Fallback Patterns: Missing Src, Failed Loads, and Placeholders: https://fallback.pics/blog/react-image-fallback-patterns/

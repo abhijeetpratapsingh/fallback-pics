@@ -16,6 +16,12 @@ const navItems = [
 
 const routes = [
   {
+    title: 'Blog thumbnail',
+    path: '/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide',
+    description: 'Generate a featured-image style thumbnail from a title. Decorative elements stay outside the text safe zone.',
+    image: `${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide`,
+  },
+  {
     title: 'Standard fallback',
     path: '/api/v1/640x360',
     description: 'Create a deterministic placeholder from dimensions alone. SVG is the default output.',
@@ -47,6 +53,10 @@ const parameters = [
   { name: 'bgColor', type: 'path hex', description: 'Optional background color as a path segment after dimensions, without the # prefix.' },
   { name: 'textColor', type: 'path hex', description: 'Optional foreground/text color as the next path segment, without the # prefix.' },
   { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated image.' },
+  { name: 'style', type: 'query string', description: 'Thumbnail style: soft, rings, lines, or pattern. Used by /thumbnail routes.' },
+  { name: 'theme', type: 'query string', description: 'Thumbnail theme: purple, blue, green, orange, or dark. Used by /thumbnail routes.' },
+  { name: 'label', type: 'query string', description: 'Short category pill for thumbnail routes, such as Blog Post, Guide, Tutorial, or Performance.' },
+  { name: 'accent', type: 'query hex', description: 'Optional thumbnail accent color without the # prefix.' },
   { name: 'extension', type: 'path suffix', description: 'Optional route suffix: .svg, .png, .jpg, .jpeg, or .webp. SVG is the default when omitted.' },
 ];
 
@@ -89,6 +99,12 @@ const reactExample = `export function ProductImageFallback() {
       alt="Product image fallback"
     />
   );
+}`;
+
+const thumbnailExample = `export function BlogFeaturedImage() {
+  const src = "${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&theme=purple&label=Guide";
+
+  return <img src={src} width={1200} height={630} alt="Blog featured image" />;
 }`;
 ---
 
@@ -182,6 +198,7 @@ const reactExample = `export function ProductImageFallback() {
             <CodeBlock label="CSS" language="css" code={cssExample} />
             <CodeBlock label="JavaScript" language="ts" code={jsExample} />
             <CodeBlock label="React" language="tsx" code={reactExample} />
+            <CodeBlock label="Thumbnail" language="tsx" code={thumbnailExample} />
           </div>
         </section>
 

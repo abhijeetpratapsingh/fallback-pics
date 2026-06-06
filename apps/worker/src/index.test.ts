@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import worker, { Env } from './index';
-import { ImagesEncoder } from './raster';
+import { describe, expect, it } from "vitest";
+import worker, { Env } from "./index";
+import { ImagesEncoder } from "./raster";
 
 function fakeImagesEncoder(): ImagesEncoder {
   return {
@@ -15,8 +15,8 @@ function fakeImagesEncoder(): ImagesEncoder {
         async output(options) {
           return {
             response() {
-              return new Response('encoded-image', {
-                headers: { 'Content-Type': options.format },
+              return new Response("encoded-image", {
+                headers: { "Content-Type": options.format },
               });
             },
             contentType() {
@@ -37,47 +37,100 @@ const ctx = {
   passThroughOnException() {},
 } as unknown as ExecutionContext;
 
-describe('worker raster formats', () => {
-  it('returns PNG bytes and headers for .png routes', async () => {
+describe("worker raster formats", () => {
+  it("returns PNG bytes and headers for .png routes", async () => {
     const env: Env = {
       IMAGES: fakeImagesEncoder(),
-      GOOGLE_ANALYTICS_ENABLED: 'false',
-      NEW_RELIC_ENABLED: 'false',
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
     };
 
-    const response = await worker.fetch(new Request('https://fallback.pics/api/v1/400x300.png'), env, ctx);
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/400x300.png"),
+      env,
+      ctx,
+    );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('Content-Type')).toBe('image/png');
-    await expect(response.text()).resolves.toBe('encoded-image/png');
+    expect(response.headers.get("Content-Type")).toBe("image/png");
+    await expect(response.text()).resolves.toBe("encoded-image/png");
   });
 
-  it('returns JPEG bytes and headers for .jpg routes', async () => {
+  it("returns JPEG bytes and headers for .jpg routes", async () => {
     const env: Env = {
       IMAGES: fakeImagesEncoder(),
-      GOOGLE_ANALYTICS_ENABLED: 'false',
-      NEW_RELIC_ENABLED: 'false',
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
     };
 
-    const response = await worker.fetch(new Request('https://fallback.pics/api/v1/400x300.jpg'), env, ctx);
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/400x300.jpg"),
+      env,
+      ctx,
+    );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('Content-Type')).toBe('image/jpeg');
-    await expect(response.text()).resolves.toBe('encoded-image/jpeg');
+    expect(response.headers.get("Content-Type")).toBe("image/jpeg");
+    await expect(response.text()).resolves.toBe("encoded-image/jpeg");
   });
 
-  it('returns WebP bytes and headers for preset .webp routes', async () => {
+  it("returns WebP bytes and headers for preset .webp routes", async () => {
     const env: Env = {
       IMAGES: fakeImagesEncoder(),
-      GOOGLE_ANALYTICS_ENABLED: 'false',
-      NEW_RELIC_ENABLED: 'false',
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
     };
 
-    const response = await worker.fetch(new Request('https://fallback.pics/api/v1/avatar/200.webp?text=JD'), env, ctx);
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/avatar/200.webp?text=JD"),
+      env,
+      ctx,
+    );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('Content-Type')).toBe('image/webp');
-    await expect(response.text()).resolves.toBe('encoded-image/webp');
+    expect(response.headers.get("Content-Type")).toBe("image/webp");
+    await expect(response.text()).resolves.toBe("encoded-image/webp");
+  });
+
+  it("returns SVG blog thumbnails with safe-zone decoration styles", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request(
+        "https://fallback.pics/api/v1/thumbnail/1200x630?text=Prevent+Layout+Shift+From+Missing+Images&style=lines&label=Performance&theme=dark",
+      ),
+      env,
+      ctx,
+    );
+
+    const body = await response.text();
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("image/svg+xml");
+    expect(body).toContain("PERFORMANCE");
+    expect(body).toContain("Prevent Layout");
+    expect(body).toContain("Missing Images");
+  });
+
+  it("returns raster encoded thumbnail responses", async () => {
+    const env: Env = {
+      IMAGES: fakeImagesEncoder(),
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request(
+        "https://fallback.pics/api/v1/thumbnail/1200x630.webp?text=Blog+Thumbnail",
+      ),
+      env,
+      ctx,
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toBe("image/webp");
+    await expect(response.text()).resolves.toBe("encoded-image/webp");
   });
 });
-

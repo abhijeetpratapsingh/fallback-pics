@@ -154,13 +154,25 @@
 
   <url>
     <loc>https://fallback.pics/blog/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog</image:loc>
       <image:title>fallback.pics Blog - Image Placeholder Guides and Best Practices</image:title>
       <image:caption>Learn about image placeholders, fallback strategies, and web development best practices</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://fallback.pics/blog/generate-blog-thumbnails-from-text/</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fallback.pics/api/v1/thumbnail/1200x630?text=Generate+Blog+Thumbnails+from+Text&amp;style=soft&amp;label=Guide</image:loc>
+      <image:title>Generate Blog Thumbnails from Text When Featured Images Are Missing</image:title>
+      <image:caption>Use fallback.pics thumbnail URLs to generate blog featured images from post titles, category labels, themes, and safe-zone background styles.</image:caption>
     </image:image>
   </url>
 

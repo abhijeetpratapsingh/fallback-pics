@@ -24,8 +24,13 @@ const capabilities = [
   },
   {
     title: 'Presets for product states',
-    detail: 'Use avatar, banner, skeleton, blur, animated, contextual, and chart routes for common placeholder surfaces.',
-    example: '/api/v1/avatar/160?text=JD',
+    detail: 'Use thumbnail, avatar, banner, skeleton, blur, animated, contextual, and chart routes for common placeholder surfaces.',
+    example: '/api/v1/thumbnail/1200x630?text=Blog+Post',
+  },
+  {
+    title: 'Blog thumbnail generation',
+    detail: 'Create featured-image style thumbnails from post titles with safe-zone background elements, category labels, themes, and deterministic variation.',
+    example: '/api/v1/thumbnail/1200x630?style=soft&label=Guide',
   },
   {
     title: 'Brand-safe customization',
