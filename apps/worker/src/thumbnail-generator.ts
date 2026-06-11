@@ -1,3 +1,5 @@
+import { createSeededRandom, escapeXml, hashString } from "./utils";
+
 export type ThumbnailStyle = "soft" | "rings" | "lines" | "pattern";
 export type ThumbnailTheme = "purple" | "blue" | "green" | "orange" | "dark";
 
@@ -33,41 +35,12 @@ const THEMES: Record<
   dark: { from: "#18181B", to: "#334155", accent: "#F97316", text: "#FFFFFF" },
 };
 
-function escapeXml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
 function normalizeHex(value?: string): string | undefined {
   if (!value) return undefined;
   const cleaned = value.replace("#", "").trim();
   return /^[0-9A-Fa-f]{6}$/.test(cleaned)
     ? `#${cleaned.toUpperCase()}`
     : undefined;
-}
-
-function hashString(value: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function createRandom(seed: string): () => number {
-  let state = hashString(seed) || 1;
-  return () => {
-    state += 0x6d2b79f5;
-    let next = state;
-    next = Math.imul(next ^ (next >>> 15), next | 1);
-    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
-    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
-  };
 }
 
 function wrapText(text: string, maxChars: number, maxLines: number): string[] {
@@ -184,7 +157,7 @@ export function generateThumbnailSVG(
   const textColor = normalizeHex(options.color) || theme.text;
   const title = (options.text || "Blog Post Thumbnail").slice(0, 160);
   const label = (options.label || "Blog Post").slice(0, 28).toUpperCase();
-  const random = createRandom(
+  const random = createSeededRandom(
     options.seed || `${title}|${label}|${style}|${themeName}`,
   );
   const gradientId = `thumb-${hashString(`${bgFrom}${bgTo}`).toString(16)}`;

@@ -1,7 +1,9 @@
+import { normalizeColor } from "./utils";
+
 export interface ImageParams {
   width: number;
   height: number;
-  format: "svg" | "png" | "jpg" | "jpeg" | "webp" | "avif" | "gif";
+  format: "svg" | "png" | "jpg" | "jpeg" | "webp";
   bgColor: string;
   textColor: string;
   text?: string;
@@ -66,10 +68,7 @@ export class Router {
     // When using route without /*, the path after domain becomes the pathname
     // Check if pathname looks like a domain path that wasn't properly routed
     const host = this.url.hostname;
-    if (
-      host.includes("img.fallback.pics") ||
-      host.includes("https://fallback.pics/api/v1")
-    ) {
+    if (host.includes("img.fallback.pics")) {
       // Extract actual image params from URL
       const fullPath = this.url.href;
       const match = fullPath.match(/(?:img|api)\.fallback\.pics\/(.+)/);
@@ -237,10 +236,10 @@ export class Router {
 
     // Only apply path colors if they're not dimension strings
     if (segments[bgIndex] && !/^\d+x\d+/.test(segments[bgIndex])) {
-      bgColor = this.normalizeColor(segments[bgIndex]);
+      bgColor = normalizeColor(segments[bgIndex], bgColor);
     }
     if (segments[textIndex] && !/^\d+x\d+/.test(segments[textIndex])) {
-      textColor = this.normalizeColor(segments[textIndex]);
+      textColor = normalizeColor(segments[textIndex], textColor);
     }
 
     // Query param colors (override path colors)
@@ -249,8 +248,8 @@ export class Router {
     const textParam =
       this.url.searchParams.get("fg") || this.url.searchParams.get("textColor");
 
-    if (bgParam) bgColor = this.normalizeColor(bgParam);
-    if (textParam) textColor = this.normalizeColor(textParam);
+    if (bgParam) bgColor = normalizeColor(bgParam, bgColor);
+    if (textParam) textColor = normalizeColor(textParam, textColor);
 
     // Custom text
     const text =
@@ -258,7 +257,6 @@ export class Router {
       (preset !== "thumbnail"
         ? this.url.searchParams.get("label")
         : undefined) ||
-      (preset === "avatar" && segments[2]) ||
       undefined;
 
     // Font options
@@ -350,66 +348,17 @@ export class Router {
 
   private validateFormat(format: string): ImageParams["format"] {
     const normalized = format.toLowerCase();
-    const validFormats = ["svg", "png", "jpg", "jpeg", "webp", "avif", "gif"];
+    if (normalized === "avif" || normalized === "gif") {
+      throw new Error(`Unsupported image format: ${normalized}`);
+    }
+
+    const validFormats = ["svg", "png", "jpg", "jpeg", "webp"];
     if (validFormats.includes(normalized)) {
-      // Normalize jpeg to jpg
       return (
         normalized === "jpeg" ? "jpg" : normalized
       ) as ImageParams["format"];
     }
-    return "svg";
-  }
 
-  private normalizeColor(color: string): string {
-    // CSS color names mapping
-    const cssColors: Record<string, string> = {
-      transparent: "transparent",
-      black: "#000000",
-      white: "#FFFFFF",
-      red: "#FF0000",
-      green: "#008000",
-      blue: "#0000FF",
-      yellow: "#FFFF00",
-      cyan: "#00FFFF",
-      magenta: "#FF00FF",
-      gray: "#808080",
-      grey: "#808080",
-      orange: "#FFA500",
-      purple: "#800080",
-      brown: "#A52A2A",
-      pink: "#FFC0CB",
-      lime: "#00FF00",
-      navy: "#000080",
-      teal: "#008080",
-      silver: "#C0C0C0",
-      gold: "#FFD700",
-      indigo: "#4B0082",
-      violet: "#EE82EE",
-    };
-
-    // Check for CSS color names
-    const lowerColor = color.toLowerCase();
-    if (cssColors[lowerColor]) {
-      return cssColors[lowerColor];
-    }
-
-    // Remove # if present
-    color = color.replace(/^#/, "");
-
-    // Validate hex color
-    if (/^[0-9A-Fa-f]{3}$/.test(color)) {
-      // Convert 3-char to 6-char
-      color = color
-        .split("")
-        .map((c) => c + c)
-        .join("");
-    }
-
-    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
-      return "#" + color.toUpperCase();
-    }
-
-    // Return default if invalid
-    return "#7C3AED";
+    throw new Error(`Unsupported image format: ${normalized}`);
   }
 }

@@ -32,9 +32,40 @@ export function isSupportedOutputFormat(format: ImageParams['format']): format i
   return format === 'svg' || format === 'png' || format === 'jpg' || format === 'jpeg' || format === 'webp';
 }
 
-export function extractFormatFromSegment(segment: string | undefined): SupportedOutputFormat {
-  const match = segment?.match(/\.(svg|png|jpg|jpeg|webp)$/i);
-  return match ? (match[1].toLowerCase() as SupportedOutputFormat) : 'svg';
+const UNSUPPORTED_RASTER_EXTENSIONS = new Set(['avif', 'gif']);
+
+export type ParsedFormat =
+  | { ok: true; format: SupportedOutputFormat }
+  | { ok: false; error: string };
+
+export function parseFormatFromSegment(segment: string | undefined): ParsedFormat {
+  const match = segment?.match(/\.([a-z0-9]+)$/i);
+  if (!match) {
+    return { ok: true, format: 'svg' };
+  }
+
+  const extension = match[1].toLowerCase();
+  if (UNSUPPORTED_RASTER_EXTENSIONS.has(extension)) {
+    return { ok: false, error: `Unsupported image format: ${extension}` };
+  }
+
+  if (extension === 'svg') {
+    return { ok: true, format: 'svg' };
+  }
+
+  if (extension === 'png') {
+    return { ok: true, format: 'png' };
+  }
+
+  if (extension === 'jpg' || extension === 'jpeg') {
+    return { ok: true, format: extension === 'jpeg' ? 'jpeg' : 'jpg' };
+  }
+
+  if (extension === 'webp') {
+    return { ok: true, format: 'webp' };
+  }
+
+  return { ok: false, error: `Unsupported image format: ${extension}` };
 }
 
 export async function encodeSvg(svg: string, format: SupportedOutputFormat, images?: ImagesEncoder): Promise<EncodedImage> {

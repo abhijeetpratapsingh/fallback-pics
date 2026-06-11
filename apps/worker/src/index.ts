@@ -4,6 +4,7 @@
  */
 
 import { generateAISVG } from "./ai-generator";
+import { generateChartSVG } from "./chart-generator";
 import { generateThumbnailSVG } from "./thumbnail-generator";
 import {
   GoogleAnalyticsTelemetry,
@@ -16,11 +17,16 @@ import {
 import type { RequestMetrics } from "./telemetry";
 import {
   encodeSvg,
-  extractFormatFromSegment,
   getContentType,
   ImagesEncoder,
+  parseFormatFromSegment,
   SupportedOutputFormat,
 } from "./raster";
+import {
+  escapeXml,
+  getAvatarInitials,
+  normalizeColor,
+} from "./utils";
 
 export interface Env {
   IMAGES?: ImagesEncoder;
@@ -44,7 +50,20 @@ const STALE_WHILE_REVALIDATE = 86400; // 1 day
 // Pre-compiled regex patterns
 const DIMENSION_REGEX = /^(\d+)(?:x(\d+))?$/;
 const HEX_COLOR_REGEX = /^[0-9A-Fa-f]{6}$/;
-const FORMAT_REGEX = /\.(svg|png|jpg|jpeg|webp|avif|gif)$/i;
+const FORMAT_REGEX = /\.[a-z0-9]+$/i;
+const MAX_DIMENSION = 5000;
+const PRESET_ROUTES = new Set([
+  "thumbnail",
+  "avatar",
+  "square",
+  "banner",
+  "chart",
+  "ai",
+  "skeleton",
+  "blur",
+  "gradient",
+  "animated",
+]);
 
 // Headers
 const CORS_HEADERS = {
@@ -72,24 +91,28 @@ async function createImageResponse(
   return new Response(encoded.body, { headers });
 }
 
-// Fast XML escape
-const escapeXml = (str: string): string => {
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  };
-  return str.replace(/[&<>"']/g, (m) => map[m]);
-};
+function normalizePathname(pathname: string): string {
+  if (pathname.startsWith("/api/v1/")) {
+    pathname = pathname.substring(8);
+  } else if (pathname === "/api/v1") {
+    pathname = "";
+  }
 
-// Color normalization
-const normalizeColor = (color: string): string => {
-  if (!color) return "";
-  const cleaned = color.replace("#", "");
-  return HEX_COLOR_REGEX.test(cleaned) ? `#${cleaned}` : "";
-};
+  if (pathname.startsWith("/")) {
+    pathname = pathname.substring(1);
+  }
+
+  return pathname;
+}
+
+function isValidDimensions(width: number, height: number): boolean {
+  return (
+    width > 0 &&
+    height > 0 &&
+    width <= MAX_DIMENSION &&
+    height <= MAX_DIMENSION
+  );
+}
 
 // SVG Templates
 const SVG_TEMPLATE = (
@@ -114,122 +137,13 @@ const GRADIENT_TEMPLATE = (
   h: number,
   color1: string,
   color2: string,
-  text: string,
+  textColor: string,
+  displayText?: string,
 ) =>
-  `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${color1}"/><stop offset="100%" style="stop-color:${color2}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="50%" y="50%" font-family="system-ui" font-size="${Math.min(w, h) * 0.1}" fill="${text}" text-anchor="middle" dominant-baseline="middle">${w} × ${h}</text></svg>`;
+  `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${color1}"/><stop offset="100%" style="stop-color:${color2}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="50%" y="50%" font-family="system-ui" font-size="${Math.min(w, h) * 0.1}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${escapeXml(displayText ?? `${w} × ${h}`)}</text></svg>`;
 
 const SKELETON_TEMPLATE = (w: number, h: number) =>
   `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f0f0f0"/><stop offset="50%" style="stop-color:#e0e0e0"/><stop offset="100%" style="stop-color:#f0f0f0"/><animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="1.5s" repeatCount="indefinite"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#shimmer)"/></svg>`;
-
-// Import chart generator
-import { generateChartSVG } from "./chart-generator";
-
-// Mood modifiers for colors
-const MOOD_MODIFIERS: Record<string, (color: string) => string> = {
-  energetic: (color) => adjustBrightness(color, 1.2),
-  calm: (color) => adjustSaturation(color, 0.7),
-  dark: (color) => adjustBrightness(color, 0.6),
-  vibrant: (color) => adjustSaturation(color, 1.3),
-  professional: (color) => adjustSaturation(color, 0.8),
-  playful: (color) => adjustHue(color, 30),
-  serious: (color) => adjustSaturation(color, 0.5),
-  warm: (color) => adjustHue(color, -20),
-  cool: (color) => adjustHue(color, 20),
-};
-
-// Color adjustment helpers
-function hexToRgb(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [
-        parseInt(result[1], 16),
-        parseInt(result[2], 16),
-        parseInt(result[3], 16),
-      ]
-    : [0, 0, 0];
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-
-function adjustBrightness(hex: string, factor: number): string {
-  const [r, g, b] = hexToRgb(hex);
-  return rgbToHex(
-    Math.min(255, Math.floor(r * factor)),
-    Math.min(255, Math.floor(g * factor)),
-    Math.min(255, Math.floor(b * factor)),
-  );
-}
-
-function adjustSaturation(hex: string, factor: number): string {
-  const [r, g, b] = hexToRgb(hex);
-  const gray = 0.2989 * r + 0.587 * g + 0.114 * b;
-  return rgbToHex(
-    Math.min(255, Math.floor(gray + factor * (r - gray))),
-    Math.min(255, Math.floor(gray + factor * (g - gray))),
-    Math.min(255, Math.floor(gray + factor * (b - gray))),
-  );
-}
-
-function adjustHue(hex: string, degrees: number): string {
-  const [r, g, b] = hexToRgb(hex);
-  const hsl = rgbToHsl(r, g, b);
-  hsl[0] = (hsl[0] + degrees) % 360;
-  const rgb = hslToRgb(hsl[0], hsl[1], hsl[2]);
-  return rgbToHex(rgb[0], rgb[1], rgb[2]);
-}
-
-function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  const max = Math.max(r, g, b),
-    min = Math.min(r, g, b);
-  let h = 0,
-    s = 0,
-    l = (max + min) / 2;
-
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-        break;
-      case g:
-        h = ((b - r) / d + 2) / 6;
-        break;
-      case b:
-        h = ((r - g) / d + 4) / 6;
-        break;
-    }
-  }
-  return [h * 360, s, l];
-}
-
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-  h /= 360;
-  let r, g, b;
-  if (s === 0) {
-    r = g = b = l;
-  } else {
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
-  }
-  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-}
 
 export default {
   async fetch(
@@ -273,6 +187,59 @@ export default {
       return response;
     };
 
+    const serveImage = async (
+      svg: string,
+      outputFormat: SupportedOutputFormat,
+      metrics: Partial<RequestMetrics> & { route: string },
+    ): Promise<Response> => {
+      const response = await createImageResponse(svg, outputFormat, env.IMAGES);
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(
+        telemetry.sendMetrics([
+          telemetry.trackRequest({
+            route: metrics.route,
+            method: request.method,
+            statusCode: 200,
+            responseTime,
+            country: request.cf?.country as string | undefined,
+            userAgent: request.headers.get("user-agent"),
+            imageWidth: metrics.imageWidth,
+            imageHeight: metrics.imageHeight,
+            imageFormat: metrics.imageFormat,
+            customText: metrics.customText,
+          }),
+        ]),
+      );
+
+      return trackWorkerResponse(response, metrics);
+    };
+
+    const presetError = (
+      route: string,
+      message: string,
+      attrs: Partial<RequestMetrics> = {},
+    ): Response => {
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(
+        telemetry.sendMetrics([
+          telemetry.trackError(message, route, 400, {
+            responseTime,
+            country: request.cf?.country as string | undefined,
+            userAgentCategory: getUserAgentCategory(
+              request.headers.get("user-agent"),
+            ),
+          }),
+        ]),
+      );
+
+      return trackWorkerResponse(
+        new Response(message, { status: 400, headers: CORS_HEADERS }),
+        { route, errorMessage: message, ...attrs },
+      );
+    };
+
     // Handle OPTIONS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: CORS_HEADERS });
@@ -308,18 +275,9 @@ export default {
       );
     }
 
+    try {
     const url = new URL(request.url);
-    let pathname = url.pathname;
-
-    // Remove /api/v1 prefix
-    if (pathname.startsWith("/api/v1/")) {
-      pathname = pathname.substring(8);
-    }
-
-    // Remove leading slash
-    if (pathname.startsWith("/")) {
-      pathname = pathname.substring(1);
-    }
+    const pathname = normalizePathname(url.pathname);
 
     // Empty path
     if (!pathname) {
@@ -356,232 +314,301 @@ export default {
     // Handle special routes
 
     // Blog thumbnail route
-    if (firstSegment === "thumbnail" && segments[1]) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
+    if (firstSegment === "thumbnail") {
+      if (!segments[1]) {
+        return presetError("thumbnail", "Invalid thumbnail dimensions");
+      }
+
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError("thumbnail", parsedFormat.error);
+      }
+
       const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
       const match = DIMENSION_REGEX.exec(dimensionStr);
 
-      if (match) {
-        const width = parseInt(match[1]);
-        const height = match[2] ? parseInt(match[2]) : 630;
-
-        if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-          const svg = generateThumbnailSVG(width, height, {
-            text: url.searchParams.get("text") || undefined,
-            label: url.searchParams.get("label") || undefined,
-            style: url.searchParams.get("style") || undefined,
-            theme: url.searchParams.get("theme") || undefined,
-            bg: url.searchParams.get("bg") || undefined,
-            accent: url.searchParams.get("accent") || undefined,
-            color: url.searchParams.get("color") || undefined,
-            seed: url.searchParams.get("seed") || undefined,
-          });
-
-          return trackWorkerResponse(
-            await createImageResponse(svg, outputFormat, env.IMAGES),
-            {
-              route: "thumbnail",
-              imageWidth: width,
-              imageHeight: height,
-              imageFormat: outputFormat,
-              customText: !!url.searchParams.get("text"),
-            },
-          );
-        }
+      if (!match) {
+        return presetError("thumbnail", "Invalid thumbnail dimensions");
       }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : 630;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          "thumbnail",
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      const svg = generateThumbnailSVG(width, height, {
+        text: url.searchParams.get("text") || undefined,
+        label: url.searchParams.get("label") || undefined,
+        style: url.searchParams.get("style") || undefined,
+        theme: url.searchParams.get("theme") || undefined,
+        bg: url.searchParams.get("bg") || undefined,
+        accent: url.searchParams.get("accent") || undefined,
+        color: url.searchParams.get("color") || undefined,
+        seed: url.searchParams.get("seed") || undefined,
+      });
+
+      return serveImage(svg, parsedFormat.format, {
+        route: "thumbnail",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+        customText: !!url.searchParams.get("text"),
+      });
     }
 
     // Avatar route
-    if (firstSegment === "avatar" && segments[1]) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
-      const size = parseInt(segments[1]);
-      if (size > 0 && size <= 5000) {
-        const text = url.searchParams.get("text") || "A";
-        const bg = normalizeColor(segments[2]) || DEFAULT_BG;
-        const textColor = normalizeColor(segments[3]) || DEFAULT_TEXT;
+    if (firstSegment === "avatar") {
+      if (!segments[1]) {
+        return presetError("avatar", "Invalid avatar size");
+      }
 
-        const svg = AVATAR_TEMPLATE(size, bg, textColor, escapeXml(text));
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError("avatar", parsedFormat.error);
+      }
 
-        // Track avatar request
-        const responseTime = Date.now() - startTime;
-        ctx.waitUntil(
-          telemetry.sendMetrics([
-            telemetry.trackRequest({
-              route: "avatar",
-              method: request.method,
-              statusCode: 200,
-              responseTime,
-              country: request.cf?.country as string | undefined,
-              userAgent: request.headers.get("user-agent"),
-              imageWidth: size,
-              imageHeight: size,
-              imageFormat: outputFormat,
-              customText: !!text && text !== "A",
-            }),
-            telemetry.trackBusinessMetric("avatar_generated", 1, {
-              size,
-              hasCustomText: !!text && text !== "A",
-              country: request.cf?.country as string | undefined,
-            }),
-          ]),
-        );
+      const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
+      const size = parseInt(dimensionStr, 10);
 
-        return trackWorkerResponse(
-          await createImageResponse(svg, outputFormat, env.IMAGES),
-          {
-            route: "avatar",
-            imageWidth: size,
-            imageHeight: size,
-            imageFormat: outputFormat,
-            customText: !!text && text !== "A",
-          },
+      if (!Number.isFinite(size) || size <= 0 || size > MAX_DIMENSION) {
+        return presetError(
+          "avatar",
+          `Invalid avatar size (max ${MAX_DIMENSION})`,
+          { imageWidth: size, imageHeight: size },
         );
       }
+
+      const text = url.searchParams.get("text") || "A";
+      const bg = normalizeColor(segments[2] || "", DEFAULT_BG);
+      const textColor = normalizeColor(segments[3] || "", DEFAULT_TEXT);
+      const initials = getAvatarInitials(text);
+      const svg = AVATAR_TEMPLATE(
+        size,
+        bg,
+        textColor,
+        escapeXml(initials),
+      );
+
+      const response = await serveImage(svg, parsedFormat.format, {
+        route: "avatar",
+        imageWidth: size,
+        imageHeight: size,
+        imageFormat: parsedFormat.format,
+        customText: !!url.searchParams.get("text"),
+      });
+
+      ctx.waitUntil(
+        telemetry.sendMetrics([
+          telemetry.trackBusinessMetric("avatar_generated", 1, {
+            size,
+            hasCustomText: !!url.searchParams.get("text"),
+            country: request.cf?.country as string | undefined,
+          }),
+        ]),
+      );
+
+      return response;
     }
 
     // Square format
-    if (firstSegment === "square" && segments[1]) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
-      const size = parseInt(segments[1]);
-      if (size > 0 && size <= 5000) {
-        const text = url.searchParams.get("text") || `${size} × ${size}`;
-        const bg = normalizeColor(segments[2]) || DEFAULT_BG;
-        const textColor = normalizeColor(segments[3]) || DEFAULT_TEXT;
+    if (firstSegment === "square") {
+      if (!segments[1]) {
+        return presetError("square", "Invalid square size");
+      }
 
-        const svg = SVG_TEMPLATE(size, size, bg, textColor, escapeXml(text));
-        return trackWorkerResponse(
-          await createImageResponse(svg, outputFormat, env.IMAGES),
-          {
-            route: "square",
-            imageWidth: size,
-            imageHeight: size,
-            imageFormat: outputFormat,
-            customText: !!url.searchParams.get("text"),
-          },
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError("square", parsedFormat.error);
+      }
+
+      const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
+      const size = parseInt(dimensionStr, 10);
+
+      if (!Number.isFinite(size) || size <= 0 || size > MAX_DIMENSION) {
+        return presetError(
+          "square",
+          `Invalid square size (max ${MAX_DIMENSION})`,
+          { imageWidth: size, imageHeight: size },
         );
       }
+
+      const text = url.searchParams.get("text") || `${size} × ${size}`;
+      const bg = normalizeColor(segments[2] || "", DEFAULT_BG);
+      const textColor = normalizeColor(segments[3] || "", DEFAULT_TEXT);
+      const svg = SVG_TEMPLATE(size, size, bg, textColor, escapeXml(text));
+
+      return serveImage(svg, parsedFormat.format, {
+        route: "square",
+        imageWidth: size,
+        imageHeight: size,
+        imageFormat: parsedFormat.format,
+        customText: !!url.searchParams.get("text"),
+      });
     }
 
     // Banner preset
-    if (firstSegment === "banner" && segments[1]) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
+    if (firstSegment === "banner") {
+      if (!segments[1]) {
+        return presetError("banner", "Invalid banner dimensions");
+      }
+
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError("banner", parsedFormat.error);
+      }
+
       const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
       const match = DIMENSION_REGEX.exec(dimensionStr);
-      if (match) {
-        const width = parseInt(match[1]);
-        const height = match[2] ? parseInt(match[2]) : 400; // Default banner height
 
-        if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-          const text = url.searchParams.get("text") || "Banner";
-          const svg = GRADIENT_TEMPLATE(
-            width,
-            height,
-            "#667EEA",
-            "#764BA2",
-            "#FFFFFF",
-          );
-          return trackWorkerResponse(
-            await createImageResponse(svg, outputFormat, env.IMAGES),
-            {
-              route: "banner",
-              imageWidth: width,
-              imageHeight: height,
-              imageFormat: outputFormat,
-              customText: !!url.searchParams.get("text"),
-            },
-          );
-        }
+      if (!match) {
+        return presetError("banner", "Invalid banner dimensions");
       }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : 400;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          "banner",
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      const text = url.searchParams.get("text") || "Banner";
+      const svg = GRADIENT_TEMPLATE(
+        width,
+        height,
+        "#667EEA",
+        "#764BA2",
+        "#FFFFFF",
+        text,
+      );
+
+      return serveImage(svg, parsedFormat.format, {
+        route: "banner",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+        customText: !!url.searchParams.get("text"),
+      });
     }
 
     // Chart generation with sophisticated visualizations
-    if (firstSegment === "chart" && segments[1] && segments[2]) {
+    if (firstSegment === "chart") {
+      if (!segments[1] || !segments[2]) {
+        return presetError("chart", "Invalid chart route");
+      }
+
       const chartType = segments[1];
-      const outputFormat = extractFormatFromSegment(segments[2]);
+      const parsedFormat = parseFormatFromSegment(segments[2]);
+      if (!parsedFormat.ok) {
+        return presetError("chart", parsedFormat.error);
+      }
+
       const dimensionStr = segments[2].replace(FORMAT_REGEX, "");
       const match = DIMENSION_REGEX.exec(dimensionStr);
 
-      if (match) {
-        const width = parseInt(match[1]);
-        const height = match[2] ? parseInt(match[2]) : width;
-
-        if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-          // Use the improved chart generator
-          const svg = generateChartSVG(width, height, chartType);
-          return trackWorkerResponse(
-            await createImageResponse(svg, outputFormat, env.IMAGES),
-            {
-              route: "chart",
-              imageWidth: width,
-              imageHeight: height,
-              imageFormat: outputFormat,
-            },
-          );
-        }
+      if (!match) {
+        return presetError("chart", "Invalid chart dimensions");
       }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : width;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          "chart",
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      const svg = generateChartSVG(width, height, chartType);
+      return serveImage(svg, parsedFormat.format, {
+        route: "chart",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+      });
     }
 
     // AI context generation with intelligent layouts
-    if (firstSegment === "ai" && segments[1]) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
+    if (firstSegment === "ai") {
+      if (!segments[1]) {
+        return presetError("ai", "Invalid AI dimensions");
+      }
+
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError("ai", parsedFormat.error);
+      }
+
       const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
       const match = DIMENSION_REGEX.exec(dimensionStr);
 
-      if (match) {
-        const width = parseInt(match[1]);
-        const height = match[2] ? parseInt(match[2]) : width;
-
-        if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-          const context = (
-            url.searchParams.get("context") || "tech"
-          ).toLowerCase();
-          const mood = (
-            url.searchParams.get("mood") || "default"
-          ).toLowerCase();
-          const customText = url.searchParams.get("text");
-
-          // Support custom colors from URL params or path segments
-          let customBgColor =
-            url.searchParams.get("bg") || url.searchParams.get("bgcolor");
-          let customTextColor =
-            url.searchParams.get("text_color") ||
-            url.searchParams.get("textcolor");
-
-          // Also support colors in path: /ai/400x300/FF6B6B/FFFFFF
-          if (segments[2] && HEX_COLOR_REGEX.test(segments[2])) {
-            customBgColor = `#${segments[2]}`;
-          }
-          if (segments[3] && HEX_COLOR_REGEX.test(segments[3])) {
-            customTextColor = `#${segments[3]}`;
-          }
-
-          // Normalize colors if provided
-          if (customBgColor) customBgColor = normalizeColor(customBgColor);
-          if (customTextColor)
-            customTextColor = normalizeColor(customTextColor);
-
-          // Use the intelligent AI generator
-          const svg = generateAISVG(
-            width,
-            height,
-            context,
-            mood,
-            customText || undefined,
-            customBgColor || undefined,
-            customTextColor || undefined,
-          );
-          return trackWorkerResponse(
-            await createImageResponse(svg, outputFormat, env.IMAGES),
-            {
-              route: "ai",
-              imageWidth: width,
-              imageHeight: height,
-              imageFormat: outputFormat,
-              customText: !!customText,
-            },
-          );
-        }
+      if (!match) {
+        return presetError("ai", "Invalid AI dimensions");
       }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : width;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          "ai",
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      const context = (url.searchParams.get("context") || "tech").toLowerCase();
+      const mood = (url.searchParams.get("mood") || "default").toLowerCase();
+      const customText = url.searchParams.get("text");
+
+      let customBgColor =
+        url.searchParams.get("bg") || url.searchParams.get("bgcolor");
+      let customTextColor =
+        url.searchParams.get("text_color") ||
+        url.searchParams.get("textcolor");
+
+      if (segments[2] && HEX_COLOR_REGEX.test(segments[2])) {
+        customBgColor = `#${segments[2]}`;
+      }
+      if (segments[3] && HEX_COLOR_REGEX.test(segments[3])) {
+        customTextColor = `#${segments[3]}`;
+      }
+
+      if (customBgColor) {
+        customBgColor = normalizeColor(customBgColor, "");
+      }
+      if (customTextColor) {
+        customTextColor = normalizeColor(customTextColor, "");
+      }
+
+      const svg = generateAISVG(
+        width,
+        height,
+        context,
+        mood,
+        customText || undefined,
+        customBgColor || undefined,
+        customTextColor || undefined,
+      );
+
+      return serveImage(svg, parsedFormat.format, {
+        route: "ai",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+        customText: !!customText,
+      });
     }
 
     // Direct effect endpoints (e.g., /skeleton/400x300, /blur/400x300)
@@ -590,123 +617,153 @@ export default {
       firstSegment === "blur" ||
       firstSegment === "gradient"
     ) {
-      const outputFormat = extractFormatFromSegment(segments[1]);
-      const dimensionStr = segments[1]?.replace(FORMAT_REGEX, "");
-      if (dimensionStr) {
-        const match = DIMENSION_REGEX.exec(dimensionStr);
-        if (match) {
-          const width = parseInt(match[1]);
-          const height = match[2] ? parseInt(match[2]) : width;
-
-          if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-            if (firstSegment === "skeleton") {
-              const svg = SKELETON_TEMPLATE(width, height);
-              return trackWorkerResponse(
-                await createImageResponse(svg, outputFormat, env.IMAGES),
-                {
-                  route: "skeleton",
-                  imageWidth: width,
-                  imageHeight: height,
-                  imageFormat: outputFormat,
-                },
-              );
-            } else if (firstSegment === "blur") {
-              // Blur effect using SVG filter
-              const blurSvg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><filter id="blur"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="100%" height="100%" fill="#e0e0e0" filter="url(#blur)"/></svg>`;
-              return trackWorkerResponse(
-                await createImageResponse(blurSvg, outputFormat, env.IMAGES),
-                {
-                  route: "blur",
-                  imageWidth: width,
-                  imageHeight: height,
-                  imageFormat: outputFormat,
-                },
-              );
-            } else if (firstSegment === "gradient") {
-              const svg = GRADIENT_TEMPLATE(
-                width,
-                height,
-                "#7C3AED",
-                "#3B82F6",
-                "#FFFFFF",
-              );
-              return trackWorkerResponse(
-                await createImageResponse(svg, outputFormat, env.IMAGES),
-                {
-                  route: "gradient",
-                  imageWidth: width,
-                  imageHeight: height,
-                  imageFormat: outputFormat,
-                },
-              );
-            }
-          }
-        }
+      if (!segments[1]) {
+        return presetError(firstSegment, "Invalid dimensions");
       }
+
+      const parsedFormat = parseFormatFromSegment(segments[1]);
+      if (!parsedFormat.ok) {
+        return presetError(firstSegment, parsedFormat.error);
+      }
+
+      const dimensionStr = segments[1].replace(FORMAT_REGEX, "");
+      const match = DIMENSION_REGEX.exec(dimensionStr);
+
+      if (!match) {
+        return presetError(firstSegment, "Invalid dimensions");
+      }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : width;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          firstSegment,
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      if (firstSegment === "skeleton") {
+        return serveImage(SKELETON_TEMPLATE(width, height), parsedFormat.format, {
+          route: "skeleton",
+          imageWidth: width,
+          imageHeight: height,
+          imageFormat: parsedFormat.format,
+        });
+      }
+
+      if (firstSegment === "blur") {
+        const blurSvg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><filter id="blur"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="100%" height="100%" fill="#e0e0e0" filter="url(#blur)"/></svg>`;
+        return serveImage(blurSvg, parsedFormat.format, {
+          route: "blur",
+          imageWidth: width,
+          imageHeight: height,
+          imageFormat: parsedFormat.format,
+        });
+      }
+
+      const svg = GRADIENT_TEMPLATE(
+        width,
+        height,
+        "#7C3AED",
+        "#3B82F6",
+        "#FFFFFF",
+      );
+      return serveImage(svg, parsedFormat.format, {
+        route: "gradient",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+      });
     }
 
     // Animated endpoints
-    if (firstSegment === "animated" && segments[1] && segments[2]) {
+    if (firstSegment === "animated") {
+      if (!segments[1] || !segments[2]) {
+        return presetError("animated", "Invalid animated route");
+      }
+
       const animationType = segments[1];
-      const outputFormat = extractFormatFromSegment(segments[2]);
+      const parsedFormat = parseFormatFromSegment(segments[2]);
+      if (!parsedFormat.ok) {
+        return presetError(`animated-${animationType}`, parsedFormat.error);
+      }
+
       const dimensionStr = segments[2].replace(FORMAT_REGEX, "");
       const match = DIMENSION_REGEX.exec(dimensionStr);
 
-      if (match) {
-        const width = parseInt(match[1]);
-        const height = match[2] ? parseInt(match[2]) : width;
-
-        if (width > 0 && width <= 5000 && height > 0 && height <= 5000) {
-          // Handle different animation types
-          let svg;
-          switch (animationType) {
-            case "skeleton":
-              svg = SKELETON_TEMPLATE(width, height);
-              break;
-            case "pulse":
-              svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#e0e0e0"><animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/></rect></svg>`;
-              break;
-            case "wave":
-              svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wave" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#e0e0e0"/><stop offset="50%" style="stop-color:#f0f0f0"/><stop offset="100%" style="stop-color:#e0e0e0"/><animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="2s" repeatCount="indefinite"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#wave)"/></svg>`;
-              break;
-            case "shimmer":
-              svg = SKELETON_TEMPLATE(width, height); // Reuse skeleton which has shimmer
-              break;
-            case "dots":
-              svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#f0f0f0"/><g><circle cx="${width / 2 - 30}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0s" repeatCount="indefinite"/></circle><circle cx="${width / 2}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0.2s" repeatCount="indefinite"/></circle><circle cx="${width / 2 + 30}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0.4s" repeatCount="indefinite"/></circle></g></svg>`;
-              break;
-            case "gradient":
-              svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="animGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7C3AED"><animate attributeName="stop-color" values="#7C3AED;#3B82F6;#7C3AED" dur="3s" repeatCount="indefinite"/></stop><stop offset="100%" style="stop-color:#3B82F6"><animate attributeName="stop-color" values="#3B82F6;#7C3AED;#3B82F6" dur="3s" repeatCount="indefinite"/></stop></linearGradient></defs><rect width="100%" height="100%" fill="url(#animGrad)"/></svg>`;
-              break;
-            default:
-              return trackWorkerResponse(
-                new Response("Invalid animation type", {
-                  status: 400,
-                  headers: CORS_HEADERS,
-                }),
-                {
-                  route: `animated-${animationType || "unknown"}`,
-                  imageWidth: width,
-                  imageHeight: height,
-                  errorMessage: "Invalid animation type",
-                },
-              );
-          }
-          return trackWorkerResponse(
-            await createImageResponse(svg, outputFormat, env.IMAGES),
-            {
-              route: `animated-${animationType}`,
-              imageWidth: width,
-              imageHeight: height,
-              imageFormat: outputFormat,
-            },
-          );
-        }
+      if (!match) {
+        return presetError(`animated-${animationType}`, "Invalid dimensions");
       }
+
+      const width = parseInt(match[1], 10);
+      const height = match[2] ? parseInt(match[2], 10) : width;
+
+      if (!isValidDimensions(width, height)) {
+        return presetError(
+          `animated-${animationType}`,
+          `Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`,
+          { imageWidth: width, imageHeight: height },
+        );
+      }
+
+      let svg: string;
+      switch (animationType) {
+        case "skeleton":
+          svg = SKELETON_TEMPLATE(width, height);
+          break;
+        case "pulse":
+          svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#e0e0e0"><animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/></rect></svg>`;
+          break;
+        case "wave":
+          svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wave" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#e0e0e0"/><stop offset="50%" style="stop-color:#f0f0f0"/><stop offset="100%" style="stop-color:#e0e0e0"/><animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="2s" repeatCount="indefinite"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#wave)"/></svg>`;
+          break;
+        case "shimmer":
+          svg = SKELETON_TEMPLATE(width, height);
+          break;
+        case "dots":
+          svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#f0f0f0"/><g><circle cx="${width / 2 - 30}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0s" repeatCount="indefinite"/></circle><circle cx="${width / 2}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0.2s" repeatCount="indefinite"/></circle><circle cx="${width / 2 + 30}" cy="${height / 2}" r="8" fill="#999"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" begin="0.4s" repeatCount="indefinite"/></circle></g></svg>`;
+          break;
+        case "gradient":
+          svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="animGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7C3AED"><animate attributeName="stop-color" values="#7C3AED;#3B82F6;#7C3AED" dur="3s" repeatCount="indefinite"/></stop><stop offset="100%" style="stop-color:#3B82F6"><animate attributeName="stop-color" values="#3B82F6;#7C3AED;#3B82F6" dur="3s" repeatCount="indefinite"/></stop></linearGradient></defs><rect width="100%" height="100%" fill="url(#animGrad)"/></svg>`;
+          break;
+        default:
+          return presetError(
+            `animated-${animationType || "unknown"}`,
+            "Invalid animation type",
+            { imageWidth: width, imageHeight: height },
+          );
+      }
+
+      return serveImage(svg, parsedFormat.format, {
+        route: `animated-${animationType}`,
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: parsedFormat.format,
+      });
+    }
+
+    if (PRESET_ROUTES.has(firstSegment)) {
+      return presetError(firstSegment, "Invalid route parameters");
     }
 
     // Standard dimensions with special effects
-    const outputFormat = extractFormatFromSegment(firstSegment);
+    const parsedStandardFormat = parseFormatFromSegment(firstSegment);
+    if (!parsedStandardFormat.ok) {
+      return trackWorkerResponse(
+        new Response(parsedStandardFormat.error, {
+          status: 400,
+          headers: CORS_HEADERS,
+        }),
+        {
+          route: extractRoute(pathname),
+          errorMessage: parsedStandardFormat.error,
+        },
+      );
+    }
+
+    const outputFormat = parsedStandardFormat.format;
     const dimensionStr = firstSegment.replace(FORMAT_REGEX, "");
     const match = DIMENSION_REGEX.exec(dimensionStr);
 
@@ -747,7 +804,7 @@ export default {
     const height = match[2] ? parseInt(match[2]) : width;
 
     // Validate dimensions
-    if ((width | height) <= 0 || width > 5000 || height > 5000) {
+    if (!isValidDimensions(width, height)) {
       const responseTime = Date.now() - startTime;
 
       ctx.waitUntil(
@@ -770,7 +827,7 @@ export default {
       );
 
       return trackWorkerResponse(
-        new Response("Invalid dimensions (max 5000x5000)", {
+        new Response(`Invalid dimensions (max ${MAX_DIMENSION}x${MAX_DIMENSION})`, {
           status: 400,
           headers: CORS_HEADERS,
         }),
@@ -785,38 +842,30 @@ export default {
 
     // Check for special effects in path
     if (segments[1] === "gradient") {
-      const color1 = normalizeColor(segments[2]) || "#7C3AED";
-      const color2 = normalizeColor(segments[3]) || "#3B82F6";
+      const color1 = normalizeColor(segments[2] || "", "#7C3AED");
+      const color2 = normalizeColor(segments[3] || "", "#3B82F6");
       const svg = GRADIENT_TEMPLATE(width, height, color1, color2, "#FFFFFF");
-      return trackWorkerResponse(
-        await createImageResponse(svg, outputFormat, env.IMAGES),
-        {
-          route: "gradient",
-          imageWidth: width,
-          imageHeight: height,
-          imageFormat: outputFormat,
-        },
-      );
+      return serveImage(svg, outputFormat, {
+        route: "gradient",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: outputFormat,
+      });
     }
 
     if (segments[1] === "skeleton") {
-      const svg = SKELETON_TEMPLATE(width, height);
-      return trackWorkerResponse(
-        await createImageResponse(svg, outputFormat, env.IMAGES),
-        {
-          route: "skeleton",
-          imageWidth: width,
-          imageHeight: height,
-          imageFormat: outputFormat,
-        },
-      );
+      return serveImage(SKELETON_TEMPLATE(width, height), outputFormat, {
+        route: "skeleton",
+        imageWidth: width,
+        imageHeight: height,
+        imageFormat: outputFormat,
+      });
     }
 
     // Standard placeholder
-    const bg = normalizeColor(segments[1]) || DEFAULT_BG;
-    const textColor = normalizeColor(segments[2]) || DEFAULT_TEXT;
+    const bg = normalizeColor(segments[1] || "", DEFAULT_BG);
+    const textColor = normalizeColor(segments[2] || "", DEFAULT_TEXT);
     const customText = url.searchParams.get("text") || `${width} × ${height}`;
-
     const svg = SVG_TEMPLATE(
       width,
       height,
@@ -825,44 +874,54 @@ export default {
       escapeXml(customText),
     );
 
-    // Track successful request
-    const responseTime = Date.now() - startTime;
     const route = extractRoute(pathname);
-    const dimensions = extractDimensions(pathname);
+    const response = await serveImage(svg, outputFormat, {
+      route,
+      imageWidth: width,
+      imageHeight: height,
+      imageFormat: outputFormat,
+      customText: !!url.searchParams.get("text"),
+    });
 
     ctx.waitUntil(
       telemetry.sendMetrics([
-        telemetry.trackRequest({
-          route,
-          method: request.method,
-          statusCode: 200,
-          responseTime,
-          country: request.cf?.country as string | undefined,
-          userAgent: request.headers.get("user-agent"),
-          imageWidth: dimensions.width,
-          imageHeight: dimensions.height,
-          imageFormat: outputFormat,
-          customText: !!url.searchParams.get("text"),
-        }),
         telemetry.trackBusinessMetric("image_generated", 1, {
           route,
-          width: dimensions.width,
-          height: dimensions.height,
+          width,
+          height,
           hasCustomText: !!url.searchParams.get("text"),
           country: request.cf?.country as string | undefined,
         }),
       ]),
     );
 
-    return trackWorkerResponse(
-      await createImageResponse(svg, outputFormat, env.IMAGES),
-      {
-        route,
-        imageWidth: dimensions.width,
-        imageHeight: dimensions.height,
-        imageFormat: outputFormat,
-        customText: !!url.searchParams.get("text"),
-      },
-    );
+    return response;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Internal server error";
+      const status = message.includes("Unsupported image format")
+        ? 400
+        : message.includes("Raster output requires")
+          ? 503
+          : 500;
+      const responseTime = Date.now() - startTime;
+
+      ctx.waitUntil(
+        telemetry.sendMetrics([
+          telemetry.trackError(message, "unknown", status, {
+            responseTime,
+            country: request.cf?.country as string | undefined,
+            userAgentCategory: getUserAgentCategory(
+              request.headers.get("user-agent"),
+            ),
+          }),
+        ]),
+      );
+
+      return trackWorkerResponse(
+        new Response(message, { status, headers: CORS_HEADERS }),
+        { route: "unknown", errorMessage: message },
+      );
+    }
   },
 };

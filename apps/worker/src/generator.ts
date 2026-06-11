@@ -1,5 +1,6 @@
 import { ImageParams } from "./router";
 import { generateAISVG } from "./ai-generator";
+import { escapeXml } from "./utils";
 import { generateAnimatedSVG } from "./animated-generator";
 import { generateChartSVG } from "./chart-generator";
 import { generateThumbnailSVG } from "./thumbnail-generator";
@@ -15,15 +16,6 @@ export interface GeneratedImage {
   content: BodyInit;
   format: SupportedOutputFormat;
   contentType: string;
-}
-
-function escapeXml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 export async function generateImage(
@@ -322,8 +314,16 @@ function generatePatternSVG(width: number, height: number): string {
 }
 
 function adjustBrightness(hex: string, percent: number): string {
+  if (hex === "transparent") {
+    return "#E5E5E5";
+  }
+
   // Remove # if present
   hex = hex.replace(/^#/, "");
+
+  if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+    return "#E5E5E5";
+  }
 
   // Parse RGB values
   const num = parseInt(hex, 16);

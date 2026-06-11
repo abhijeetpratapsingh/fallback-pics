@@ -13,7 +13,6 @@ export function setCacheHeaders(format: string): Headers {
   
   // Security headers
   headers.set('X-Content-Type-Options', 'nosniff');
-  headers.set('X-Frame-Options', 'ALLOWALL'); // Allow embedding
   headers.set('Access-Control-Allow-Origin', '*'); // CORS for all origins
   headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Content-Type');

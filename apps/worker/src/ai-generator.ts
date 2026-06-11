@@ -3,6 +3,8 @@
  * Creates context-aware, sophisticated SVG placeholders
  */
 
+import { createSeededRandom, escapeXml } from "./utils";
+
 interface AIContext {
   name: string;
   layout: 'product' | 'hero' | 'card' | 'dashboard' | 'profile' | 'gallery';
@@ -278,6 +280,7 @@ function generateDashboardLayout(w: number, h: number, ctx: AIContext, mood: str
   const padding = Math.min(w, h) * 0.03;
   const cardWidth = (w - padding * 4) / 3;
   const cardHeight = h * 0.25;
+  const random = createSeededRandom(`${w}x${h}-${mood}-dashboard`);
   
   return `
     <!-- KPI Cards -->
@@ -310,7 +313,7 @@ function generateDashboardLayout(w: number, h: number, ctx: AIContext, mood: str
     
     <!-- Chart Bars -->
     ${[0, 1, 2, 3, 4].map(i => {
-      const barHeight = Math.random() * (h - cardHeight - padding * 6) * 0.7 + (h - cardHeight - padding * 6) * 0.2;
+      const barHeight = random() * (h - cardHeight - padding * 6) * 0.7 + (h - cardHeight - padding * 6) * 0.2;
       const barX = padding * 2 + i * (w * 0.65 - padding * 3) / 5;
       return `<rect x="${barX}" y="${h - padding - barHeight}" 
                     width="${(w * 0.65 - padding * 3) / 6}" height="${barHeight}" 
@@ -437,15 +440,12 @@ export function generateAISVG(
   customBgColor?: string,
   customTextColor?: string
 ): string {
-  const ctx = AI_CONTEXTS[context.toLowerCase()] || AI_CONTEXTS['tech'];
-  
-  // Override colors if custom ones provided
-  if (customBgColor) {
-    ctx.primaryColor = customBgColor;
-  }
-  if (customTextColor) {
-    ctx.accentColor = customTextColor;
-  }
+  const baseCtx = AI_CONTEXTS[context.toLowerCase()] || AI_CONTEXTS['tech'];
+  const ctx = {
+    ...baseCtx,
+    primaryColor: customBgColor || baseCtx.primaryColor,
+    accentColor: customTextColor || baseCtx.accentColor,
+  };
   
   // Select layout based on context
   let layoutContent = '';
@@ -489,6 +489,6 @@ export function generateAISVG(
     <defs>${filter}</defs>
     <rect width="100%" height="100%" fill="#fafafa"/>
     ${layoutContent}
-    ${customText ? `<text x="${width/2}" y="${height - 10}" font-family="system-ui" font-size="10" fill="#999" text-anchor="middle">${customText}</text>` : ''}
+    ${customText ? `<text x="${width/2}" y="${height - 10}" font-family="system-ui" font-size="10" fill="#999" text-anchor="middle">${escapeXml(customText)}</text>` : ''}
   </svg>`;
 }

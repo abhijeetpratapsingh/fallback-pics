@@ -114,6 +114,112 @@ describe("worker raster formats", () => {
     expect(body).toContain("Missing Images");
   });
 
+  it("rejects unsupported .gif format with 400", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/400x300.gif"),
+      env,
+      ctx,
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.text()).resolves.toContain("Unsupported image format");
+  });
+
+  it("returns avatar initials instead of full text", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/avatar/200?text=John+Doe"),
+      env,
+      ctx,
+    );
+    const body = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(body).toContain("JD");
+    expect(body).not.toContain("John");
+  });
+
+  it("escapes AI custom text in SVG output", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request(
+        "https://fallback.pics/api/v1/ai/400x300?text=%3Cscript%3Ealert(1)%3C%2Fscript%3E",
+      ),
+      env,
+      ctx,
+    );
+    const body = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(body).not.toContain("<script>");
+    expect(body).toContain("&lt;script&gt;");
+  });
+
+  it("rejects zero-width dimensions", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/0x300"),
+      env,
+      ctx,
+    );
+
+    expect(response.status).toBe(400);
+  });
+
+  it("shows banner custom text from query param", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request(
+        "https://fallback.pics/api/v1/banner/1200x400?text=Launch+Week",
+      ),
+      env,
+      ctx,
+    );
+    const body = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(body).toContain("Launch Week");
+  });
+
+  it("returns 503 when raster format requested without Images binding", async () => {
+    const env: Env = {
+      GOOGLE_ANALYTICS_ENABLED: "false",
+      NEW_RELIC_ENABLED: "false",
+    };
+
+    const response = await worker.fetch(
+      new Request("https://fallback.pics/api/v1/400x300.png"),
+      env,
+      ctx,
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.text()).resolves.toContain(
+      "Raster output requires the Cloudflare Images binding",
+    );
+  });
+
   it("returns raster encoded thumbnail responses", async () => {
     const env: Env = {
       IMAGES: fakeImagesEncoder(),

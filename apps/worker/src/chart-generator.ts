@@ -3,6 +3,10 @@
  * Creates sophisticated, realistic-looking chart visualizations
  */
 
+import { createSeededRandom } from "./utils";
+
+type RandomFn = () => number;
+
 interface ChartColors {
   primary: string;
   secondary: string;
@@ -63,24 +67,25 @@ export function generateChartSVG(
 ): string {
   // Determine theme based on colors or use default
   const theme = bgColor && bgColor.toLowerCase() === '#1f2937' ? 'dark' : 'default';
+  const random = createSeededRandom(`${width}x${height}-${type}-${text || ''}`);
   
   switch (type) {
     case 'bar':
       return generateBarChart(width, height, theme);
     case 'pie':
-      return generatePieChart(width, height, false, theme);
+      return generatePieChart(width, height, false, theme, random);
     case 'line':
-      return generateLineChart(width, height, theme);
+      return generateLineChart(width, height, theme, random);
     case 'area':
-      return generateAreaChart(width, height, theme);
+      return generateAreaChart(width, height, theme, random);
     case 'donut':
-      return generatePieChart(width, height, true, theme);
+      return generatePieChart(width, height, true, theme, random);
     case 'scatter':
-      return generateScatterChart(width, height, theme);
+      return generateScatterChart(width, height, theme, random);
     case 'radar':
-      return generateRadarChart(width, height, theme);
+      return generateRadarChart(width, height, theme, random);
     case 'heatmap':
-      return generateHeatmap(width, height, theme);
+      return generateHeatmap(width, height, theme, random);
     default:
       return generateBarChart(width, height, theme);
   }
@@ -157,19 +162,25 @@ function generateBarChart(width: number, height: number, theme: string = 'defaul
 }
 
 // Generate realistic pie/donut chart
-function generatePieChart(width: number, height: number, isDonut: boolean = false, theme: string = 'default'): string {
+function generatePieChart(
+  width: number,
+  height: number,
+  isDonut: boolean = false,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const centerX = width / 2;
   const centerY = height / 2;
   const radius = Math.min(width, height) * 0.35;
   
-  // Generate random slice values
-  const sliceCount = 4 + Math.floor(Math.random() * 3);
-  const values = Array.from({ length: sliceCount }, () => Math.random());
+  // Generate deterministic slice values
+  const sliceCount = 4 + Math.floor(random() * 3);
+  const values = Array.from({ length: sliceCount }, () => random());
   const total = values.reduce((a, b) => a + b, 0);
   const percentages = values.map(v => v / total);
   
-  const sliceColors = generateColorPalette(colors.primary, sliceCount);
+  const sliceColors = generateColorPalette(colors.primary, sliceCount, random);
   
   let slices = '';
   let currentAngle = -90; // Start from top
@@ -215,21 +226,26 @@ function generatePieChart(width: number, height: number, isDonut: boolean = fals
 }
 
 // Generate sophisticated line chart
-function generateLineChart(width: number, height: number, theme: string = 'default'): string {
+function generateLineChart(
+  width: number,
+  height: number,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const padding = Math.min(width, height) * 0.1;
   const chartWidth = width - padding * 2;
   const chartHeight = height - padding * 2;
-  const pointCount = 8 + Math.floor(Math.random() * 5);
+  const pointCount = 8 + Math.floor(random() * 5);
   
-  // Generate smooth random data with trend
-  const trend = Math.random() > 0.5 ? 1 : -1;
+  // Generate smooth deterministic data with trend
+  const trend = random() > 0.5 ? 1 : -1;
   const points: { x: number; y: number }[] = [];
   let currentY = 0.5;
   
   for (let i = 0; i < pointCount; i++) {
     const x = padding + (i / (pointCount - 1)) * chartWidth;
-    currentY += (Math.random() - 0.5) * 0.3 + trend * 0.05;
+    currentY += (random() - 0.5) * 0.3 + trend * 0.05;
     currentY = Math.max(0.1, Math.min(0.9, currentY));
     const y = padding + (1 - currentY) * chartHeight;
     points.push({ x, y });
@@ -285,7 +301,12 @@ function generateLineChart(width: number, height: number, theme: string = 'defau
 }
 
 // Generate area chart
-function generateAreaChart(width: number, height: number, theme: string = 'default'): string {
+function generateAreaChart(
+  width: number,
+  height: number,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const padding = Math.min(width, height) * 0.1;
   const chartWidth = width - padding * 2;
@@ -294,7 +315,7 @@ function generateAreaChart(width: number, height: number, theme: string = 'defau
   // Generate multiple area series
   const seriesCount = 3;
   const pointCount = 10;
-  const seriesColors = generateColorPalette(colors.primary, seriesCount);
+  const seriesColors = generateColorPalette(colors.primary, seriesCount, random);
   
   let areas = '';
   
@@ -304,7 +325,7 @@ function generateAreaChart(width: number, height: number, theme: string = 'defau
     
     for (let i = 0; i < pointCount; i++) {
       const x = padding + (i / (pointCount - 1)) * chartWidth;
-      const variation = Math.sin(i * 0.5 + s) * 0.2 + Math.random() * 0.1;
+      const variation = Math.sin(i * 0.5 + s) * 0.2 + random() * 0.1;
       const y = padding + (1 - (baseY + variation)) * chartHeight;
       points.push({ x, y });
     }
@@ -429,28 +450,33 @@ function generateDonutChartOld(width: number, height: number, bgColor: string, p
 }
 
 // Generate scatter plot
-function generateScatterChart(width: number, height: number, theme: string = 'default'): string {
+function generateScatterChart(
+  width: number,
+  height: number,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const padding = Math.min(width, height) * 0.1;
   const chartWidth = width - padding * 2;
   const chartHeight = height - padding * 2;
-  const pointCount = 30 + Math.floor(Math.random() * 20);
+  const pointCount = 30 + Math.floor(random() * 20);
   
   // Generate clusters of points
-  const clusters = 2 + Math.floor(Math.random() * 2);
-  const clusterColors = generateColorPalette(colors.primary, clusters);
+  const clusters = 2 + Math.floor(random() * 2);
+  const clusterColors = generateColorPalette(colors.primary, clusters, random);
   let points = '';
   
   for (let c = 0; c < clusters; c++) {
-    const centerX = 0.2 + Math.random() * 0.6;
-    const centerY = 0.2 + Math.random() * 0.6;
-    const spread = 0.15 + Math.random() * 0.1;
+    const centerX = 0.2 + random() * 0.6;
+    const centerY = 0.2 + random() * 0.6;
+    const spread = 0.15 + random() * 0.1;
     const clusterPoints = Math.floor(pointCount / clusters);
     
     for (let i = 0; i < clusterPoints; i++) {
-      const x = padding + (centerX + (Math.random() - 0.5) * spread) * chartWidth;
-      const y = padding + (1 - (centerY + (Math.random() - 0.5) * spread)) * chartHeight;
-      const size = 3 + Math.random() * 4;
+      const x = padding + (centerX + (random() - 0.5) * spread) * chartWidth;
+      const y = padding + (1 - (centerY + (random() - 0.5) * spread)) * chartHeight;
+      const size = 3 + random() * 4;
       
       points += `<circle cx="${x}" cy="${y}" r="${size}" 
                         fill="${clusterColors[c]}" 
@@ -487,7 +513,12 @@ function generateScatterChart(width: number, height: number, theme: string = 'de
 }
 
 // Generate radar/spider chart  
-function generateRadarChart(width: number, height: number, theme: string = 'default'): string {
+function generateRadarChart(
+  width: number,
+  height: number,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const centerX = width / 2;
   const centerY = height / 2;
@@ -534,7 +565,7 @@ function generateRadarChart(width: number, height: number, theme: string = 'defa
   let dataPolygon = '';
   
   for (let i = 0; i < axes; i++) {
-    const value = 0.3 + Math.random() * 0.6;
+    const value = 0.3 + random() * 0.6;
     const angle = (i * 360 / axes - 90) * Math.PI / 180;
     const x = centerX + radius * value * Math.cos(angle);
     const y = centerY + radius * value * Math.sin(angle);
@@ -577,13 +608,18 @@ function generateRadarChart(width: number, height: number, theme: string = 'defa
 }
 
 // Generate heatmap
-function generateHeatmap(width: number, height: number, theme: string = 'default'): string {
+function generateHeatmap(
+  width: number,
+  height: number,
+  theme: string = 'default',
+  random: RandomFn = Math.random,
+): string {
   const colors = CHART_THEMES[theme] || CHART_THEMES.default;
   const padding = Math.min(width, height) * 0.1;
   const chartWidth = width - padding * 2;
   const chartHeight = height - padding * 2;
-  const cols = 10 + Math.floor(Math.random() * 5);
-  const rows = 8 + Math.floor(Math.random() * 4);
+  const cols = 10 + Math.floor(random() * 5);
+  const rows = 8 + Math.floor(random() * 4);
   const cellWidth = chartWidth / cols;
   const cellHeight = chartHeight / rows;
   
@@ -592,7 +628,7 @@ function generateHeatmap(width: number, height: number, theme: string = 'default
   
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      const intensity = Math.random();
+      const intensity = random();
       const x = padding + col * cellWidth;
       const y = padding + row * cellHeight;
       
@@ -648,7 +684,11 @@ function generateGridLines(x1: number, x2: number, y1: number, y2: number, count
   return lines;
 }
 
-function generateColorPalette(baseColor: string, count: number): string[] {
+function generateColorPalette(
+  baseColor: string,
+  count: number,
+  random: RandomFn = Math.random,
+): string[] {
   const colors: string[] = [];
   const rgb = hexToRgb(baseColor);
   
@@ -660,9 +700,9 @@ function generateColorPalette(baseColor: string, count: number): string[] {
     
     // Add some variation
     const variation = 20;
-    const vr = Math.min(255, Math.max(0, r + Math.random() * variation - variation/2));
-    const vg = Math.min(255, Math.max(0, g + Math.random() * variation - variation/2));
-    const vb = Math.min(255, Math.max(0, b + Math.random() * variation - variation/2));
+    const vr = Math.min(255, Math.max(0, r + random() * variation - variation/2));
+    const vg = Math.min(255, Math.max(0, g + random() * variation - variation/2));
+    const vb = Math.min(255, Math.max(0, b + random() * variation - variation/2));
     
     colors.push(`rgb(${vr},${vg},${vb})`);
   }

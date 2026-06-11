@@ -97,6 +97,13 @@ describe("Router", () => {
     expect(() => router.parse()).toThrow("Invalid dimensions");
   });
 
+  it("should reject unsupported gif format", () => {
+    const request = new Request("https://fallback.pics/400x300.gif");
+    const router = new Router(request);
+
+    expect(() => router.parse()).toThrow("Unsupported image format: gif");
+  });
+
   it("should handle 3-char hex colors", () => {
     const request = new Request("https://fallback.pics/400x300/F00/FFF");
     const router = new Router(request);

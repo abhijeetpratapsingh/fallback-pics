@@ -324,6 +324,7 @@ export function extractRoute(pathname: string): string {
   if (firstSegment === 'avatar') return 'avatar';
   if (firstSegment === 'square') return 'square';
   if (firstSegment === 'banner') return 'banner';
+  if (firstSegment === 'thumbnail') return 'thumbnail';
   if (firstSegment === 'chart') return 'chart';
   if (firstSegment === 'ai') return 'ai';
   if (firstSegment === 'skeleton') return 'skeleton';
@@ -355,6 +356,10 @@ export function extractDimensions(pathname: string): { width?: number; height?: 
 
   if (firstSegment === 'banner' && segments[1]) {
     return extractDimensionsFromSegment(segments[1], 400);
+  }
+
+  if (firstSegment === 'thumbnail' && segments[1]) {
+    return extractDimensionsFromSegment(segments[1], 630);
   }
 
   if (firstSegment === 'ai' && segments[1]) {
