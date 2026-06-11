@@ -35,6 +35,9 @@ const THEMES: Record<
   dark: { from: "#18181B", to: "#334155", accent: "#F97316", text: "#FFFFFF" },
 };
 
+/** Left ~58% of canvas reserved for label + title; decorations start after this. */
+const TEXT_ZONE_WIDTH_RATIO = 0.58;
+
 function normalizeHex(value?: string): string | undefined {
   if (!value) return undefined;
   const cleaned = value.replace("#", "").trim();
@@ -43,8 +46,20 @@ function normalizeHex(value?: string): string | undefined {
     : undefined;
 }
 
+function splitLongWord(word: string, maxChars: number): string[] {
+  if (word.length <= maxChars) return [word];
+
+  const chunks: string[] = [];
+  for (let i = 0; i < word.length; i += maxChars) {
+    chunks.push(word.slice(i, i + maxChars));
+  }
+  return chunks;
+}
+
 function wrapText(text: string, maxChars: number, maxLines: number): string[] {
-  const words = text.trim().replace(/\s+/g, " ").split(" ").filter(Boolean);
+  const rawWords = text.trim().replace(/\s+/g, " ").split(" ").filter(Boolean);
+  const words = rawWords.flatMap((word) => splitLongWord(word, maxChars));
+
   const lines: string[] = [];
   let current = "";
 
@@ -150,7 +165,9 @@ export function generateThumbnailSVG(
     ? (options.theme as ThumbnailTheme)
     : "purple";
   const theme = THEMES[themeName];
-  const customBg = options.bg?.split(",").map((part) => normalizeHex(part));
+  const customBg = options.bg
+    ?.split(",")
+    .map((part) => normalizeHex(part.trim()));
   const bgFrom = customBg?.[0] || theme.from;
   const bgTo = customBg?.[1] || theme.to;
   const accent = normalizeHex(options.accent) || theme.accent;
@@ -158,13 +175,19 @@ export function generateThumbnailSVG(
   const title = (options.text || "Blog Post Thumbnail").slice(0, 160);
   const label = (options.label || "Blog Post").slice(0, 28).toUpperCase();
   const random = createSeededRandom(
-    options.seed || `${title}|${label}|${style}|${themeName}`,
+    options.seed ||
+      `${title}|${label}|${style}|${themeName}|${options.bg || ""}|${options.accent || ""}|${options.color || ""}`,
   );
   const gradientId = `thumb-${hashString(`${bgFrom}${bgTo}`).toString(16)}`;
 
   const labelWidth = Math.max(132, Math.min(260, label.length * 12 + 58));
   const titleFontSize = Math.max(36, Math.min(width * 0.064, height * 0.122));
-  const maxChars = width >= 1000 ? 18 : 14;
+  const maxTextWidth = width * TEXT_ZONE_WIDTH_RATIO;
+  const approxCharWidth = titleFontSize * 0.52;
+  const maxChars = Math.max(
+    8,
+    Math.min(width >= 1000 ? 18 : 14, Math.floor(maxTextWidth / approxCharWidth)),
+  );
   const lines = wrapText(title, maxChars, 3);
   const lineHeight = titleFontSize * 1.16;
   const textX = width * 0.06;
@@ -181,16 +204,16 @@ export function generateThumbnailSVG(
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeXml(title)}">
-  <rect width="${width}" height="${height}" fill="url(#${gradientId})"/>
-  ${generateDecorations(width, height, style, accent, random)}
-  <rect x="${labelX}" y="${labelY}" width="${labelWidth}" height="${height * 0.07}" rx="${height * 0.035}" fill="#FFFFFF" opacity="0.18"/>
-  <text x="${labelX + width * 0.025}" y="${labelY + height * 0.046}" fill="${textColor}" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="${Math.max(14, height * 0.032)}" font-weight="800">${escapeXml(label)}</text>
-  <text x="${textX}" y="${textY}" fill="${textColor}" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="${titleFontSize}" font-weight="900" letter-spacing="0">${textElements}</text>
   <defs>
     <linearGradient id="${gradientId}" x1="0" y1="0" x2="${width}" y2="${height}" gradientUnits="userSpaceOnUse">
       <stop stop-color="${bgFrom}"/>
       <stop offset="1" stop-color="${bgTo}"/>
     </linearGradient>
   </defs>
+  <rect width="${width}" height="${height}" fill="url(#${gradientId})"/>
+  ${generateDecorations(width, height, style, accent, random)}
+  <rect x="${labelX}" y="${labelY}" width="${labelWidth}" height="${height * 0.07}" rx="${height * 0.035}" fill="#FFFFFF" opacity="0.18"/>
+  <text x="${labelX + width * 0.025}" y="${labelY + height * 0.046}" fill="${textColor}" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="${Math.max(14, height * 0.032)}" font-weight="800">${escapeXml(label)}</text>
+  <text x="${textX}" y="${textY}" fill="${textColor}" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="${titleFontSize}" font-weight="900" letter-spacing="0">${textElements}</text>
 </svg>`;
 }

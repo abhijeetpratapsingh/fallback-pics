@@ -210,7 +210,7 @@ The current public image API returns SVG responses with deterministic cache head
 async function importTsData(filePath) {
   const source = await readFile(filePath, 'utf8');
   if (filePath.endsWith('seoPages.ts')) return { seoPages: extractExportedArray(source, 'seoPages') };
-  if (filePath.endsWith('blogPosts.ts')) return { blogPosts: extractExportedArray(source, 'blogPosts') };
+  if (filePath.endsWith('blogPosts.ts')) return { blogPosts: extractExportedArray(source, 'blogPostData') };
   throw new Error(`Unsupported metadata source: ${filePath}`);
 }
 

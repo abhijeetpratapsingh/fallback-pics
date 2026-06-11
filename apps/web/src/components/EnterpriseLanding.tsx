@@ -3,15 +3,52 @@ import { trackConversion, trackEvent } from '../utils/analytics';
 
 const API_BASE = 'https://fallback.pics/api/v1';
 
-type Preset = 'standard' | 'avatar' | 'banner' | 'skeleton' | 'blur';
+type Preset =
+  | 'standard'
+  | 'square'
+  | 'avatar'
+  | 'banner'
+  | 'thumbnail'
+  | 'skeleton'
+  | 'blur'
+  | 'animated'
+  | 'ai';
 type CodeTab = 'html' | 'react' | 'next' | 'css' | 'curl';
 
 const presetOptions: Array<{ id: Preset; label: string; icon: string }> = [
   { id: 'standard', label: 'Standard', icon: 'Std' },
+  { id: 'square', label: 'Square', icon: 'Sq' },
   { id: 'avatar', label: 'Avatar', icon: 'Av' },
   { id: 'banner', label: 'Banner', icon: 'Bn' },
+  { id: 'thumbnail', label: 'Thumbnail', icon: 'Th' },
   { id: 'skeleton', label: 'Skeleton', icon: 'Sk' },
   { id: 'blur', label: 'Blur', icon: 'Bl' },
+  { id: 'animated', label: 'Animated', icon: 'An' },
+  { id: 'ai', label: 'Pattern', icon: 'Pt' },
+];
+
+const thumbnailStyles = [
+  { id: 'soft', label: 'Soft shapes' },
+  { id: 'rings', label: 'Rings' },
+  { id: 'lines', label: 'Lines' },
+  { id: 'pattern', label: 'Mini pattern' },
+];
+
+const thumbnailThemes = [
+  { id: 'purple', label: 'Purple' },
+  { id: 'blue', label: 'Blue' },
+  { id: 'green', label: 'Green' },
+  { id: 'orange', label: 'Orange' },
+  { id: 'dark', label: 'Dark' },
+];
+
+const animationTypes = [
+  { id: 'skeleton', label: 'Skeleton shimmer' },
+  { id: 'pulse', label: 'Pulse' },
+  { id: 'wave', label: 'Wave' },
+  { id: 'shimmer', label: 'Shimmer line' },
+  { id: 'gradient', label: 'Rotating gradient' },
+  { id: 'dots', label: 'Loading dots' },
 ];
 
 const trustMetrics = [
@@ -107,9 +144,11 @@ const enterpriseRows = [
 
 const trustLogos = ['Cloudflare Workers', 'Cloudflare CDN', 'SVG + raster output', 'Immutable cache', 'No client SDK'];
 
+const MAX_DIMENSION = 5000;
+
 function clampDimension(value: number, fallback: number) {
   if (!Number.isFinite(value)) return fallback;
-  return Math.min(4000, Math.max(10, Math.round(value)));
+  return Math.min(MAX_DIMENSION, Math.max(10, Math.round(value)));
 }
 
 function sanitizeHex(value: string, fallback: string) {
@@ -121,20 +160,66 @@ function readableText(value: string) {
   return value.trim() || 'Fallback Image';
 }
 
-function buildPath(preset: Preset, width: number, height: number, bg: string, fg: string, text: string) {
-  const encoded = encodeURIComponent(readableText(text)).replace(/%20/g, '+');
+type BuilderOptions = {
+  thumbnailStyle: string;
+  thumbnailTheme: string;
+  thumbnailLabel: string;
+  animationType: string;
+  aiContext: string;
+  aiMood: string;
+};
 
-  if (preset === 'avatar') return `/avatar/${width}?text=${encoded.slice(0, 8)}`;
+function buildPath(
+  preset: Preset,
+  width: number,
+  height: number,
+  bg: string,
+  fg: string,
+  text: string,
+  options: BuilderOptions,
+) {
+  const displayText = readableText(text);
+  const encoded = encodeURIComponent(displayText).replace(/%20/g, '+');
+
+  if (preset === 'avatar') return `/avatar/${width}?text=${encoded}`;
+  if (preset === 'square') return `/square/${width}?text=${encoded}`;
   if (preset === 'banner') return `/banner/${width}x${height}?text=${encoded}`;
-  if (preset === 'skeleton') return `/animated/skeleton/${width}x${height}`;
+  if (preset === 'thumbnail') {
+    const params = new URLSearchParams({
+      text: displayText,
+      style: options.thumbnailStyle,
+      theme: options.thumbnailTheme,
+      label: options.thumbnailLabel,
+    });
+    return `/thumbnail/${width}x${height}?${params.toString()}`;
+  }
+  if (preset === 'skeleton') return `/skeleton/${width}x${height}`;
   if (preset === 'blur') return `/blur/${width}x${height}`;
+  if (preset === 'animated') {
+    return `/animated/${options.animationType}/${width}x${height}`;
+  }
+  if (preset === 'ai') {
+    const params = new URLSearchParams();
+    if (displayText) params.set('text', displayText);
+    if (options.aiContext.trim()) params.set('context', options.aiContext.trim());
+    if (options.aiMood.trim()) params.set('mood', options.aiMood.trim());
+    const query = params.toString();
+    return query ? `/ai/${width}x${height}?${query}` : `/ai/${width}x${height}`;
+  }
 
   return `/${width}x${height}/${bg}/${fg}?text=${encoded}`;
 }
 
+function usesLiveApiPreview(preset: Preset) {
+  return preset !== 'standard';
+}
+
 function createPreviewSvg(width: number, height: number, bg: string, fg: string, text: string, preset: Preset) {
   const safeWidth = clampDimension(width, 640);
-  const safeHeight = preset === 'avatar' ? safeWidth : clampDimension(height, 360);
+  const safeHeight =
+    preset === 'avatar' || preset === 'square'
+      ? safeWidth
+      : clampDimension(height, 360);
   const label = preset === 'skeleton' ? '' : readableText(text);
   const fontSize = Math.max(18, Math.min(48, Math.round(Math.min(safeWidth, safeHeight) * 0.12)));
 
@@ -143,7 +228,7 @@ function createPreviewSvg(width: number, height: number, bg: string, fg: string,
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
   }
 
-  const radius = preset === 'avatar' ? safeWidth / 2 : 16;
+  const radius = preset === 'avatar' || preset === 'square' ? safeWidth / 2 : 16;
   const dimensionsY = Math.round(safeHeight / 2 + fontSize * 0.95);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}"><rect width="100%" height="100%" rx="${radius}" fill="#${bg}"/><path d="M0 ${safeHeight * 0.82} C ${safeWidth * 0.24} ${safeHeight * 0.72}, ${safeWidth * 0.38} ${safeHeight * 0.95}, ${safeWidth} ${safeHeight * 0.72} L ${safeWidth} ${safeHeight} L 0 ${safeHeight} Z" fill="#ffffff" opacity="0.08"/><text x="50%" y="50%" font-family="Roboto Slab, serif" font-size="${fontSize}" font-weight="650" fill="#${fg}" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text><text x="50%" y="${dimensionsY}" font-family="Roboto Slab, serif" font-size="${Math.max(12, Math.round(fontSize * 0.36))}" fill="#${fg}" opacity="0.72" text-anchor="middle" dominant-baseline="middle">${safeWidth}x${safeHeight}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
@@ -249,21 +334,46 @@ function EnterpriseLanding() {
   const [fg, setFg] = useState('FFFFFF');
   const [text, setText] = useState('Product Image');
   const [preset, setPreset] = useState<Preset>('standard');
+  const [thumbnailStyle, setThumbnailStyle] = useState('soft');
+  const [thumbnailTheme, setThumbnailTheme] = useState('purple');
+  const [thumbnailLabel, setThumbnailLabel] = useState('Blog Post');
+  const [animationType, setAnimationType] = useState('skeleton');
+  const [aiContext, setAiContext] = useState('');
+  const [aiMood, setAiMood] = useState('');
   const [codeTab, setCodeTab] = useState<CodeTab>('html');
   const [scenario, setScenario] = useState(0);
   const [enterpriseOpen, setEnterpriseOpen] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
 
   const safeWidth = clampDimension(width, 800);
-  const safeHeight = preset === 'avatar' ? safeWidth : clampDimension(height, 450);
+  const isSquareOrAvatar = preset === 'avatar' || preset === 'square';
+  const safeHeight = isSquareOrAvatar ? safeWidth : clampDimension(height, 450);
   const safeBg = sanitizeHex(bg, '18181B');
   const safeFg = sanitizeHex(fg, 'FFFFFF');
-  const path = buildPath(preset, safeWidth, safeHeight, safeBg, safeFg, text);
+  const builderOptions: BuilderOptions = {
+    thumbnailStyle,
+    thumbnailTheme,
+    thumbnailLabel,
+    animationType,
+    aiContext,
+    aiMood,
+  };
+  const path = buildPath(
+    preset,
+    safeWidth,
+    safeHeight,
+    safeBg,
+    safeFg,
+    text,
+    builderOptions,
+  );
   const publicPath = `/api/v1${path}`;
   const generatedUrl = `${API_BASE}${path}`;
   const displayUrl = generatedUrl;
   const previewSvg = createPreviewSvg(safeWidth, safeHeight, safeBg, safeFg, text, preset);
-  const previewSrc = imageFailed ? previewSvg : generatedUrl;
+  const previewSrc =
+    usesLiveApiPreview(preset) || !imageFailed ? generatedUrl : previewSvg;
+  const showColorControls = preset === 'standard' || preset === 'banner';
 
   const snippets = useMemo(() => {
     return {
@@ -367,7 +477,7 @@ function EnterpriseLanding() {
                 <div className="order-2 space-y-4 lg:order-1">
                   <fieldset>
                     <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Preset</legend>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                       {presetOptions.map((item) => (
                         <button
                           key={item.id}
@@ -375,6 +485,15 @@ function EnterpriseLanding() {
                           onClick={() => {
                             setPreset(item.id);
                             setImageFailed(false);
+                            if (item.id === 'thumbnail') {
+                              setWidth(1200);
+                              setHeight(630);
+                              setText(
+                                (current) =>
+                                  current ||
+                                  'How to Fix Broken Images in Production',
+                              );
+                            }
                             trackEvent('demo_preset_select', {
                               event_category: 'demo',
                               event_label: item.id,
@@ -397,7 +516,7 @@ function EnterpriseLanding() {
                       <input
                         type="number"
                         min="10"
-                        max="4000"
+                        max={MAX_DIMENSION}
                         value={width}
                         onChange={(event) => {
                           setWidth(clampDimension(Number(event.target.value), 800));
@@ -411,9 +530,9 @@ function EnterpriseLanding() {
                       <input
                         type="number"
                         min="10"
-                        max="4000"
+                        max={MAX_DIMENSION}
                         value={height}
-                        disabled={preset === 'avatar'}
+                        disabled={isSquareOrAvatar}
                         onChange={(event) => {
                           setHeight(clampDimension(Number(event.target.value), 450));
                           setImageFailed(false);
@@ -436,32 +555,149 @@ function EnterpriseLanding() {
                     />
                   </label>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="text-sm font-medium text-zinc-700">
-                      Background
-                      <input
-                        type="text"
-                        value={`#${safeBg}`}
-                        onChange={(event) => {
-                          setBg(sanitizeHex(event.target.value, safeBg));
-                          setImageFailed(false);
-                        }}
-                        className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                      />
-                    </label>
-                    <label className="text-sm font-medium text-zinc-700">
-                      Text
-                      <input
-                        type="text"
-                        value={`#${safeFg}`}
-                        onChange={(event) => {
-                          setFg(sanitizeHex(event.target.value, safeFg));
-                          setImageFailed(false);
-                        }}
-                        className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                      />
-                    </label>
-                  </div>
+                  {showColorControls && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="text-sm font-medium text-zinc-700">
+                        Background
+                        <input
+                          type="text"
+                          value={`#${safeBg}`}
+                          onChange={(event) => {
+                            setBg(sanitizeHex(event.target.value, safeBg));
+                            setImageFailed(false);
+                          }}
+                          className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+                        />
+                      </label>
+                      <label className="text-sm font-medium text-zinc-700">
+                        Text
+                        <input
+                          type="text"
+                          value={`#${safeFg}`}
+                          onChange={(event) => {
+                            setFg(sanitizeHex(event.target.value, safeFg));
+                            setImageFailed(false);
+                          }}
+                          className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+                        />
+                      </label>
+                    </div>
+                  )}
+
+                  {preset === 'thumbnail' && (
+                    <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-blue-900">
+                        Blog thumbnail
+                      </p>
+                      <label className="block text-sm font-medium text-blue-950">
+                        Category label
+                        <input
+                          type="text"
+                          value={thumbnailLabel}
+                          onChange={(event) => {
+                            setThumbnailLabel(event.target.value);
+                            setImageFailed(false);
+                          }}
+                          className="mt-2 w-full rounded-lg border border-blue-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                          placeholder="Guide, Tutorial, Blog Post"
+                        />
+                      </label>
+                      <div>
+                        <span className="mb-2 block text-sm font-medium text-blue-950">
+                          Style
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {thumbnailStyles.map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => {
+                                setThumbnailStyle(item.id);
+                                setImageFailed(false);
+                              }}
+                              className={`rounded-lg border px-2.5 py-2 text-left text-xs font-semibold transition ${thumbnailStyle === item.id ? 'border-blue-500 bg-white text-blue-950 shadow-sm' : 'border-blue-100 bg-white/80 text-blue-900 hover:bg-white'}`}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="mb-2 block text-sm font-medium text-blue-950">
+                          Theme
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {thumbnailThemes.map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => {
+                                setThumbnailTheme(item.id);
+                                setImageFailed(false);
+                              }}
+                              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${thumbnailTheme === item.id ? 'border-blue-500 bg-white text-blue-950 shadow-sm' : 'border-blue-100 bg-white/80 text-blue-900 hover:bg-white'}`}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {preset === 'animated' && (
+                    <div className="space-y-2 rounded-lg border border-violet-200 bg-violet-50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-violet-900">
+                        Animation
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {animationTypes.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setAnimationType(item.id);
+                              setImageFailed(false);
+                            }}
+                            className={`rounded-lg border px-2.5 py-2 text-left text-xs font-semibold transition ${animationType === item.id ? 'border-violet-500 bg-white text-violet-950 shadow-sm' : 'border-violet-100 bg-white/80 text-violet-900 hover:bg-white'}`}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {preset === 'ai' && (
+                    <div className="grid grid-cols-2 gap-3 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
+                      <label className="text-sm font-medium text-indigo-950">
+                        Context
+                        <input
+                          type="text"
+                          value={aiContext}
+                          onChange={(event) => {
+                            setAiContext(event.target.value);
+                            setImageFailed(false);
+                          }}
+                          className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                          placeholder="tech, ecommerce"
+                        />
+                      </label>
+                      <label className="text-sm font-medium text-indigo-950">
+                        Mood
+                        <input
+                          type="text"
+                          value={aiMood}
+                          onChange={(event) => {
+                            setAiMood(event.target.value);
+                            setImageFailed(false);
+                          }}
+                          className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                          placeholder="minimal, calm"
+                        />
+                      </label>
+                    </div>
+                  )}
                 </div>
 
                 <div className="order-1 flex flex-col gap-4 lg:order-2">
@@ -470,7 +706,7 @@ function EnterpriseLanding() {
                       src={previewSrc}
                       onError={() => setImageFailed(true)}
                       alt="Live generated fallback preview"
-                      className={`${preset === 'avatar' ? 'aspect-square max-w-[220px] rounded-full' : 'max-h-[260px] rounded-lg'} w-full max-w-full border border-zinc-200 bg-white object-contain shadow-sm`}
+                      className={`${preset === 'avatar' || preset === 'square' ? 'aspect-square max-w-[220px] rounded-full' : 'max-h-[260px] rounded-lg'} w-full max-w-full border border-zinc-200 bg-white object-contain shadow-sm`}
                     />
                   </div>
                   <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">

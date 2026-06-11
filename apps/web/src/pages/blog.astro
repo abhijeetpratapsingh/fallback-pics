@@ -50,7 +50,7 @@ const structuredData = {
   title="Blog - Web Performance & Image Optimization Guides | fallback.pics"
   description="Expert guides on image optimization, placeholders, lazy loading, and web performance. Learn from real case studies and best practices."
   keywords="web performance blog, image optimization guides, lazy loading tutorials, placeholder best practices, core web vitals, web development"
-  ogImage="https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics+Blog"
+  ogImage="https://fallback.pics/api/v1/thumbnail/1200x630?text=fallback.pics+Blog&style=soft&theme=purple&label=Blog"
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
@@ -74,7 +74,13 @@ const structuredData = {
     <section class="blog-featured" aria-label="Featured blog posts">
       <article class="latest-post">
         <a href={`/blog/${latestPost.slug}/`} aria-label={`Read ${latestPost.title}`}>
-          <img src={latestPost.image} alt="" loading="eager" />
+          <img
+            src={latestPost.image}
+            alt={latestPost.title}
+            width="1200"
+            height="630"
+            loading="eager"
+          />
           <div class="latest-post__content">
             <p class="blog-eyebrow">Latest post</p>
             <h2>{latestPost.title}</h2>
@@ -94,7 +100,13 @@ const structuredData = {
         <div class="editor-picks__list">
           {editorPicks.map((post) => (
             <a href={`/blog/${post.slug}/`} class="editor-pick">
-              <img src={post.image} alt="" loading="lazy" />
+              <img
+                src={post.image}
+                alt={post.title}
+                width="1200"
+                height="630"
+                loading="lazy"
+              />
               <div>
                 <span>{post.category}</span>
                 <h3>{post.title}</h3>
@@ -134,7 +146,13 @@ const structuredData = {
             data-search={`${post.title} ${post.description} ${post.category} ${post.tags.join(' ')}`.toLowerCase()}
           >
             <a href={`/blog/${post.slug}/`} aria-label={`Read ${post.title}`}>
-              <img src={post.image} alt="" loading="lazy" />
+              <img
+                src={post.image}
+                alt={post.title}
+                width="1200"
+                height="630"
+                loading="lazy"
+              />
               <div class="blog-card__body">
                 <span>{post.category}</span>
                 <h3>{post.title}</h3>
@@ -292,7 +310,7 @@ const structuredData = {
 
     .latest-post img {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 1200 / 630;
       object-fit: cover;
       background: var(--color-text);
     }
@@ -358,7 +376,7 @@ const structuredData = {
 
     .editor-pick img {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 1200 / 630;
       border-radius: 0.375rem;
       object-fit: cover;
       background: var(--color-text);
@@ -455,7 +473,7 @@ const structuredData = {
 
     .blog-card img {
       width: 100%;
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 1200 / 630;
       object-fit: cover;
       background: var(--color-text);
     }
@@ -522,7 +540,7 @@ const structuredData = {
       }
 
       .editor-pick img {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 1200 / 630;
       }
     }
   </style>

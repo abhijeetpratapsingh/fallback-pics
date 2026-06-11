@@ -12,6 +12,8 @@ export interface Props {
   keywords?: string;
   canonical?: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   header?: boolean;
   footer?: boolean;
   robots?: string;
@@ -23,6 +25,8 @@ const {
   keywords = "placeholder images, image placeholder api, dummy images, developer tools, web development, mockup images, fallback images, svg placeholder, png placeholder",
   canonical,
   ogImage = "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=fallback.pics",
+  ogImageWidth,
+  ogImageHeight,
   header = true,
   footer = true,
   robots = 'index, follow',
@@ -59,6 +63,8 @@ const currentUrl = canonical || `https://fallback.pics${Astro.url.pathname}`;
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    {ogImageWidth && <meta property="og:image:width" content={String(ogImageWidth)} />}
+    {ogImageHeight && <meta property="og:image:height" content={String(ogImageHeight)} />}
     <meta property="og:url" content={currentUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="fallback.pics" />

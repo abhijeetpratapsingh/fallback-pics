@@ -45,8 +45,13 @@ const thumbnailThemes = [
   { id: "dark", label: "Dark" },
 ];
 
+const MAX_DIMENSION = 5000;
+
 const clampDimension = (value: number) =>
-  Math.min(4000, Math.max(10, Number.isFinite(value) ? value : 400));
+  Math.min(
+    MAX_DIMENSION,
+    Math.max(10, Number.isFinite(value) ? value : 400),
+  );
 const sanitizeHex = (value: string, fallback: string) => {
   const normalized = value
     .replace("#", "")
@@ -69,6 +74,10 @@ export default function LiveDemoEnhanced() {
   const [thumbnailStyle, setThumbnailStyle] = useState("soft");
   const [thumbnailTheme, setThumbnailTheme] = useState("purple");
   const [thumbnailLabel, setThumbnailLabel] = useState("Blog Post");
+  const [thumbnailBg, setThumbnailBg] = useState("");
+  const [thumbnailAccent, setThumbnailAccent] = useState("");
+  const [thumbnailColor, setThumbnailColor] = useState("");
+  const [thumbnailSeed, setThumbnailSeed] = useState("");
   const [imageUrl, setImageUrl] = useState(`${API_URL}/400x300`);
   const [copied, setCopied] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
@@ -107,6 +116,14 @@ export default function LiveDemoEnhanced() {
       params.push(`theme=${encodeURIComponent(thumbnailTheme)}`);
       if (thumbnailLabel)
         params.push(`label=${encodeURIComponent(thumbnailLabel)}`);
+      if (thumbnailBg)
+        params.push(`bg=${encodeURIComponent(thumbnailBg)}`);
+      if (thumbnailAccent)
+        params.push(`accent=${encodeURIComponent(thumbnailAccent)}`);
+      if (thumbnailColor)
+        params.push(`color=${encodeURIComponent(thumbnailColor)}`);
+      if (thumbnailSeed)
+        params.push(`seed=${encodeURIComponent(thumbnailSeed)}`);
     }
     if (preset === "ai") {
       if (aiContext) params.push(`context=${encodeURIComponent(aiContext)}`);
@@ -127,6 +144,10 @@ export default function LiveDemoEnhanced() {
     thumbnailStyle,
     thumbnailTheme,
     thumbnailLabel,
+    thumbnailBg,
+    thumbnailAccent,
+    thumbnailColor,
+    thumbnailSeed,
   ]);
 
   useEffect(() => {
@@ -242,7 +263,7 @@ export default function LiveDemoEnhanced() {
                     setWidth(clampDimension(Number(event.target.value)))
                   }
                   min="10"
-                  max="4000"
+                  max={MAX_DIMENSION}
                   disabled={preset === "square" || preset === "avatar"}
                   className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
                 />
@@ -256,7 +277,7 @@ export default function LiveDemoEnhanced() {
                     setHeight(clampDimension(Number(event.target.value)))
                   }
                   min="10"
-                  max="4000"
+                  max={MAX_DIMENSION}
                   disabled={preset === "square" || preset === "avatar"}
                   className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
                 />
@@ -494,6 +515,64 @@ export default function LiveDemoEnhanced() {
                       </button>
                     ))}
                   </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block text-sm font-medium text-blue-950">
+                    Background gradient (hex, comma-separated)
+                    <input
+                      type="text"
+                      value={thumbnailBg}
+                      onChange={(event) => setThumbnailBg(event.target.value)}
+                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                      placeholder="7C3AED,3B82F6"
+                    />
+                  </label>
+                  <label className="block text-sm font-medium text-blue-950">
+                    Accent color (hex)
+                    <input
+                      type="text"
+                      value={thumbnailAccent}
+                      onChange={(event) =>
+                        setThumbnailAccent(
+                          event.target.value
+                            .replace(/#/g, "")
+                            .replace(/[^0-9a-fA-F]/g, "")
+                            .slice(0, 6)
+                            .toUpperCase(),
+                        )
+                      }
+                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                      placeholder="F97316"
+                    />
+                  </label>
+                  <label className="block text-sm font-medium text-blue-950">
+                    Text color (hex)
+                    <input
+                      type="text"
+                      value={thumbnailColor}
+                      onChange={(event) =>
+                        setThumbnailColor(
+                          event.target.value
+                            .replace(/#/g, "")
+                            .replace(/[^0-9a-fA-F]/g, "")
+                            .slice(0, 6)
+                            .toUpperCase(),
+                        )
+                      }
+                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                      placeholder="FFFFFF"
+                    />
+                  </label>
+                  <label className="block text-sm font-medium text-blue-950">
+                    Seed (optional)
+                    <input
+                      type="text"
+                      value={thumbnailSeed}
+                      onChange={(event) => setThumbnailSeed(event.target.value)}
+                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                      placeholder="campaign-spring-launch"
+                    />
+                  </label>
                 </div>
               </div>
             </section>

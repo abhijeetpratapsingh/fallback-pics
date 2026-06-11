@@ -1,3 +1,5 @@
+import { buildBlogThumbnailUrl } from '../utils/blogImages';
+
 export type BlogCard = {
   title: string;
   body: string;
@@ -26,15 +28,13 @@ export type BlogPost = {
   related: string[];
 };
 
-export const blogPosts: BlogPost[] = [
+export const blogPostData: Omit<BlogPost, 'image'>[] = [
   {
     title:
       "Generate Blog Thumbnails from Text When Featured Images Are Missing",
     description:
       "Use fallback.pics thumbnail URLs to generate blog featured images from post titles, category labels, themes, and safe-zone background styles.",
     slug: "generate-blog-thumbnails-from-text",
-    image:
-      "https://fallback.pics/api/v1/thumbnail/1200x630?text=Generate+Blog+Thumbnails+from+Text&style=soft&label=Guide",
     date: "2026-06-06",
     readTime: "8 min read",
     category: "API Guides",
@@ -62,9 +62,11 @@ export const blogPosts: BlogPost[] = [
         title: "Generate a thumbnail from a title",
         body: [
           "Start with the thumbnail route and a 1200x630 size for Open Graph-friendly featured images. Add the title with the text parameter.",
+          "Use SVG for crisp in-page previews. For social crawlers, append .jpg or .webp to the dimensions segment so platforms receive a raster image.",
           "If you use the same URL repeatedly, the generated decoration remains deterministic, so caching and previews stay consistent.",
         ],
-        code: `https://fallback.pics/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images`,
+        code: `https://fallback.pics/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images
+https://fallback.pics/api/v1/thumbnail/1200x630.jpg?text=How+to+Fix+Broken+Images`,
       },
       {
         eyebrow: "Controls",
@@ -95,7 +97,7 @@ https://fallback.pics/api/v1/thumbnail/1200x630?text=Prevent+Layout+Shift+From+M
           },
           {
             title: "Deterministic output",
-            body: "The title and optional seed control the variation so the same URL produces the same thumbnail.",
+            body: "Title, label, style, theme, colors, and an optional seed control decoration layout so the same URL produces the same thumbnail.",
           },
         ],
       },
@@ -115,18 +117,19 @@ https://fallback.pics/api/v1/thumbnail/1200x630?text=Prevent+Layout+Shift+From+M
           "A blog template can use the uploaded featured image when one exists, then fall back to a generated thumbnail URL when the field is empty.",
           "Keep URL text public and generic. Post titles are usually public, but avoid putting drafts with private launch names, customer data, or sensitive identifiers in image URLs.",
         ],
-        code: `const image = post.featuredImage ??
-  "https://fallback.pics/api/v1/thumbnail/1200x630?" +
-  new URLSearchParams({
-    text: post.title,
-    label: post.category,
-    style: "soft",
-    theme: "purple",
-  });`,
+        code: `const params = new URLSearchParams({
+  text: post.title,
+  label: post.category,
+  style: "soft",
+  theme: "purple",
+});
+
+const image = post.featuredImage ??
+  \`https://fallback.pics/api/v1/thumbnail/1200x630.jpg?\${params}\`;`,
       },
     ],
     takeaways: [
-      "Use /api/v1/thumbnail/1200x630 for blog featured image fallbacks.",
+      "Use /api/v1/thumbnail/1200x630 for in-page featured image fallbacks; add .jpg or .webp for social/OG crawlers.",
       "Pass the post title through the text query parameter.",
       "Use label, style, and theme to make generated thumbnails feel intentional.",
       "Decorative elements stay in a separate safe zone so they do not affect title readability.",
@@ -142,8 +145,6 @@ https://fallback.pics/api/v1/thumbnail/1200x630?text=Prevent+Layout+Shift+From+M
     description:
       "A practical URL syntax guide for using fallback.pics as a placeholder image API, with examples for dimensions, colors, text, avatars, and skeleton states.",
     slug: "placeholder-image-api-url-syntax-guide",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Placeholder+Image+API",
     date: "2026-06-05",
     readTime: "10 min read",
     category: "API Guides",
@@ -302,8 +303,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Use the HTML img onerror fallback pattern to replace broken images with stable fallback.pics URLs while preserving layout, alt text, and production safety.",
     slug: "fix-broken-images-html-onerror",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=HTML+Image+Fallback",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "Implementation Guides",
@@ -490,8 +489,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Build a React image fallback component that handles missing src values, failed image loads, layout-safe placeholders, and production-safe fallback.pics URLs.",
     slug: "react-image-fallback-patterns",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=React+Image+Fallback",
     date: "2026-06-05",
     readTime: "13 min read",
     category: "React Guides",
@@ -757,8 +754,6 @@ API reference: https://fallback.pics/api/`,
     description:
       "Build Next.js image fallbacks that handle missing src values, failed remote images, SVG placeholders, width and height, fill layouts, and CLS-safe fallback URLs.",
     slug: "nextjs-image-fallbacks-without-layout-shift",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Next.js+Image+Fallback",
     date: "2026-06-05",
     readTime: "14 min read",
     category: "Next.js Guides",
@@ -1006,8 +1001,6 @@ API reference: https://fallback.pics/api/`,
     description:
       "Compare placeholder image generators and dummy image generators, then choose the right URL pattern for mockups, layout testing, production fallbacks, and missing media.",
     slug: "placeholder-image-generator-vs-dummy-image-generator",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Placeholder+vs+Dummy+Image",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Comparisons",
@@ -1171,8 +1164,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Compare placeholder image APIs by route syntax, output type, custom text, colors, deterministic behavior, production fallback use, and developer workflow.",
     slug: "best-placeholder-image-apis-for-developers",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Best+Placeholder+Image+APIs",
     date: "2026-06-05",
     readTime: "13 min read",
     category: "Comparisons",
@@ -1362,8 +1353,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Compare placehold.co alternatives for production placeholder images, broken-image fallbacks, deterministic SVG URLs, avatars, skeletons, and framework workflows.",
     slug: "placehold-co-alternatives-production-placeholder-images",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=placehold.co+Alternatives",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Alternatives",
@@ -1548,8 +1537,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Compare DummyImage alternatives for modern web apps, including SVG dummy image URLs, branded placeholders, avatars, skeletons, and production fallbacks.",
     slug: "dummyimage-alternatives-modern-dummy-image-urls",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=DummyImage+Alternatives",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Alternatives",
@@ -1724,8 +1711,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "Compare Lorem Picsum random photo placeholders with deterministic SVG placeholder images for product cards, docs, dashboards, screenshots, and fallback states.",
     slug: "lorem-picsum-vs-svg-placeholder-images",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Lorem+Picsum+vs+SVG",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Comparisons",
@@ -1905,8 +1890,6 @@ Next.js guide: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "A practical ecommerce image placeholder strategy for missing supplier photos, failed CDN URLs, incomplete product imports, and stable product catalog layouts.",
     slug: "product-image-placeholder-ecommerce-catalogs",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Product+Image+Placeholder",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Ecommerce",
@@ -2148,8 +2131,6 @@ Dummy image generator: https://fallback.pics/dummy-image-generator/`,
     description:
       "A practical performance guide for preventing image layout shift with dimensions, aspect ratios, placeholders, and stable fallback image URLs.",
     slug: "prevent-layout-shift-missing-images",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Prevent+Image+Layout+Shift",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "Performance",
@@ -2411,8 +2392,6 @@ Product image placeholder: https://fallback.pics/product-image-placeholder/`,
     description:
       "A developer guide to skeleton placeholder images, loading placeholders, and static fallback images, with practical rules for choosing the right UI state.",
     slug: "skeleton-placeholder-images-vs-static-fallbacks",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Skeleton+vs+Fallback",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "UX Patterns",
@@ -2684,8 +2663,6 @@ Product image placeholder: https://fallback.pics/product-image-placeholder/`,
     description:
       "A practical guide to initials-based avatar placeholders, readable colors, alt text, privacy-safe labels, and profile image fallback behavior.",
     slug: "avatar-placeholder-generator-initials-colors-accessibility",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Avatar+Placeholder+Guide",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "UX Patterns",
@@ -2950,8 +2927,6 @@ Placeholder image API: https://fallback.pics/placeholder-image-api/`,
     description:
       "A technical guide to SVG placeholder images, deterministic URLs, CDN caching, browser caching, and when SVG placeholders beat raster or photo placeholders.",
     slug: "svg-placeholder-images-fast-cacheable-scalable",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=SVG+Placeholder+Images",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Technical",
@@ -3161,8 +3136,6 @@ Skeleton placeholder generator: https://fallback.pics/skeleton-placeholder-gener
     description:
       "A technical guide to Cache-Control for placeholder images, covering immutable URLs, CDN caching, browser caching, cache keys, and production debugging.",
     slug: "cache-control-placeholder-images-cdn-browser",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Cache-Control+for+Placeholders",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Technical",
@@ -3388,8 +3361,6 @@ Skeleton placeholder generator: https://fallback.pics/skeleton-placeholder-gener
     description:
       "A practical tutorial for building a self-hosted SVG placeholder image API on Cloudflare Workers, with routing, escaping, cache headers, and production tradeoffs.",
     slug: "self-hosted-placeholder-image-api-cloudflare-workers",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Self-Hosted+Placeholder+API",
     date: "2026-06-05",
     readTime: "13 min read",
     category: "Technical",
@@ -3661,8 +3632,6 @@ Next.js image fallback: https://fallback.pics/guides/nextjs-image-fallback/`,
     description:
       "A testing workflow guide for deterministic placeholder image URLs in Storybook stories, Playwright screenshots, visual regression tests, fixtures, and CI.",
     slug: "placeholder-images-storybook-playwright-visual-regression",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Test+Placeholder+Images",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Testing",
@@ -3889,8 +3858,6 @@ Cache-Control guide: https://fallback.pics/blog/cache-control-placeholder-images
     description:
       "A practical guide to CSS background image fallbacks, including layered backgrounds, placeholder URLs, JavaScript detection, component state, and when to use img instead.",
     slug: "css-background-image-fallbacks",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=CSS+Background+Fallbacks",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "Implementation",
@@ -4088,8 +4055,6 @@ SVG placeholder images: https://fallback.pics/blog/svg-placeholder-images-fast-c
     description:
       "Use responsive placeholder images for cards, banners, hero slots, and grids without causing layout shift or inconsistent media boxes.",
     slug: "responsive-placeholder-images-cards-banners-grids",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Responsive+Placeholders",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "Implementation",
@@ -4231,8 +4196,6 @@ Skeleton placeholders: https://fallback.pics/blog/skeleton-placeholder-images-vs
     description:
       "Use generated OG image placeholders for blog posts, documentation pages, changelogs, and social previews while final artwork is unavailable.",
     slug: "og-image-placeholders-blogs-docs-social-sharing",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=OG+Image+Placeholders",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "Content Workflows",
@@ -4338,8 +4301,6 @@ https://fallback.pics/api/v1/1200x630/F4F4F5/18181B?text=Documentation`,
     description:
       "Use placeholder images for CMS previews, empty media fields, draft content, editorial cards, and broken remote assets without blocking publication.",
     slug: "placeholder-images-cms-previews-missing-media",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=CMS+Media+Placeholders",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "CMS Workflows",
@@ -4430,8 +4391,6 @@ https://fallback.pics/api/v1/banner/1200x400/F4F4F5/18181B?text=Collection`,
     description:
       "Design mobile image fallbacks for avatars, feed cards, thumbnails, unavailable media, and offline states without collapsing the app UI.",
     slug: "mobile-app-image-fallbacks-avatars-cards-offline",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Mobile+Image+Fallbacks",
     date: "2026-06-05",
     readTime: "13 min read",
     category: "Mobile UX",
@@ -4534,8 +4493,6 @@ function MobileCardImage({ imageUrl }) {
     description:
       "A practical privacy guide for placeholder image URLs, URL text parameters, no-upload placeholders, logs, referrers, caching, and safe production examples.",
     slug: "privacy-safe-placeholder-images-url-text-uploads",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Privacy-Safe+Placeholders",
     date: "2026-06-05",
     readTime: "11 min read",
     category: "Trust",
@@ -4626,8 +4583,6 @@ Avoid putting customer-specific, account-specific, private, regulated, or secret
     description:
       "Use branded fallback images in dashboards, report previews, avatars, workspaces, admin panels, and internal tools without breaking layout or leaking private data.",
     slug: "branded-fallback-images-saas-dashboards-internal-tools",
-    image:
-      "https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Branded+Fallbacks",
     date: "2026-06-05",
     readTime: "12 min read",
     category: "SaaS",
@@ -4723,8 +4678,6 @@ https://fallback.pics/api/v1/800x600/F4F4F5/18181B?text=File+Preview`,
     description:
       "Audit broken image states, choose branded fallback URLs, update shared components, test image failures, and monitor rollout quality.",
     slug: "broken-image-icon-to-branded-fallback-checklist",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Fallback+Rollout+Checklist",
     date: "2026-06-05",
     readTime: "13 min read",
     category: "Implementation",
@@ -4834,8 +4787,6 @@ https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Report+Preview`,
     description:
       "Learn how image placeholders protect perceived performance, preserve layout, and keep product interfaces professional when media is missing or delayed.",
     slug: "complete-guide-to-image-placeholders-in-web-development",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Image+Placeholder+Guide",
     date: "2025-01-15",
     readTime: "15 min read",
     category: "Web Development",
@@ -4905,8 +4856,6 @@ https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Report+Preview`,
     description:
       "Production examples showing how fallback images protect ecommerce, SaaS, social, and marketplace interfaces when media systems fail.",
     slug: "why-every-developer-needs-fallback-images-case-studies",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Fallback+Image+Case+Studies",
     date: "2025-01-15",
     readTime: "12 min read",
     category: "Case Studies",
@@ -4976,8 +4925,6 @@ https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Report+Preview`,
     description:
       "Practical image loading patterns for faster perceived performance, lower layout shift, and cleaner fallback states in production interfaces.",
     slug: "image-loading-best-practices-for-better-ux",
-    image:
-      "https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=Image+Loading+Best+Practices",
     date: "2025-01-15",
     readTime: "18 min read",
     category: "Performance",
@@ -5038,6 +4985,11 @@ https://fallback.pics/api/v1/1200x630/7C3AED/FFFFFF?text=Report+Preview`,
     ],
   },
 ];
+
+export const blogPosts: BlogPost[] = blogPostData.map((post) => ({
+  ...post,
+  image: buildBlogThumbnailUrl(post.title, post.category, post.slug),
+}));
 
 export const blogPostsBySlug = Object.fromEntries(
   blogPosts.map((post) => [post.slug, post]),
