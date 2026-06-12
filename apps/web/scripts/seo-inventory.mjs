@@ -97,7 +97,8 @@ export async function getPageInventory() {
     llmsSection: coreTopicSection(page.slug)
   }));
 
-  const latestBlogDate = maxDate(blogPosts.map((post) => post.date));
+  const blogPostDate = (post, index) => post.date ?? blogPublishDate(index);
+  const latestBlogDate = maxDate(blogPosts.map((post, index) => blogPostDate(post, index)));
   const blogIndex = {
     path: '/blog/',
     title: 'Blog',
@@ -113,16 +114,16 @@ export async function getPageInventory() {
     }
   };
 
-  const blogInventory = blogPosts.map((post) => ({
+  const blogInventory = blogPosts.map((post, index) => ({
     path: finalPath(`/blog/${post.slug}/`),
     title: post.title,
     description: post.description,
-    lastmod: post.date,
+    lastmod: blogPostDate(post, index),
     changefreq: 'monthly',
     priority: '0.8',
     llmsSection: 'Blog posts',
     image: {
-      loc: post.image,
+      loc: post.image ?? buildBlogThumbnailUrl(post.title, post.slug),
       title: post.title,
       caption: post.description
     }
@@ -210,8 +211,78 @@ The current public image API returns SVG responses with deterministic cache head
 async function importTsData(filePath) {
   const source = await readFile(filePath, 'utf8');
   if (filePath.endsWith('seoPages.ts')) return { seoPages: extractExportedArray(source, 'seoPages') };
-  if (filePath.endsWith('blogPosts.ts')) return { blogPosts: extractExportedArray(source, 'blogPostData') };
+  if (filePath.endsWith('blogPosts.ts')) {
+    const batchContext = await resolveBatchImports(filePath, source);
+    const posts = extractExportedArrayWithContext(source, 'blogPostData', batchContext);
+    return { blogPosts: posts };
+  }
   throw new Error(`Unsupported metadata source: ${filePath}`);
+}
+
+/** Load all ./blogContent/backlog-batch-NN imports referenced in a TS file. */
+async function resolveBatchImports(baseFilePath, source) {
+  const batchDir = resolve(dirname(baseFilePath), 'blogContent');
+  const importRe = /import\s*\{\s*(\w+)\s*\}\s*from\s*['"]\.\/blogContent\/(backlog-batch-\d+)['"]/g;
+  const context = {};
+  for (const match of source.matchAll(importRe)) {
+    const [, exportName, batchFile] = match;
+    const batchSource = await readFile(resolve(batchDir, `${batchFile}.ts`), 'utf8');
+    context[exportName] = extractExportedArray(batchSource, exportName);
+  }
+  return context;
+}
+
+function findArrayBounds(source, markerIndex) {
+  // Find the '= [' assignment start, skipping TypeScript type annotations
+  const assignMatch = source.slice(markerIndex).match(/=\s*\[/);
+  if (!assignMatch) return null;
+  const arrayStart = markerIndex + assignMatch.index + assignMatch[0].length - 1;
+
+  // Walk character-by-character tracking string state and bracket depth
+  // to find the actual closing ']' of the top-level array.
+  let depth = 0;
+  let i = arrayStart;
+  let inString = null; // null | '\'' | '"' | '`'
+  let backtickDepth = 0; // for nested ${} inside template literals
+
+  while (i < source.length) {
+    const ch = source[i];
+    const prev = i > 0 ? source[i - 1] : '';
+
+    if (inString) {
+      if (ch === '\\') {
+        i += 2; // skip escaped character
+        continue;
+      }
+      if (inString === '`') {
+        if (ch === '`' && backtickDepth === 0) {
+          inString = null;
+        } else if (ch === '$' && source[i + 1] === '{') {
+          backtickDepth++;
+          i += 2;
+          continue;
+        } else if (ch === '}' && backtickDepth > 0) {
+          backtickDepth--;
+        }
+      } else if (ch === inString) {
+        inString = null;
+      }
+    } else {
+      if (ch === '"' || ch === "'" || ch === '`') {
+        inString = ch;
+        backtickDepth = 0;
+      } else if (ch === '[') {
+        depth++;
+      } else if (ch === ']') {
+        depth--;
+        if (depth === 0) {
+          return { arrayStart, arrayEnd: i };
+        }
+      }
+    }
+    i++;
+  }
+  return null;
 }
 
 function extractExportedArray(source, exportName) {
@@ -219,12 +290,29 @@ function extractExportedArray(source, exportName) {
   const markerIndex = source.indexOf(marker);
   if (markerIndex === -1) throw new Error(`Could not find ${exportName} export`);
 
-  const arrayStart = source.indexOf('[', markerIndex);
-  const arrayEnd = source.indexOf('\n];', arrayStart);
-  if (arrayStart === -1 || arrayEnd === -1) throw new Error(`Could not read ${exportName} array`);
+  const bounds = findArrayBounds(source, markerIndex);
+  if (!bounds) throw new Error(`Could not read ${exportName} array`);
+  const { arrayStart, arrayEnd } = bounds;
 
-  const literal = source.slice(arrayStart, arrayEnd + 2);
+  // arrayEnd is the index of the closing ']'
+  const literal = source.slice(arrayStart, arrayEnd + 1);
   return Function(`"use strict"; return (${literal});`)();
+}
+
+function extractExportedArrayWithContext(source, exportName, context) {
+  const marker = `export const ${exportName}`;
+  const markerIndex = source.indexOf(marker);
+  if (markerIndex === -1) throw new Error(`Could not find ${exportName} export`);
+
+  const bounds = findArrayBounds(source, markerIndex);
+  if (!bounds) throw new Error(`Could not read ${exportName} array`);
+  const { arrayStart, arrayEnd } = bounds;
+
+  const literal = source.slice(arrayStart, arrayEnd + 1);
+  const argNames = Object.keys(context);
+  const argValues = Object.values(context);
+  // eslint-disable-next-line no-new-func
+  return new Function(...argNames, `"use strict"; return (${literal});`)(...argValues);
 }
 
 function seoPriority(slug) {
@@ -237,6 +325,34 @@ function seoPriority(slug) {
 function coreTopicSection(slug) {
   if (slug.startsWith('alternatives/') || slug === 'self-hosted-placeholder-image-api') return 'Comparisons and deployment';
   return 'Core topics';
+}
+
+function blogPublishDate(index) {
+  const d = new Date('2026-01-01T00:00:00.000Z');
+  d.setUTCDate(d.getUTCDate() + index);
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const THUMBNAIL_STYLES = ['soft', 'rings', 'lines', 'pattern'];
+const THUMBNAIL_THEMES = ['purple', 'blue', 'green', 'orange', 'dark'];
+
+function slugVariant(slug, options) {
+  let hash = 0;
+  for (const char of slug) hash = (hash + char.charCodeAt(0)) % 997;
+  return options[hash % options.length];
+}
+
+function buildBlogThumbnailUrl(title, slug) {
+  const params = new URLSearchParams({
+    text: title,
+    style: slugVariant(slug, THUMBNAIL_STYLES),
+    theme: slugVariant(slug, THUMBNAIL_THEMES),
+    label: 'fallback.pics',
+  });
+  return `https://fallback.pics/api/v1/thumbnail/1200x630?${params.toString().replace(/%20/g, '+')}`;
 }
 
 function maxDate(values) {

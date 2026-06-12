@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['404-page-branded-image-placeholders'];
+---
+
+<BlogArticle post={post} />

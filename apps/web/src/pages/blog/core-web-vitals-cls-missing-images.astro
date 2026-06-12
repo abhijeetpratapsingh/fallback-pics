@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['core-web-vitals-cls-missing-images'];
+---
+
+<BlogArticle post={post} />

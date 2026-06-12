@@ -1,0 +1,8 @@
+---
+import BlogArticle from '../../components/BlogArticle.astro';
+import { blogPostsBySlug } from '../../data/blogPosts';
+
+const post = blogPostsBySlug['b2b-wholesale-catalog-placeholders'];
+---
+
+<BlogArticle post={post} />

@@ -1,27 +1,6 @@
 const THUMBNAIL_STYLES = ["soft", "rings", "lines", "pattern"] as const;
 const THUMBNAIL_THEMES = ["purple", "blue", "green", "orange", "dark"] as const;
-
-const CATEGORY_LABELS: Record<string, string> = {
-  "API Guides": "Guide",
-  "Implementation Guides": "Guide",
-  "React Guides": "React",
-  "Next.js Guides": "Next.js",
-  Comparisons: "Compare",
-  Alternatives: "Alternative",
-  Ecommerce: "Ecommerce",
-  Performance: "Performance",
-  "UX Patterns": "UX",
-  Technical: "Technical",
-  Testing: "Testing",
-  Implementation: "Guide",
-  "Content Workflows": "Content",
-  "CMS Workflows": "CMS",
-  "Mobile UX": "Mobile",
-  Trust: "Trust",
-  SaaS: "SaaS",
-  "Web Development": "Guide",
-  "Case Studies": "Case Study",
-};
+const BLOG_THUMBNAIL_LABEL = "fallback.pics";
 
 function slugVariant(slug: string, options: readonly string[]): string {
   let hash = 0;
@@ -31,14 +10,22 @@ function slugVariant(slug: string, options: readonly string[]): string {
   return options[hash % options.length];
 }
 
-export function categoryThumbnailLabel(category: string): string {
-  return CATEGORY_LABELS[category] ?? category.split(/\s+/)[0];
+/** One blog per calendar day starting 2026-01-01 (index 0 = Jan 1). */
+export function blogPublishDate(index: number): string {
+  if (!Number.isInteger(index) || index < 0) {
+    throw new Error(`blogPublishDate: invalid index ${index}`);
+  }
+  const d = new Date("2026-01-01T00:00:00.000Z");
+  d.setUTCDate(d.getUTCDate() + index);
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-/** Blog featured image via /thumbnail route (title, category pill, rotated style/theme). */
+/** Blog featured image via /thumbnail route (title, brand label, rotated style/theme). */
 export function buildBlogThumbnailUrl(
   title: string,
-  category: string,
   slug: string,
   baseUrl = "https://fallback.pics/api/v1",
 ): string {
@@ -46,7 +33,7 @@ export function buildBlogThumbnailUrl(
     text: title,
     style: slugVariant(slug, THUMBNAIL_STYLES),
     theme: slugVariant(slug, THUMBNAIL_THEMES),
-    label: categoryThumbnailLabel(category),
+    label: BLOG_THUMBNAIL_LABEL,
   });
 
   return `${baseUrl}/thumbnail/1200x630?${params.toString().replace(/%20/g, "+")}`;

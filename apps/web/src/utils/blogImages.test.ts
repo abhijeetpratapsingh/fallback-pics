@@ -1,30 +1,34 @@
 import { describe, expect, it } from "vitest";
 import {
+  blogPublishDate,
   buildBlogThumbnailUrl,
-  categoryThumbnailLabel,
   inferCodeLanguage,
   toSocialImageUrl,
 } from "./blogImages";
 
+describe("blogPublishDate", () => {
+  it("assigns one calendar day per index from 2026-01-01", () => {
+    expect(blogPublishDate(0)).toBe("2026-01-01");
+    expect(blogPublishDate(29)).toBe("2026-01-30");
+    expect(blogPublishDate(30)).toBe("2026-01-31");
+    expect(blogPublishDate(31)).toBe("2026-02-01");
+    expect(blogPublishDate(59)).toBe("2026-03-01");
+  });
+});
+
 describe("buildBlogThumbnailUrl", () => {
-  it("uses the thumbnail route with title, label, style, and theme", () => {
+  it("uses the thumbnail route with title, brand label, style, and theme", () => {
     const url = buildBlogThumbnailUrl(
       "React Image Fallback Patterns",
-      "React Guides",
       "react-image-fallback-patterns",
     );
     expect(url).toMatch(
       /^https:\/\/fallback\.pics\/api\/v1\/thumbnail\/1200x630\?/,
     );
     expect(url).toContain("text=React+Image+Fallback+Patterns");
-    expect(url).toContain("label=React");
+    expect(url).toContain("label=fallback.pics");
     expect(url).toContain("style=");
     expect(url).toContain("theme=");
-  });
-
-  it("maps categories to short thumbnail labels", () => {
-    expect(categoryThumbnailLabel("API Guides")).toBe("Guide");
-    expect(categoryThumbnailLabel("Case Studies")).toBe("Case Study");
   });
 });
 

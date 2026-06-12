@@ -461,23 +461,26 @@ function EnterpriseLanding() {
               </nav>
             </div>
 
-            <div id="hero-demo" className="rounded-lg border border-zinc-200 bg-white p-3 shadow-[0_12px_32px_rgba(9,9,11,0.08)] sm:p-4">
-              <div className="mb-3 flex items-center justify-between gap-3 border-b border-zinc-200 pb-3 sm:mb-4 sm:pb-4">
-                <div>
+            <div
+              id="hero-demo"
+              className="min-w-0 rounded-lg border border-zinc-200 bg-white p-3 shadow-[0_12px_32px_rgba(9,9,11,0.08)] sm:p-4"
+            >
+              <div className="mb-3 flex flex-wrap items-start justify-between gap-3 border-b border-zinc-200 pb-3 sm:mb-4 sm:pb-4">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-zinc-950">Live fallback builder</p>
                   <p className="text-sm text-zinc-500">Generate a placeholder image URL, preview it, and copy it.</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex shrink-0 gap-2">
                   <span className="rounded-md bg-blue-50 px-2 py-1 font-mono text-xs font-semibold text-blue-700">edge</span>
                   <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-xs font-semibold text-emerald-700">cached</span>
                 </div>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[0.92fr_1fr]">
-                <div className="order-2 space-y-4 lg:order-1">
-                  <fieldset>
+              <div className="grid min-w-0 gap-4">
+                <div className="min-w-0 space-y-4">
+                  <fieldset className="min-w-0">
                     <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Preset</legend>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-2 min-[420px]:grid-cols-3">
                       {presetOptions.map((item) => (
                         <button
                           key={item.id}
@@ -501,10 +504,11 @@ function EnterpriseLanding() {
                             });
                           }}
                           aria-pressed={preset === item.id}
-                          className={`flex min-h-11 items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-sm font-semibold transition ${preset === item.id ? 'border-violet-500 bg-violet-50 text-violet-900 shadow-sm ring-2 ring-violet-100' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
+                          aria-label={item.label}
+                          className={`flex min-h-[4.25rem] min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-center text-xs font-semibold leading-tight transition ${preset === item.id ? 'border-violet-500 bg-violet-50 text-violet-900 shadow-sm ring-2 ring-violet-100' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
                         >
                           <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-md font-mono text-[0.65rem] ${preset === item.id ? 'bg-violet-700 text-white' : 'bg-zinc-100 text-zinc-600'}`}>{item.icon}</span>
-                          <span>{item.label}</span>
+                          <span className="w-full truncate px-0.5">{item.label}</span>
                         </button>
                       ))}
                     </div>
@@ -700,7 +704,7 @@ function EnterpriseLanding() {
                   )}
                 </div>
 
-                <div className="order-1 flex flex-col gap-4 lg:order-2">
+                <div className="flex min-w-0 flex-col gap-4">
                   <div className="relative grid min-h-[220px] place-items-center rounded-lg border border-zinc-200 bg-[radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] p-4 [background-size:22px_22px] sm:min-h-[280px] sm:p-5">
                     <img
                       src={previewSrc}
