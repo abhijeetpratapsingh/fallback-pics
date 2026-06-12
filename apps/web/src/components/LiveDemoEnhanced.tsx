@@ -1,136 +1,157 @@
-import { useCallback, useEffect, useState } from "react";
-import { API_URL } from "../config";
-import { trackConversion, trackEvent } from "../utils/analytics";
+import { useCallback, useEffect, useState } from 'react';
+import { PUBLIC_API_BASE } from '../config';
+import { trackConversion, trackEvent } from '../utils/analytics';
 
-const presets = [
-  { id: "standard", label: "Standard", description: "Dimension-based SVG" },
-  { id: "square", label: "Square", description: "Equal width and height" },
-  { id: "avatar", label: "Avatar", description: "Initials and profiles" },
-  { id: "banner", label: "Banner", description: "Wide responsive media" },
-  { id: "thumbnail", label: "Thumbnail", description: "Blog featured images" },
-  { id: "animated", label: "Animated", description: "Loading placeholders" },
-  { id: "ai", label: "Pattern", description: "Contextual SVG pattern" },
+type PresetId =
+  | 'standard'
+  | 'square'
+  | 'avatar'
+  | 'banner'
+  | 'thumbnail'
+  | 'skeleton'
+  | 'blur'
+  | 'animated'
+  | 'ai';
+
+const presets: Array<{ id: PresetId; label: string; description: string }> = [
+  { id: 'standard', label: 'Standard', description: 'Dimension-based SVG' },
+  { id: 'square', label: 'Square', description: 'Equal width and height' },
+  { id: 'avatar', label: 'Avatar', description: 'Initials and profiles' },
+  { id: 'banner', label: 'Banner', description: 'Wide responsive media' },
+  { id: 'thumbnail', label: 'Thumbnail', description: 'Blog featured images' },
+  { id: 'skeleton', label: 'Skeleton', description: 'Loading placeholders' },
+  { id: 'blur', label: 'Blur', description: 'Blurred media state' },
+  { id: 'animated', label: 'Animated', description: 'Motion placeholders' },
+  { id: 'ai', label: 'Pattern', description: 'Contextual SVG pattern' },
 ];
 
 const animationTypes = [
-  { id: "skeleton", label: "Skeleton shimmer" },
-  { id: "pulse", label: "Pulse" },
-  { id: "wave", label: "Wave" },
-  { id: "shimmer", label: "Shimmer line" },
-  { id: "gradient", label: "Rotating gradient" },
-  { id: "dots", label: "Loading dots" },
+  { id: 'skeleton', label: 'Skeleton shimmer' },
+  { id: 'pulse', label: 'Pulse' },
+  { id: 'wave', label: 'Wave' },
+  { id: 'shimmer', label: 'Shimmer line' },
+  { id: 'gradient', label: 'Rotating gradient' },
+  { id: 'dots', label: 'Loading dots' },
 ];
 
 const colorPresets = [
-  { bg: "7C3AED", fg: "FFFFFF", label: "Brand" },
-  { bg: "2563EB", fg: "FFFFFF", label: "Blue" },
-  { bg: "059669", fg: "FFFFFF", label: "Success" },
-  { bg: "111827", fg: "FFFFFF", label: "Dark" },
-  { bg: "F3F4F6", fg: "111827", label: "Neutral" },
-  { bg: "EEF2FF", fg: "4338CA", label: "Soft" },
+  { bg: '7C3AED', fg: 'FFFFFF', label: 'Brand' },
+  { bg: '2563EB', fg: 'FFFFFF', label: 'Blue' },
+  { bg: '059669', fg: 'FFFFFF', label: 'Success' },
+  { bg: '18181B', fg: 'FFFFFF', label: 'Dark' },
+  { bg: 'F4F4F5', fg: '18181B', label: 'Neutral' },
+  { bg: 'EEF2FF', fg: '4338CA', label: 'Soft' },
 ];
 
 const thumbnailStyles = [
-  { id: "soft", label: "Soft shapes" },
-  { id: "rings", label: "Rings" },
-  { id: "lines", label: "Lines" },
-  { id: "pattern", label: "Mini pattern" },
+  { id: 'soft', label: 'Soft shapes' },
+  { id: 'rings', label: 'Rings' },
+  { id: 'lines', label: 'Lines' },
+  { id: 'pattern', label: 'Mini pattern' },
 ];
 
 const thumbnailThemes = [
-  { id: "purple", label: "Purple" },
-  { id: "blue", label: "Blue" },
-  { id: "green", label: "Green" },
-  { id: "orange", label: "Orange" },
-  { id: "dark", label: "Dark" },
+  { id: 'purple', label: 'Purple' },
+  { id: 'blue', label: 'Blue' },
+  { id: 'green', label: 'Green' },
+  { id: 'orange', label: 'Orange' },
+  { id: 'dark', label: 'Dark' },
 ];
 
 const MAX_DIMENSION = 5000;
 
-const clampDimension = (value: number) =>
-  Math.min(
-    MAX_DIMENSION,
-    Math.max(10, Number.isFinite(value) ? value : 400),
-  );
+const clampDimension = (value: number, fallback = 400) =>
+  Math.min(MAX_DIMENSION, Math.max(10, Number.isFinite(value) ? value : fallback));
+
 const sanitizeHex = (value: string, fallback: string) => {
   const normalized = value
-    .replace("#", "")
-    .replace(/[^0-9a-fA-F]/g, "")
+    .replace('#', '')
+    .replace(/[^0-9a-fA-F]/g, '')
     .slice(0, 6)
     .toUpperCase();
   return normalized.length === 6 ? normalized : fallback;
 };
 
-export default function LiveDemoEnhanced() {
-  const [width, setWidth] = useState(400);
-  const [height, setHeight] = useState(300);
-  const [bgColor, setBgColor] = useState("7C3AED");
-  const [textColor, setTextColor] = useState("FFFFFF");
-  const [text, setText] = useState("");
-  const [preset, setPreset] = useState("standard");
-  const [aiContext, setAiContext] = useState("");
-  const [aiMood, setAiMood] = useState("");
-  const [animationType, setAnimationType] = useState("skeleton");
-  const [thumbnailStyle, setThumbnailStyle] = useState("soft");
-  const [thumbnailTheme, setThumbnailTheme] = useState("purple");
-  const [thumbnailLabel, setThumbnailLabel] = useState("Blog Post");
-  const [thumbnailBg, setThumbnailBg] = useState("");
-  const [thumbnailAccent, setThumbnailAccent] = useState("");
-  const [thumbnailColor, setThumbnailColor] = useState("");
-  const [thumbnailSeed, setThumbnailSeed] = useState("");
-  const [imageUrl, setImageUrl] = useState(`${API_URL}/400x300`);
+function showColorControlsFor(preset: PresetId) {
+  return preset === 'standard' || preset === 'banner' || preset === 'square' || preset === 'avatar';
+}
+
+type LiveDemoEnhancedProps = {
+  embedded?: boolean;
+};
+
+export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedProps) {
+  const [width, setWidth] = useState(800);
+  const [height, setHeight] = useState(450);
+  const [bgColor, setBgColor] = useState('7C3AED');
+  const [textColor, setTextColor] = useState('FFFFFF');
+  const [text, setText] = useState('Placeholder Image');
+  const [preset, setPreset] = useState<PresetId>('standard');
+  const [aiContext, setAiContext] = useState('');
+  const [aiMood, setAiMood] = useState('');
+  const [animationType, setAnimationType] = useState('skeleton');
+  const [thumbnailStyle, setThumbnailStyle] = useState('soft');
+  const [thumbnailTheme, setThumbnailTheme] = useState('purple');
+  const [thumbnailLabel, setThumbnailLabel] = useState('Blog Post');
+  const [thumbnailBg, setThumbnailBg] = useState('');
+  const [thumbnailAccent, setThumbnailAccent] = useState('');
+  const [thumbnailColor, setThumbnailColor] = useState('');
+  const [thumbnailSeed, setThumbnailSeed] = useState('');
+  const [imageUrl, setImageUrl] = useState(
+    `${PUBLIC_API_BASE}/800x450/7C3AED/FFFFFF?text=Placeholder+Image`,
+  );
   const [copied, setCopied] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [recentUrls, setRecentUrls] = useState<string[]>([]);
 
-  const generateUrl = useCallback(() => {
-    const safeWidth = clampDimension(width);
-    const safeHeight = clampDimension(height);
-    const safeBg = sanitizeHex(bgColor, "7C3AED");
-    const safeText = sanitizeHex(textColor, "FFFFFF");
-    let url = `${API_URL}/`;
+  const isSquareOrAvatar = preset === 'avatar' || preset === 'square';
+  const safeWidth = clampDimension(width, 800);
+  const safeHeight = isSquareOrAvatar ? safeWidth : clampDimension(height, 450);
+  const showColorControls = showColorControlsFor(preset);
 
-    if (preset === "standard") {
+  const generateUrl = useCallback(() => {
+    const safeBg = sanitizeHex(bgColor, '7C3AED');
+    const safeFg = sanitizeHex(textColor, 'FFFFFF');
+    let url = `${PUBLIC_API_BASE}/`;
+
+    if (preset === 'standard') {
       url += `${safeWidth}x${safeHeight}`;
-      if (safeBg !== "7C3AED" || safeText !== "FFFFFF") {
-        url += `/${safeBg}/${safeText}`;
+      if (safeBg !== '7C3AED' || safeFg !== 'FFFFFF') {
+        url += `/${safeBg}/${safeFg}`;
       }
-    } else if (preset === "square" || preset === "avatar") {
+    } else if (preset === 'square' || preset === 'avatar') {
       url += `${preset}/${safeWidth}`;
-    } else if (preset === "banner") {
+    } else if (preset === 'banner') {
       url += `banner/${safeWidth}x${safeHeight}`;
-    } else if (preset === "animated") {
+    } else if (preset === 'animated') {
       url += `animated/${animationType}/${safeWidth}x${safeHeight}`;
-    } else if (preset === "thumbnail") {
+    } else if (preset === 'thumbnail') {
       url += `thumbnail/${safeWidth}x${safeHeight}`;
-    } else if (preset === "ai") {
+    } else if (preset === 'ai') {
       url += `ai/${safeWidth}x${safeHeight}`;
     } else {
       url += `${preset}/${safeWidth}x${safeHeight}`;
     }
 
-    const params = [];
-    if (text) params.push(`text=${encodeURIComponent(text)}`);
-    if (preset === "thumbnail") {
+    const params: string[] = [];
+    if (text && preset !== 'skeleton' && preset !== 'blur') {
+      params.push(`text=${encodeURIComponent(text)}`);
+    }
+    if (preset === 'thumbnail') {
       params.push(`style=${encodeURIComponent(thumbnailStyle)}`);
       params.push(`theme=${encodeURIComponent(thumbnailTheme)}`);
-      if (thumbnailLabel)
-        params.push(`label=${encodeURIComponent(thumbnailLabel)}`);
-      if (thumbnailBg)
-        params.push(`bg=${encodeURIComponent(thumbnailBg)}`);
-      if (thumbnailAccent)
-        params.push(`accent=${encodeURIComponent(thumbnailAccent)}`);
-      if (thumbnailColor)
-        params.push(`color=${encodeURIComponent(thumbnailColor)}`);
-      if (thumbnailSeed)
-        params.push(`seed=${encodeURIComponent(thumbnailSeed)}`);
+      if (thumbnailLabel) params.push(`label=${encodeURIComponent(thumbnailLabel)}`);
+      if (thumbnailBg) params.push(`bg=${encodeURIComponent(thumbnailBg)}`);
+      if (thumbnailAccent) params.push(`accent=${encodeURIComponent(thumbnailAccent)}`);
+      if (thumbnailColor) params.push(`color=${encodeURIComponent(thumbnailColor)}`);
+      if (thumbnailSeed) params.push(`seed=${encodeURIComponent(thumbnailSeed)}`);
     }
-    if (preset === "ai") {
+    if (preset === 'ai') {
       if (aiContext) params.push(`context=${encodeURIComponent(aiContext)}`);
       if (aiMood) params.push(`mood=${encodeURIComponent(aiMood)}`);
     }
 
-    return params.length > 0 ? `${url}?${params.join("&")}` : url;
+    return params.length > 0 ? `${url}?${params.join('&')}` : url;
   }, [
     width,
     height,
@@ -148,30 +169,86 @@ export default function LiveDemoEnhanced() {
     thumbnailAccent,
     thumbnailColor,
     thumbnailSeed,
+    safeWidth,
+    safeHeight,
   ]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setImageUrl(generateUrl());
       setImageLoading(true);
     }, 180);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, [generateUrl]);
+
+  function selectPreset(next: PresetId) {
+    setPreset(next);
+
+    switch (next) {
+      case 'avatar':
+        setWidth(128);
+        setHeight(128);
+        setText('JD');
+        break;
+      case 'square':
+        setWidth(400);
+        setHeight(400);
+        setText('Square');
+        break;
+      case 'banner':
+        setWidth(1200);
+        setHeight(400);
+        setText('Hero Banner');
+        break;
+      case 'thumbnail':
+        setWidth(1200);
+        setHeight(630);
+        setText((current) => current || 'How to Fix Broken Images in Production');
+        break;
+      case 'skeleton':
+        setWidth(640);
+        setHeight(360);
+        break;
+      case 'blur':
+        setWidth(800);
+        setHeight(450);
+        break;
+      case 'animated':
+        setWidth(640);
+        setHeight(360);
+        break;
+      case 'ai':
+        setWidth(800);
+        setHeight(450);
+        break;
+      default:
+        setWidth(800);
+        setHeight(450);
+        setText('Placeholder Image');
+        break;
+    }
+
+    trackEvent('demo_preset_select', {
+      event_category: 'demo',
+      event_label: next,
+      preset: next,
+    });
+  }
 
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(imageUrl);
     setCopied(true);
-    trackEvent("demo_url_copy", {
-      event_category: "conversion",
+    trackEvent('demo_url_copy', {
+      event_category: 'conversion',
       event_label: preset,
       preset,
     });
-    trackConversion("demo_url_copy", preset);
+    trackConversion('demo_url_copy', preset);
     setRecentUrls((previous) =>
       [imageUrl, ...previous.filter((url) => url !== imageUrl)].slice(0, 3),
     );
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 2000);
   };
 
   const applyColorPreset = (bg: string, fg: string) => {
@@ -179,270 +256,49 @@ export default function LiveDemoEnhanced() {
     setTextColor(fg);
   };
 
+  const presetLabel = presets.find((item) => item.id === preset)?.label ?? preset;
+
   return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-10 max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple-700">
-          Interactive generator
-        </p>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-950 md:text-5xl">
-          Build a fallback URL in seconds.
-        </h2>
-        <p className="mt-4 text-lg leading-8 text-gray-600">
-          Tune dimensions, presets, colors, and text while the generated image
-          updates in place.
-        </p>
-      </div>
+    <div className={embedded ? 'min-w-0' : 'mx-auto max-w-7xl'}>
+      {!embedded && (
+        <div className="mb-10 max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-700">
+            Interactive generator
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-950 md:text-5xl">
+            Build a fallback URL in seconds.
+          </h2>
+          <p className="mt-4 text-lg leading-8 text-zinc-600">
+            Tune dimensions, presets, colors, and text while the generated image updates in place.
+          </p>
+        </div>
+      )}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1fr)]">
-        <div className="space-y-4">
-          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-700">
-                Preset
-              </h3>
-              <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                {presets.find((item) => item.id === preset)?.label}
-              </span>
-            </div>
-            <div
-              className="grid grid-cols-2 gap-2 sm:grid-cols-3"
-              role="radiogroup"
-              aria-label="Placeholder preset"
-            >
-              {presets.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => {
-                    setPreset(item.id);
-                    if (item.id === "thumbnail") {
-                      setWidth(1200);
-                      setHeight(630);
-                      setText(
-                        (current) =>
-                          current || "How to Fix Broken Images in Production",
-                      );
-                    }
-                    trackEvent("demo_preset_select", {
-                      event_category: "demo",
-                      event_label: item.label,
-                      preset: item.id,
-                    });
-                  }}
-                  role="radio"
-                  aria-checked={preset === item.id}
-                  className={`rounded-lg border p-3 text-left transition ${
-                    preset === item.id
-                      ? "border-purple-500 bg-purple-50 text-purple-950 shadow-sm"
-                      : "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="block text-sm font-semibold">
-                    {item.label}
-                  </span>
-                  <span className="mt-1 block text-xs leading-5 text-gray-500">
-                    {item.description}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
+      <div
+        className={`overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-[0_32px_64px_-28px_rgba(91,33,182,0.14),0_20px_40px_-24px_rgba(9,9,11,0.12)] ring-1 ring-zinc-950/[0.04] ${
+          embedded ? '' : 'mb-2'
+        }`}
+      >
+        <div className="h-1 bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-500" aria-hidden="true" />
 
-          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">
-              Dimensions
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Width
-                <input
-                  type="number"
-                  value={width}
-                  onChange={(event) =>
-                    setWidth(clampDimension(Number(event.target.value)))
-                  }
-                  min="10"
-                  max={MAX_DIMENSION}
-                  disabled={preset === "square" || preset === "avatar"}
-                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
-                />
-              </label>
-              <label className="block text-sm font-medium text-gray-700">
-                Height
-                <input
-                  type="number"
-                  value={height}
-                  onChange={(event) =>
-                    setHeight(clampDimension(Number(event.target.value)))
-                  }
-                  min="10"
-                  max={MAX_DIMENSION}
-                  disabled={preset === "square" || preset === "avatar"}
-                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 font-mono text-sm text-gray-950 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:bg-gray-100 disabled:text-gray-400"
-                />
-              </label>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {[
-                { w: 400, h: 300, label: "400x300" },
-                { w: 800, h: 600, label: "800x600" },
-                { w: 1200, h: 630, label: "OG image" },
-                { w: 1920, h: 1080, label: "HD" },
-              ].map((size) => (
-                <button
-                  key={size.label}
-                  type="button"
-                  onClick={() => {
-                    setWidth(size.w);
-                    setHeight(size.h);
-                    trackEvent("demo_dimension_select", {
-                      event_category: "demo",
-                      event_label: size.label,
-                      width: size.w,
-                      height: size.h,
-                    });
-                  }}
-                  disabled={preset === "square" || preset === "avatar"}
-                  className="rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {size.label}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">
-              Colors
-            </h3>
-            <div className="mb-4 flex flex-wrap gap-2">
-              {colorPresets.map((color) => (
-                <button
-                  key={color.label}
-                  type="button"
-                  onClick={() => {
-                    applyColorPreset(color.bg, color.fg);
-                    trackEvent("demo_color_select", {
-                      event_category: "demo",
-                      event_label: color.label,
-                    });
-                  }}
-                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition ${
-                    bgColor === color.bg
-                      ? "border-purple-500 bg-purple-50 text-purple-800"
-                      : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <span
-                    className="h-4 w-4 rounded-full border border-black/10"
-                    style={{ backgroundColor: `#${color.bg}` }}
-                  />
-                  {color.label}
-                </button>
-              ))}
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Background
-                <div className="mt-2 flex gap-2">
-                  <input
-                    type="color"
-                    value={`#${sanitizeHex(bgColor, "7C3AED")}`}
-                    onChange={(event) =>
-                      setBgColor(sanitizeHex(event.target.value, "7C3AED"))
-                    }
-                    className="h-11 w-14 rounded border border-gray-300 bg-white"
-                    aria-label="Choose background color"
-                  />
-                  <input
-                    type="text"
-                    value={`#${bgColor}`}
-                    onChange={(event) =>
-                      setBgColor(
-                        event.target.value.replace("#", "").toUpperCase(),
-                      )
-                    }
-                    onBlur={() => setBgColor(sanitizeHex(bgColor, "7C3AED"))}
-                    className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
-                  />
-                </div>
-              </label>
-              <label className="block text-sm font-medium text-gray-700">
-                Text
-                <div className="mt-2 flex gap-2">
-                  <input
-                    type="color"
-                    value={`#${sanitizeHex(textColor, "FFFFFF")}`}
-                    onChange={(event) =>
-                      setTextColor(sanitizeHex(event.target.value, "FFFFFF"))
-                    }
-                    className="h-11 w-14 rounded border border-gray-300 bg-white"
-                    aria-label="Choose text color"
-                  />
-                  <input
-                    type="text"
-                    value={`#${textColor}`}
-                    onChange={(event) =>
-                      setTextColor(
-                        event.target.value.replace("#", "").toUpperCase(),
-                      )
-                    }
-                    onBlur={() =>
-                      setTextColor(sanitizeHex(textColor, "FFFFFF"))
-                    }
-                    className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
-                  />
-                </div>
-              </label>
-            </div>
-          </section>
-
-          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-            <label
-              htmlFor="custom-text"
-              className="block text-sm font-semibold uppercase tracking-wide text-gray-700"
-            >
-              Custom text
-            </label>
-            <input
-              id="custom-text"
-              type="text"
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              className="mt-3 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
-              placeholder="Leave empty for dimensions"
-            />
-          </section>
-
-          {preset === "animated" && (
-            <section className="rounded-lg border border-purple-200 bg-purple-50 p-5">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-purple-900">
-                Animation style
-              </h3>
-              <div
-                className="grid grid-cols-2 gap-2"
-                role="radiogroup"
-                aria-label="Animation style"
-              >
-                {animationTypes.map((item) => (
+        <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(340px,420px)]">
+          <div className="space-y-4 border-b border-zinc-100 p-4 sm:p-5 lg:border-b-0 lg:border-r">
+            <section>
+              <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-400">
+                Placeholder type
+              </p>
+              <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Placeholder preset">
+                {presets.map((item) => (
                   <button
                     key={item.id}
                     type="button"
+                    onClick={() => selectPreset(item.id)}
                     role="radio"
-                    aria-checked={animationType === item.id}
-                    onClick={() => {
-                      setAnimationType(item.id);
-                      trackEvent("demo_animation_select", {
-                        event_category: "demo",
-                        event_label: item.label,
-                        animation_type: item.id,
-                      });
-                    }}
-                    className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
-                      animationType === item.id
-                        ? "border-purple-500 bg-white font-semibold text-purple-900 shadow-sm"
-                        : "border-purple-100 bg-white/60 text-purple-800 hover:bg-white"
+                    aria-checked={preset === item.id}
+                    className={`rounded-lg border px-1.5 py-2 text-center text-[0.65rem] font-semibold leading-tight transition sm:py-2.5 sm:text-xs ${
+                      preset === item.id
+                        ? 'border-violet-600 bg-violet-600 text-white shadow-sm'
+                        : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300 hover:bg-white'
                     }`}
                   >
                     {item.label}
@@ -450,65 +306,217 @@ export default function LiveDemoEnhanced() {
                 ))}
               </div>
             </section>
-          )}
 
-          {preset === "thumbnail" && (
-            <section className="rounded-lg border border-blue-200 bg-blue-50 p-5">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-blue-950">
-                Thumbnail options
+            <section>
+              <h3 className="mb-2 text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-400">
+                Dimensions
               </h3>
-              <div className="grid gap-4">
-                <label className="block text-sm font-medium text-blue-950">
-                  Category label
+              <div className="grid grid-cols-2 gap-2">
+                <label className="text-xs font-medium text-zinc-600">
+                  Width
                   <input
-                    type="text"
-                    value={thumbnailLabel}
-                    onChange={(event) => setThumbnailLabel(event.target.value)}
-                    className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                    placeholder="Blog Post, Guide, Tutorial"
+                    type="number"
+                    value={width}
+                    onChange={(event) => setWidth(clampDimension(Number(event.target.value), 800))}
+                    min="10"
+                    max={MAX_DIMENSION}
+                    className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
                   />
                 </label>
-                <div>
-                  <span className="mb-2 block text-sm font-medium text-blue-950">
-                    Safe-zone background style
-                  </span>
-                  <div
-                    className="grid grid-cols-2 gap-2"
-                    role="radiogroup"
-                    aria-label="Thumbnail style"
+                <label className="text-xs font-medium text-zinc-600">
+                  Height
+                  <input
+                    type="number"
+                    value={height}
+                    onChange={(event) => setHeight(clampDimension(Number(event.target.value), 450))}
+                    min="10"
+                    max={MAX_DIMENSION}
+                    disabled={isSquareOrAvatar}
+                    className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100 disabled:opacity-50"
+                  />
+                </label>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {[
+                  { w: 400, h: 300, label: '400×300' },
+                  { w: 800, h: 450, label: '800×450' },
+                  { w: 1200, h: 630, label: 'OG' },
+                  { w: 1920, h: 1080, label: 'HD' },
+                ].map((size) => (
+                  <button
+                    key={size.label}
+                    type="button"
+                    onClick={() => {
+                      setWidth(size.w);
+                      setHeight(size.h);
+                      trackEvent('demo_dimension_select', {
+                        event_category: 'demo',
+                        event_label: size.label,
+                        width: size.w,
+                        height: size.h,
+                      });
+                    }}
+                    disabled={isSquareOrAvatar}
+                    className="rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {thumbnailStyles.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        role="radio"
-                        aria-checked={thumbnailStyle === item.id}
-                        onClick={() => setThumbnailStyle(item.id)}
-                        className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
-                          thumbnailStyle === item.id
-                            ? "border-blue-500 bg-white font-semibold text-blue-950 shadow-sm"
-                            : "border-blue-100 bg-white/70 text-blue-900 hover:bg-white"
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
+                    {size.label}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {preset !== 'skeleton' && preset !== 'blur' && (
+              <section>
+                <label htmlFor="generator-label" className="text-xs font-medium text-zinc-600">
+                  Label
+                  <input
+                    id="generator-label"
+                    type="text"
+                    value={text}
+                    onChange={(event) => setText(event.target.value)}
+                    className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
+                    placeholder="Product Image"
+                  />
+                </label>
+              </section>
+            )}
+
+            {showColorControls && (
+              <section>
+                <h3 className="mb-2 text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-400">
+                  Colors
+                </h3>
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {colorPresets.map((color) => (
+                    <button
+                      key={color.label}
+                      type="button"
+                      onClick={() => {
+                        applyColorPreset(color.bg, color.fg);
+                        trackEvent('demo_color_select', {
+                          event_category: 'demo',
+                          event_label: color.label,
+                        });
+                      }}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition ${
+                        bgColor === color.bg
+                          ? 'border-violet-600 bg-violet-50 text-violet-800'
+                          : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50'
+                      }`}
+                    >
+                      <span
+                        className="h-3.5 w-3.5 rounded-full border border-black/10"
+                        style={{ backgroundColor: `#${color.bg}` }}
+                      />
+                      {color.label}
+                    </button>
+                  ))}
                 </div>
-                <div>
-                  <span className="mb-2 block text-sm font-medium text-blue-950">
-                    Theme
-                  </span>
-                  <div className="flex flex-wrap gap-2">
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label className="text-xs font-medium text-zinc-600">
+                    Background
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="color"
+                        value={`#${sanitizeHex(bgColor, '7C3AED')}`}
+                        onChange={(event) => setBgColor(sanitizeHex(event.target.value, '7C3AED'))}
+                        className="h-10 w-12 rounded border border-zinc-200 bg-white"
+                        aria-label="Choose background color"
+                      />
+                      <input
+                        type="text"
+                        value={`#${bgColor}`}
+                        onChange={(event) =>
+                          setBgColor(event.target.value.replace('#', '').toUpperCase())
+                        }
+                        onBlur={() => setBgColor(sanitizeHex(bgColor, '7C3AED'))}
+                        className="min-w-0 flex-1 rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                      />
+                    </div>
+                  </label>
+                  <label className="text-xs font-medium text-zinc-600">
+                    Text color
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="color"
+                        value={`#${sanitizeHex(textColor, 'FFFFFF')}`}
+                        onChange={(event) => setTextColor(sanitizeHex(event.target.value, 'FFFFFF'))}
+                        className="h-10 w-12 rounded border border-zinc-200 bg-white"
+                        aria-label="Choose text color"
+                      />
+                      <input
+                        type="text"
+                        value={`#${textColor}`}
+                        onChange={(event) =>
+                          setTextColor(event.target.value.replace('#', '').toUpperCase())
+                        }
+                        onBlur={() => setTextColor(sanitizeHex(textColor, 'FFFFFF'))}
+                        className="min-w-0 flex-1 rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                      />
+                    </div>
+                  </label>
+                </div>
+              </section>
+            )}
+
+            {preset === 'animated' && (
+              <section className="rounded-lg border border-violet-200 bg-violet-50/80 p-3">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-900">
+                  Animation style
+                </h3>
+                <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Animation style">
+                  {animationTypes.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={animationType === item.id}
+                      onClick={() => {
+                        setAnimationType(item.id);
+                        trackEvent('demo_animation_select', {
+                          event_category: 'demo',
+                          event_label: item.label,
+                          animation_type: item.id,
+                        });
+                      }}
+                      className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${
+                        animationType === item.id
+                          ? 'border-violet-600 bg-violet-600 text-white'
+                          : 'border-violet-100 bg-white text-violet-800 hover:border-violet-200'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {preset === 'thumbnail' && (
+              <section className="rounded-lg border border-blue-200 bg-blue-50/80 p-3">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-950">
+                  Thumbnail options
+                </h3>
+                <div className="space-y-3">
+                  <label className="block text-xs font-medium text-blue-950">
+                    Category label
+                    <input
+                      type="text"
+                      value={thumbnailLabel}
+                      onChange={(event) => setThumbnailLabel(event.target.value)}
+                      className="mt-1 w-full rounded-md border border-blue-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    />
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
                     {thumbnailThemes.map((item) => (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => setThumbnailTheme(item.id)}
-                        className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                        className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${
                           thumbnailTheme === item.id
-                            ? "border-blue-500 bg-white text-blue-950 shadow-sm"
-                            : "border-blue-100 bg-white/70 text-blue-900 hover:bg-white"
+                            ? 'border-blue-600 bg-blue-600 text-white'
+                            : 'border-blue-100 bg-white text-blue-900 hover:border-blue-200'
                         }`}
                       >
                         {item.label}
@@ -516,174 +524,111 @@ export default function LiveDemoEnhanced() {
                     ))}
                   </div>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="block text-sm font-medium text-blue-950">
-                    Background gradient (hex, comma-separated)
+              </section>
+            )}
+
+            {preset === 'ai' && (
+              <section className="rounded-lg border border-indigo-200 bg-indigo-50/80 p-3">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-900">
+                  Pattern context
+                </h3>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label className="text-xs font-medium text-indigo-950">
+                    Context
                     <input
                       type="text"
-                      value={thumbnailBg}
-                      onChange={(event) => setThumbnailBg(event.target.value)}
-                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                      placeholder="7C3AED,3B82F6"
+                      value={aiContext}
+                      onChange={(event) => setAiContext(event.target.value)}
+                      className="mt-1 w-full rounded-md border border-indigo-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                     />
                   </label>
-                  <label className="block text-sm font-medium text-blue-950">
-                    Accent color (hex)
+                  <label className="text-xs font-medium text-indigo-950">
+                    Mood
                     <input
                       type="text"
-                      value={thumbnailAccent}
-                      onChange={(event) =>
-                        setThumbnailAccent(
-                          event.target.value
-                            .replace(/#/g, "")
-                            .replace(/[^0-9a-fA-F]/g, "")
-                            .slice(0, 6)
-                            .toUpperCase(),
-                        )
-                      }
-                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                      placeholder="F97316"
-                    />
-                  </label>
-                  <label className="block text-sm font-medium text-blue-950">
-                    Text color (hex)
-                    <input
-                      type="text"
-                      value={thumbnailColor}
-                      onChange={(event) =>
-                        setThumbnailColor(
-                          event.target.value
-                            .replace(/#/g, "")
-                            .replace(/[^0-9a-fA-F]/g, "")
-                            .slice(0, 6)
-                            .toUpperCase(),
-                        )
-                      }
-                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                      placeholder="FFFFFF"
-                    />
-                  </label>
-                  <label className="block text-sm font-medium text-blue-950">
-                    Seed (optional)
-                    <input
-                      type="text"
-                      value={thumbnailSeed}
-                      onChange={(event) => setThumbnailSeed(event.target.value)}
-                      className="mt-2 w-full rounded-lg border border-blue-200 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                      placeholder="campaign-spring-launch"
+                      value={aiMood}
+                      onChange={(event) => setAiMood(event.target.value)}
+                      className="mt-1 w-full rounded-md border border-indigo-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                     />
                   </label>
                 </div>
-              </div>
-            </section>
-          )}
+              </section>
+            )}
 
-          {preset === "ai" && (
-            <section className="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-indigo-900">
-                Pattern context
-              </h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="block text-sm font-medium text-indigo-950">
-                  Context
-                  <input
-                    type="text"
-                    value={aiContext}
-                    onChange={(event) => setAiContext(event.target.value)}
-                    className="mt-2 w-full rounded-lg border border-indigo-200 px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
-                    placeholder="e-commerce, healthcare, tech"
-                  />
-                </label>
-                <label className="block text-sm font-medium text-indigo-950">
-                  Mood
-                  <input
-                    type="text"
-                    value={aiMood}
-                    onChange={(event) => setAiMood(event.target.value)}
-                    className="mt-2 w-full rounded-lg border border-indigo-200 px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
-                    placeholder="minimal, calm, professional"
-                  />
-                </label>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2.5">
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-500">
+                  API URL
+                </span>
+                <button
+                  type="button"
+                  onClick={copyToClipboard}
+                  className="inline-flex shrink-0 min-h-8 min-w-[4.25rem] items-center justify-center rounded-md border border-zinc-200 bg-white px-2.5 text-xs font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50"
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
               </div>
-            </section>
-          )}
-        </div>
+              <code className="block break-all font-mono text-[0.7rem] leading-5 text-zinc-800 sm:text-xs" aria-live="polite">
+                {imageUrl}
+              </code>
+            </div>
+          </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-8 lg:self-start">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 bg-gray-50 px-5 py-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900">
-                  Live preview
-                </h3>
-                <span className="font-mono text-xs text-gray-500">
-                  {clampDimension(width)}x{clampDimension(height)}
+          <aside className="flex flex-col bg-gradient-to-br from-violet-50/70 via-zinc-50 to-indigo-50/40">
+            <div className="border-b border-zinc-100 px-4 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-sm font-semibold text-zinc-900">Live preview</h3>
+                <span className="font-mono text-xs text-zinc-500">
+                  {safeWidth} × {safeHeight} · {presetLabel}
                 </span>
               </div>
             </div>
-            <div className="relative flex min-h-[360px] items-center justify-center bg-[radial-gradient(circle_at_1px_1px,#d1d5db_1px,transparent_0)] p-8 [background-size:24px_24px]">
+            <div className="relative flex min-h-[280px] flex-1 items-center justify-center p-5 sm:min-h-[360px] sm:p-8">
+              <div
+                className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] [background-size:18px_18px]"
+                aria-hidden="true"
+              />
               {imageLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/75">
-                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-purple-600" />
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-200 border-t-violet-600" />
                 </div>
               )}
               <img
                 src={imageUrl}
-                alt={`Generated placeholder${text ? ` with text: ${text}` : ""}`}
-                className="max-h-[420px] max-w-full rounded-lg border border-gray-200 bg-white shadow-xl transition-opacity duration-200"
+                alt={`Generated ${presetLabel} placeholder${text ? `: ${text}` : ''}`}
                 onLoad={() => setImageLoading(false)}
-                style={{ opacity: imageLoading ? 0.55 : 1 }}
+                style={
+                  isSquareOrAvatar ? undefined : { aspectRatio: `${safeWidth} / ${safeHeight}` }
+                }
+                className={`relative z-[1] max-h-[min(72%,320px)] max-w-full object-contain shadow-[0_12px_32px_-12px_rgba(9,9,11,0.28)] ring-1 ring-black/10 transition-opacity duration-200 ${
+                  isSquareOrAvatar
+                    ? 'aspect-square max-h-[min(52%,200px)] max-w-[min(52%,200px)] rounded-full'
+                    : 'rounded-lg'
+                }`}
               />
             </div>
-          </div>
-
-          <div className="rounded-xl border border-gray-200 bg-gray-950 p-5 shadow-sm">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h3 className="text-sm font-semibold text-white">
-                Generated URL
-              </h3>
-              <button
-                type="button"
-                onClick={copyToClipboard}
-                className={`rounded-md px-3 py-2 text-sm font-semibold transition ${
-                  copied
-                    ? "bg-emerald-500 text-white"
-                    : "bg-white text-gray-950 hover:bg-gray-100"
-                }`}
-              >
-                {copied ? "Copied" : "Copy URL"}
-              </button>
-            </div>
-            <code
-              className="block break-all rounded-lg bg-black px-4 py-3 font-mono text-sm leading-6 text-emerald-300"
-              aria-live="polite"
-            >
-              {imageUrl}
-            </code>
-          </div>
-
-          {recentUrls.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h3 className="mb-3 text-sm font-semibold text-gray-900">
-                Recent URLs
-              </h3>
-              <div className="space-y-2">
-                {recentUrls.map((url) => (
-                  <button
-                    key={url}
-                    type="button"
-                    onClick={() => navigator.clipboard.writeText(url)}
-                    className="block w-full truncate rounded-lg bg-gray-50 px-3 py-2 text-left font-mono text-xs text-gray-600 transition hover:bg-gray-100"
-                    title="Click to copy"
-                  >
-                    {url}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </aside>
+          </aside>
+        </div>
       </div>
+
+      {recentUrls.length > 0 && (
+        <div className="mt-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm font-semibold text-zinc-900">Recent URLs</h3>
+          <div className="space-y-2">
+            {recentUrls.map((url) => (
+              <button
+                key={url}
+                type="button"
+                onClick={() => navigator.clipboard.writeText(url)}
+                className="block w-full truncate rounded-lg bg-zinc-50 px-3 py-2 text-left font-mono text-xs text-zinc-600 transition hover:bg-zinc-100"
+                title="Click to copy"
+              >
+                {url}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

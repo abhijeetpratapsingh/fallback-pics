@@ -5,16 +5,20 @@ export interface Props {
   title: string;
   description?: string;
   keywords?: string;
+  canonical?: string;
+  ogImage?: string;
 }
 
 const {
   title,
   description = 'Documentation for fallback.pics fallback image infrastructure.',
   keywords = 'fallback.pics docs, placeholder image api docs, fallback image api',
+  canonical,
+  ogImage,
 } = Astro.props;
 ---
 
-<Layout title={title} description={description} keywords={keywords}>
+<Layout title={title} description={description} keywords={keywords} canonical={canonical} ogImage={ogImage}>
   <main id="main-content" class="docs-shell">
     <slot />
   </main>

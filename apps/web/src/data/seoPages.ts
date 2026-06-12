@@ -303,13 +303,8 @@ export const seoPages: SeoPage[] = [
       {
         heading: 'Use the generator without duplicate content',
         body: [
-          'This page focuses on creating and copying a working placeholder image URL. The Placeholder Image API page covers API concepts, comparisons, and production tradeoffs in more detail.'
-        ],
-        bullets: [
-          'Size: 800x450',
-          'Text: Placeholder Image',
-          'Background color: #7C3AED',
-          'Text color: #FFFFFF'
+          'This page focuses on creating and copying a working placeholder image URL. The Placeholder Image API page covers API concepts, comparisons, and production tradeoffs in more detail.',
+          'Default example: 800×450, text “Placeholder Image”, background #7C3AED, text color #FFFFFF.'
         ]
       }
     ],

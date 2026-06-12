@@ -26,6 +26,7 @@ const {
 } = Astro.props;
 
 const hasHeroPanel = Astro.slots.has('hero-panel');
+const hasFeatured = Astro.slots.has('featured');
 const hasSidebar = Astro.slots.has('sidebar');
 const hasCta = Astro.slots.has('cta');
 ---
@@ -47,6 +48,14 @@ const hasCta = Astro.slots.has('cta');
       </div>
       {hasHeroPanel && <slot name="hero-panel" />}
     </section>
+
+    {hasFeatured && (
+      <section class="content-featured">
+        <div class="content-featured__inner">
+          <slot name="featured" />
+        </div>
+      </section>
+    )}
 
     <section class="content-body">
       <div class="content-body__grid" data-sidebar={hasSidebar ? 'true' : 'false'}>
@@ -130,8 +139,18 @@ const hasCta = Astro.slots.has('cta');
     line-height: 1.75;
   }
 
+  .content-featured__inner {
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+    padding: 0 0 2.5rem;
+  }
+
   .content-body {
     padding: 3rem 0 5rem;
+  }
+
+  .content-featured + .content-body {
+    padding-top: 0;
   }
 
   .content-body__grid {

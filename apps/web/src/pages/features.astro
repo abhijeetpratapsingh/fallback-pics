@@ -2,93 +2,307 @@
 import DocsLayout from '../layouts/DocsLayout.astro';
 
 const baseUrl = 'https://fallback.pics/api/v1';
+const canonical = 'https://fallback.pics/features/';
 
 const navItems = [
   { href: '#platform', label: 'Platform' },
+  { href: '#presets', label: 'Presets' },
   { href: '#capabilities', label: 'Capabilities' },
+  { href: '#performance', label: 'Performance' },
   { href: '#comparison', label: 'Comparison' },
   { href: '#use-cases', label: 'Use cases' },
+  { href: '#integrations', label: 'Integrations' },
+  { href: '#faq', label: 'FAQ' },
   { href: '#enterprise', label: 'Enterprise' },
+];
+
+const platformMetrics = [
+  { value: '9', label: 'purpose-built preset routes' },
+  { value: '10–4000', label: 'pixel dimension range' },
+  { value: '5', label: 'output formats (SVG + raster)' },
+  { value: '<50ms', label: 'edge latency target' },
+  { value: '1 year', label: 'immutable cache policy' },
+  { value: '0', label: 'API keys for public routes' },
+];
+
+const presets = [
+  {
+    name: 'Standard',
+    category: 'Core',
+    route: '/api/v1/800x450?text=Product+Image',
+    url: `${baseUrl}/800x450?text=Product+Image`,
+    detail: 'Dimensioned placeholders for cards, grids, and missing product media.',
+  },
+  {
+    name: 'Thumbnail',
+    category: 'Content',
+    route: '/api/v1/thumbnail/1200x630?text=Blog+Post+Title&style=soft&label=Guide',
+    url: `${baseUrl}/thumbnail/1200x630?text=Blog+Post+Title&style=soft&label=Guide`,
+    detail: 'Featured-image style art with safe-zone decoration, themes, and category pills.',
+  },
+  {
+    name: 'Avatar',
+    category: 'People',
+    route: '/api/v1/avatar/128?text=JD',
+    url: `${baseUrl}/avatar/128?text=JD`,
+    detail: 'Circular initials for users, teams, org logos, and comment authors.',
+  },
+  {
+    name: 'Square',
+    category: 'Catalog',
+    route: '/api/v1/square/400?text=Tile',
+    url: `${baseUrl}/square/400?text=Tile`,
+    detail: 'Square tiles for ecommerce grids, collections, and inventory slots.',
+  },
+  {
+    name: 'Banner',
+    category: 'Marketing',
+    route: '/api/v1/banner/1200x400?text=Campaign',
+    url: `${baseUrl}/banner/1200x400?text=Campaign`,
+    detail: 'Wide hero banners for campaigns, docs headers, and landing previews.',
+  },
+  {
+    name: 'Skeleton',
+    category: 'Loading',
+    route: '/api/v1/skeleton/640x360',
+    url: `${baseUrl}/skeleton/640x360`,
+    detail: 'Static skeleton blocks that preserve layout while async media resolves.',
+  },
+  {
+    name: 'Animated',
+    category: 'Loading',
+    route: '/api/v1/animated/skeleton/640x360',
+    url: `${baseUrl}/animated/skeleton/640x360`,
+    detail: 'Shimmer, pulse, wave, gradient, and dot motion for loading states.',
+  },
+  {
+    name: 'Blur',
+    category: 'Progressive',
+    route: '/api/v1/blur/800x450',
+    url: `${baseUrl}/blur/800x450`,
+    detail: 'Soft blurred placeholders before high-resolution media arrives.',
+  },
+  {
+    name: 'Pattern',
+    category: 'Decorative',
+    route: '/api/v1/ai/800x450?context=saas&mood=minimal',
+    url: `${baseUrl}/ai/800x450?context=saas&mood=minimal`,
+    detail: 'Deterministic decorative backgrounds with optional context and mood.',
+  },
+];
+
+const pillars = [
+  {
+    title: 'URL-native API',
+    detail: 'Every fallback is a readable GET URL. No SDK, upload pipeline, or auth handshake for public routes.',
+    snippet: '/api/v1/800x450?text=Product',
+    tone: 'violet',
+  },
+  {
+    title: 'Deterministic output',
+    detail: 'Same URL always returns the same image. Safe to cache at the CDN, embed in emails, and review in PRs.',
+    snippet: 'Cache-Control: immutable',
+    tone: 'blue',
+  },
+  {
+    title: 'Brand-safe controls',
+    detail: 'Path colors, labels, thumbnail themes, and preset behavior stay visible and versionable in your codebase.',
+    snippet: '/api/v1/800x450/18181B/FFFFFF?text=Acme',
+    tone: 'green',
+  },
+  {
+    title: 'Broken-image recovery',
+    detail: 'Swap failed src values with dimension-matched fallbacks via onerror handlers or framework error boundaries.',
+    snippet: 'onerror → fallback.pics URL',
+    tone: 'orange',
+  },
 ];
 
 const capabilities = [
   {
-    title: 'URL-based image API',
-    detail: 'Every fallback is encoded as a readable URL, so it works in HTML, CSS, React, CMS content, emails, and native clients.',
-    example: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
+    title: 'Multi-format delivery',
+    detail: 'Default SVG for crisp UI. Append .png, .jpg, .jpeg, or .webp when raster output is required.',
+    example: '/api/v1/800x450.png?text=Raster',
+    url: `${baseUrl}/800x450.png?text=Raster`,
   },
   {
-    title: 'Deterministic image output',
-    detail: 'Generated images are small, cacheable, inspectable by URL, and available as default SVG or raster PNG, JPEG, and WebP.',
-    example: 'Content-Type: image/webp',
+    title: 'Blog thumbnail engine',
+    detail: 'Generate OG-safe featured images from post titles with style, theme, label, and deterministic seed options.',
+    example: '/api/v1/thumbnail/1200x630?style=rings&theme=blue&label=Blog',
+    url: `${baseUrl}/thumbnail/1200x630?style=rings&theme=blue&label=Blog&text=Release+Notes`,
   },
   {
-    title: 'Presets for product states',
-    detail: 'Use thumbnail, avatar, banner, skeleton, blur, animated, contextual, and chart routes for common placeholder surfaces.',
-    example: '/api/v1/thumbnail/1200x630?text=Blog+Post',
+    title: 'Chart placeholders',
+    detail: 'Reserve analytics card space with bar, line, pie, area, donut, scatter, radar, and heatmap skeletons.',
+    example: '/api/v1/chart/bar/800x400',
+    url: `${baseUrl}/chart/bar/800x400`,
   },
   {
-    title: 'Blog thumbnail generation',
-    detail: 'Create featured-image style thumbnails from post titles with safe-zone background elements, category labels, themes, and deterministic variation.',
-    example: '/api/v1/thumbnail/1200x630?style=soft&label=Guide',
+    title: 'Retina-ready sizing',
+    detail: 'Optional retina multiplier for sharper raster output on high-DPI screens without changing layout dimensions.',
+    example: '/api/v1/avatar/128?text=JD&retina=2',
+    url: `${baseUrl}/avatar/128?text=JD&retina=2`,
   },
   {
-    title: 'Brand-safe customization',
-    detail: 'Control dimensions, path-based background and foreground colors, label copy, and selected route behavior from the URL.',
-    example: '/api/v1/800x450/18181B/FFFFFF?text=Fallback',
+    title: 'CORS-enabled responses',
+    detail: 'Use fallbacks in canvas previews, design tools, and cross-origin dashboards without proxy workarounds.',
+    example: 'Access-Control-Allow-Origin: *',
+    url: `${baseUrl}/640x360?text=Preview`,
   },
   {
-    title: 'Edge-first delivery',
-    detail: 'The active worker returns cache-friendly responses with CORS enabled and immutable cache headers for repeated delivery.',
-    example: 'Cache-Control: public, max-age=31536000',
+    title: 'Explicit API errors',
+    detail: 'Invalid dimensions and unknown paths return structured API errors—not homepage HTML—so monitoring stays clean.',
+    example: '400 Invalid dimensions',
+    url: `${baseUrl}/800x450?text=Valid`,
+  },
+];
+
+const performanceItems = [
+  {
+    title: 'Edge-first generation',
+    body: 'Images are generated at the Cloudflare edge. Repeat requests behave like static assets, not application round-trips.',
   },
   {
-    title: 'Privacy-conscious integration',
-    detail: 'No client SDK or source image upload is required. Avoid placing secrets or regulated data in public URL labels.',
-    example: 'GET-only public routes',
+    title: 'SVG-first defaults',
+    body: 'Vector output stays tiny and sharp at any zoom. Raster formats are available when your pipeline requires bytes.',
+  },
+  {
+    title: 'Long-lived caching',
+    body: 'Deterministic URLs ship with immutable cache headers so product grids, emails, and CMS previews stay fast globally.',
+  },
+  {
+    title: 'Privacy by design',
+    body: 'No cookies, client SDK, or image uploads. Keep labels user-facing—avoid secrets or regulated data in URL text.',
   },
 ];
 
 const comparisonRows = [
-  { feature: 'No SDK required', fallback: 'Yes', generic: 'Usually' },
-  { feature: 'Deterministic URL surface', fallback: 'Yes', generic: 'Varies' },
-  { feature: 'SVG plus raster formats', fallback: 'Yes', generic: 'Varies' },
-  { feature: 'Avatar and state presets', fallback: 'Yes', generic: 'Partial' },
-  { feature: 'Long-lived CDN caching', fallback: 'Yes', generic: 'Varies' },
-  { feature: 'Enterprise custom domains', fallback: 'Available by agreement', generic: 'Rare' },
+  { feature: 'No SDK or npm package', fallback: 'Yes', generic: 'Often required' },
+  { feature: 'Readable, deterministic URLs', fallback: 'Yes', generic: 'Varies' },
+  { feature: 'SVG plus PNG, JPEG, WebP', fallback: 'Yes', generic: 'Partial' },
+  { feature: 'Avatar, banner, skeleton presets', fallback: 'Yes', generic: 'Limited' },
+  { feature: 'Blog thumbnail generation', fallback: 'Yes', generic: 'Rare' },
+  { feature: 'Broken-image onerror patterns', fallback: 'Documented', generic: 'Ad hoc' },
+  { feature: 'Immutable CDN caching', fallback: 'Yes', generic: 'Varies' },
+  { feature: 'Enterprise custom domains', fallback: 'By agreement', generic: 'Rare' },
 ];
 
 const useCases = [
-  { title: 'E-commerce', detail: 'Protect product grids, collections, recommendations, and transactional email previews from missing media.' },
-  { title: 'SaaS dashboards', detail: 'Keep analytics cards, profile surfaces, org logos, and chart skeletons visually stable.' },
-  { title: 'Marketplaces', detail: 'Standardize seller inventory images, avatars, listings, and pending moderation states.' },
-  { title: 'Mobile apps', detail: 'Use URL fallbacks in native views without shipping a separate placeholder asset bundle.' },
+  {
+    title: 'E-commerce catalogs',
+    detail: 'Protect product grids, variant tiles, recommendations, and transactional email previews from missing vendor media.',
+    link: '/product-image-placeholder/',
+    linkLabel: 'Product placeholder guide',
+  },
+  {
+    title: 'SaaS dashboards',
+    detail: 'Stabilize analytics cards, org logos, chart skeletons, and profile surfaces while async data loads.',
+    link: '/skeleton-placeholder-generator/',
+    linkLabel: 'Skeleton placeholder guide',
+  },
+  {
+    title: 'Docs and blogs',
+    detail: 'Generate readable featured images and Open Graph thumbnails from titles without a design asset pipeline.',
+    link: '/blog/generate-blog-thumbnails-from-text/',
+    linkLabel: 'Blog thumbnail guide',
+  },
+  {
+    title: 'Broken image recovery',
+    detail: 'Swap failed image src values with dimension-matched fallbacks that explain the missing state to users.',
+    link: '/broken-image-fallback/',
+    linkLabel: 'Broken image fallback guide',
+  },
+  {
+    title: 'Marketplaces',
+    detail: 'Standardize seller inventory images, avatars, listings, and pending moderation states across listings.',
+    link: '/showcase/',
+    linkLabel: 'Browse showcase examples',
+  },
+  {
+    title: 'Mobile and native apps',
+    detail: 'Use URL fallbacks in WebViews and native image loaders without shipping a separate placeholder asset bundle.',
+    link: '/api/',
+    linkLabel: 'API reference',
+  },
 ];
+
+const integrations = [
+  { href: '/placeholder-image-generator/', label: 'Interactive generator' },
+  { href: '/docs/', label: 'Documentation' },
+  { href: '/api/', label: 'API reference' },
+  { href: '/showcase/', label: 'Live showcase gallery' },
+  { href: '/guides/react-image-fallback/', label: 'React image fallback' },
+  { href: '/guides/nextjs-image-fallback/', label: 'Next.js image fallback' },
+  { href: '/guides/img-onerror-fallback/', label: 'HTML onerror fallback' },
+  { href: '/blog/placeholder-image-api-url-syntax-guide/', label: 'URL syntax deep dive' },
+];
+
+const faqs = [
+  {
+    question: 'What makes fallback.pics different from placeholder.com-style services?',
+    answer: 'fallback.pics is built as production infrastructure: preset routes for real product states, blog thumbnails, immutable caching, explicit API errors, and guides for broken-image recovery—not just dimension labels.',
+  },
+  {
+    question: 'Do I need an API key?',
+    answer: 'No. Public GET routes under /api/v1 work without authentication. Enterprise deployments can add custom domains and support terms by agreement.',
+  },
+  {
+    question: 'Which preset should I start with?',
+    answer: 'Use standard width×height for general slots, avatar for people, thumbnail for blog/OG art, skeleton or animated for loaders, and blur for progressive image reveals.',
+  },
+  {
+    question: 'Can I use fallbacks in production emails and CMS fields?',
+    answer: 'Yes. Deterministic URLs cache globally and work anywhere an image URL is accepted—HTML, React, CSS background-image, Markdown, and rich text editors.',
+  },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'fallback.pics Features — Placeholder Image Infrastructure',
+  description:
+    'Explore fallback.pics features: URL-based image API, nine presets, SVG and raster formats, blog thumbnails, edge caching, and production-ready broken-image recovery.',
+  url: canonical,
+  isPartOf: { '@type': 'WebSite', name: 'fallback.pics', url: 'https://fallback.pics/' },
+};
 ---
 
 <DocsLayout
-  title="Features | fallback.pics"
-  description="Explore fallback.pics infrastructure capabilities: URL-based image fallbacks, SVG and raster output, presets, edge delivery, caching, privacy-conscious integration, and enterprise options."
+  title="Features — Placeholder Image API | fallback.pics"
+  description="Explore fallback.pics features: nine preset routes, SVG and raster formats, blog thumbnails, skeleton loaders, edge caching, and production-ready broken-image recovery."
+  keywords="placeholder image features, fallback image api, image placeholder service, broken image fallback, blog thumbnail generator, skeleton placeholder"
+  canonical={canonical}
+  ogImage={`${baseUrl}/thumbnail/1200x630?text=Features&style=soft&label=Product`}
 >
   <div class="features-page">
     <section class="features-hero">
       <div>
         <p class="features-eyebrow">Features</p>
-        <h1>Image fallback primitives for production interfaces.</h1>
+        <h1>Production image fallbacks, not placeholder clip art.</h1>
         <p>
-          Replace fragile placeholder assets with URL-addressable infrastructure that keeps product surfaces stable when source images fail, arrive late, or do not exist yet.
+          fallback.pics gives teams URL-addressable infrastructure for every missing-image state: product cards, avatars, blog thumbnails, skeleton loaders, blur previews, and broken-src recovery—cached at the edge like static assets.
         </p>
+        <div class="features-hero__actions">
+          <a class="features-hero__cta" href="/placeholder-image-generator/">Try the generator</a>
+          <a class="features-hero__link" href="/docs/">Read docs</a>
+          <a class="features-hero__link" href="/showcase/">View showcase</a>
+        </div>
       </div>
       <div class="features-hero__panel">
-        <span>Live route</span>
-        <img src={`${baseUrl}/800x450/18181B/FFFFFF?text=Fallback+Image`} alt="Generated fallback image preview" />
-        <code>/api/v1/800x450/18181B/FFFFFF?text=Fallback+Image</code>
+        <span>Live preview</span>
+        <img
+          src={`${baseUrl}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&label=Features&theme=purple`}
+          alt="fallback.pics thumbnail preset preview"
+          width="1200"
+          height="630"
+        />
+        <code>/api/v1/thumbnail/1200x630?style=soft&label=Features</code>
       </div>
     </section>
 
     <div class="features-grid">
       <aside class="features-sidebar" aria-label="Features navigation">
-        <span>Explore</span>
+        <span>On this page</span>
         {navItems.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
@@ -100,42 +314,103 @@ const useCases = [
             <p>Platform</p>
             <h2>Built for teams that cannot afford broken image states.</h2>
           </div>
+          <p class="features-lead">
+            One URL replaces fragile placeholder assets across web, mobile, email, and CMS surfaces. Generate once, cache globally, and standardize fallback behavior in design systems and code review.
+          </p>
           <div class="features-metric-grid">
-            <div>
-              <strong>4</strong>
-              <span>supported output formats</span>
-            </div>
-            <div>
-              <strong>GET</strong>
-              <span>simple public route surface</span>
-            </div>
-            <div>
-              <strong>1 year</strong>
-              <span>immutable cache policy</span>
-            </div>
+            {platformMetrics.map((metric) => (
+              <div>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
+              </div>
+            ))}
+          </div>
+          <div class="features-pillar-grid">
+            {pillars.map((pillar) => (
+              <div class={`features-pillar features-pillar--${pillar.tone}`}>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.detail}</p>
+                <code>{pillar.snippet}</code>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="presets" class="features-section">
+          <div class="features-section__header">
+            <p>Presets</p>
+            <h2>Nine routes for real product surfaces.</h2>
+          </div>
+          <p class="features-lead">
+            Each preset encodes layout, motion, or decoration so you do not rebuild avatars, thumbnail safe zones, or loader shimmer by hand. Click any card to open the live image.
+          </p>
+          <div class="features-preset-grid">
+            {presets.map((preset) => (
+              <a href={preset.url} target="_blank" rel="noreferrer" class="features-preset-card">
+                <div class="features-preset-card__media">
+                  <span class="features-preset-card__category">{preset.category}</span>
+                  <img src={preset.url} alt={`${preset.name} preset generated by fallback.pics`} loading="lazy" />
+                </div>
+                <div class="features-preset-card__body">
+                  <h3>{preset.name}</h3>
+                  <code>{preset.route}</code>
+                  <p>{preset.detail}</p>
+                </div>
+              </a>
+            ))}
           </div>
         </section>
 
         <section id="capabilities" class="features-section">
           <div class="features-section__header">
             <p>Capabilities</p>
-            <h2>Focused primitives, not a template feature list.</h2>
+            <h2>Everything you need beyond width × height.</h2>
           </div>
-          <div class="features-card-grid">
+          <div class="features-capability-grid">
             {capabilities.map((feature) => (
-              <div>
-                <h3>{feature.title}</h3>
-                <p>{feature.detail}</p>
-                <code>{feature.example}</code>
+              <article class="features-capability-card">
+                <a
+                  href={feature.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="features-capability-card__preview"
+                  aria-label={`Open live ${feature.title} preview`}
+                >
+                  <img src={feature.url} alt={`${feature.title} preview`} loading="lazy" />
+                </a>
+                <div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.detail}</p>
+                  <code>{feature.example}</code>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="performance" class="features-section">
+          <div class="features-section__header">
+            <p>Performance</p>
+            <h2>Fast enough to feel invisible in the UI.</h2>
+          </div>
+          <div class="features-perf-grid">
+            {performanceItems.map((item) => (
+              <div class="features-perf-card">
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
               </div>
             ))}
+          </div>
+          <div class="features-callout">
+            <strong>Operational tip:</strong>
+            Match fallback dimensions to the final image slot, keep URLs deterministic for repeated states, and prefer SVG unless your pipeline requires raster bytes.
           </div>
         </section>
 
         <section id="comparison" class="features-section">
           <div class="features-section__header">
             <p>Comparison</p>
-            <h2>Designed as infrastructure, not a design-time placeholder toy.</h2>
+            <h2>Infrastructure-minded, not a design-time toy.</h2>
           </div>
           <div class="features-table-wrap">
             <table class="features-table">
@@ -162,14 +437,42 @@ const useCases = [
         <section id="use-cases" class="features-section">
           <div class="features-section__header">
             <p>Use cases</p>
-            <h2>Where fallback infrastructure shows up.</h2>
+            <h2>Where fallback infrastructure shows up first.</h2>
           </div>
           <div class="features-usecase-grid">
             {useCases.map((item) => (
-              <div>
+              <article class="features-use-card">
                 <h3>{item.title}</h3>
                 <p>{item.detail}</p>
-              </div>
+                <a href={item.link}>{item.linkLabel} →</a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="integrations" class="features-section">
+          <div class="features-section__header">
+            <p>Integrations</p>
+            <h2>Start building in your stack.</h2>
+          </div>
+          <div class="features-links-grid">
+            {integrations.map((link) => (
+              <a href={link.href} class="features-link-card">{link.label}</a>
+            ))}
+          </div>
+        </section>
+
+        <section id="faq" class="features-section">
+          <div class="features-section__header">
+            <p>FAQ</p>
+            <h2>Common feature questions.</h2>
+          </div>
+          <div class="features-faq-list">
+            {faqs.map((faq) => (
+              <article class="features-faq-item">
+                <h3>{faq.question}</h3>
+                <p>{faq.answer}</p>
+              </article>
             ))}
           </div>
         </section>
@@ -178,14 +481,21 @@ const useCases = [
           <div class="features-final-cta">
             <div>
               <h2>Standardize image fallbacks across your product.</h2>
-              <p>For enterprise deployments, use fallback.pics with custom domains, volume terms, support windows, and SLA commitments defined by agreement.</p>
+              <p>
+                Start with one high-traffic image slot, then expand into team conventions, showcase-approved URLs, and enterprise custom domains with support windows and SLA commitments by agreement.
+              </p>
             </div>
-            <a href="/#enterprise">View Enterprise</a>
+            <div class="features-final-cta__actions">
+              <a href="/placeholder-image-generator/">Open generator</a>
+              <a href="mailto:support@fallback.pics?subject=Enterprise%20fallback.pics" class="features-final-cta__secondary">Contact sales</a>
+            </div>
           </div>
         </section>
       </article>
     </div>
   </div>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </DocsLayout>
 
 <style>
@@ -197,7 +507,7 @@ const useCases = [
 
   .features-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.46fr);
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.48fr);
     gap: 2rem;
     align-items: end;
     border-bottom: 1px solid var(--color-border);
@@ -206,7 +516,8 @@ const useCases = [
 
   .features-eyebrow,
   .features-section__header p,
-  .features-sidebar span {
+  .features-sidebar span,
+  .features-preset-card__category {
     margin: 0;
     color: var(--color-brand-hover);
     font-size: 0.75rem;
@@ -216,13 +527,13 @@ const useCases = [
   }
 
   .features-hero h1 {
-    max-width: 58rem;
+    max-width: 54rem;
     margin: 1rem 0 0;
     color: var(--color-text);
-    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-size: clamp(2.35rem, 5vw, 4.25rem);
     font-weight: 650;
     letter-spacing: 0;
-    line-height: 0.98;
+    line-height: 1.02;
   }
 
   .features-hero p:not(.features-eyebrow) {
@@ -233,22 +544,50 @@ const useCases = [
     line-height: 1.75;
   }
 
-  .features-hero__panel,
-  .features-metric-grid > div,
-  .features-card-grid > div,
-  .features-table-wrap,
-  .features-usecase-grid > div,
-  .features-final-cta {
-    border: 1px solid var(--color-border);
+  .features-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .features-hero__cta,
+  .features-final-cta a:first-child {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
     border-radius: 0.5rem;
+    background: var(--color-brand);
+    color: var(--color-inverse-text);
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  .features-hero__link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
     background: var(--color-inverse-text);
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0 1rem;
+    text-decoration: none;
   }
 
   .features-hero__panel {
     display: grid;
     gap: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-inverse-text);
     padding: 1.25rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
   .features-hero__panel span {
@@ -265,15 +604,17 @@ const useCases = [
   }
 
   .features-hero__panel code,
-  .features-card-grid code {
+  .features-pillar code,
+  .features-capability-card code,
+  .features-preset-card code {
     display: block;
     overflow-wrap: anywhere;
     border-radius: 0.5rem;
     background: var(--color-text);
     color: var(--color-code-accent);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     line-height: 1.6;
-    padding: 0.875rem;
+    padding: 0.75rem;
   }
 
   .features-grid {
@@ -325,7 +666,15 @@ const useCases = [
   }
 
   .features-section__header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .features-lead {
+    margin: 0 0 1.25rem;
+    max-width: 48rem;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
   }
 
   .features-section__header h2,
@@ -339,8 +688,13 @@ const useCases = [
   }
 
   .features-metric-grid,
-  .features-card-grid,
-  .features-usecase-grid {
+  .features-pillar-grid,
+  .features-preset-grid,
+  .features-capability-grid,
+  .features-perf-grid,
+  .features-usecase-grid,
+  .features-links-grid,
+  .features-faq-list {
     display: grid;
     gap: 1rem;
   }
@@ -349,41 +703,184 @@ const useCases = [
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .features-card-grid,
-  .features-usecase-grid {
+  .features-pillar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 1rem;
+  }
+
+  .features-preset-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .features-capability-grid,
+  .features-usecase-grid,
+  .features-perf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .features-links-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .features-metric-grid > div,
-  .features-card-grid > div,
-  .features-usecase-grid > div {
+  .features-pillar,
+  .features-perf-card,
+  .features-table-wrap,
+  .features-use-card,
+  .features-faq-item,
+  .features-callout,
+  .features-final-cta {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-inverse-text);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .features-metric-grid > div,
+  .features-pillar,
+  .features-perf-card,
+  .features-use-card,
+  .features-faq-item,
+  .features-callout {
     padding: 1.25rem;
   }
 
   .features-metric-grid strong {
     display: block;
     color: var(--color-text);
-    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
     font-weight: 650;
     letter-spacing: 0;
     line-height: 1;
   }
 
   .features-metric-grid span,
-  .features-card-grid p,
-  .features-usecase-grid p,
+  .features-pillar p,
+  .features-capability-card p,
+  .features-preset-card p,
+  .features-perf-card p,
+  .features-use-card p,
+  .features-faq-item p,
   .features-final-cta p {
     color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.7;
   }
 
-  .features-card-grid h3,
-  .features-usecase-grid h3 {
+  .features-pillar h3,
+  .features-capability-card h3,
+  .features-preset-card h3,
+  .features-perf-card h3,
+  .features-use-card h3,
+  .features-faq-item h3 {
     margin: 0;
     color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
+  }
+
+  .features-pillar {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .features-pillar--violet { border-top: 3px solid #7c3aed; }
+  .features-pillar--blue { border-top: 3px solid #3b82f6; }
+  .features-pillar--green { border-top: 3px solid #10b981; }
+  .features-pillar--orange { border-top: 3px solid #f97316; }
+
+  .features-preset-card {
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-inverse-text);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .features-preset-card:hover {
+    border-color: #c4b5fd;
+    transform: translateY(-1px);
+  }
+
+  .features-preset-card__media {
+    position: relative;
+    display: grid;
+    min-height: 10rem;
+    place-items: center;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(180deg, var(--color-surface-muted), var(--color-inverse-text));
+    padding: 1rem;
+  }
+
+  .features-preset-card__category {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.92);
+    padding: 0.25rem 0.5rem;
+  }
+
+  .features-preset-card img {
+    width: 100%;
+    max-height: 8.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    object-fit: contain;
+    background: var(--color-inverse-text);
+  }
+
+  .features-preset-card__body {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .features-capability-card {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-inverse-text);
+    padding: 1rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  }
+
+  .features-capability-card__preview {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface-muted);
+  }
+
+  .features-capability-card__preview img {
+    display: block;
+    width: 100%;
+    height: 5.5rem;
+    object-fit: cover;
+  }
+
+  .features-capability-card > div {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .features-callout {
+    margin-top: 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .features-callout strong {
+    color: var(--color-text);
   }
 
   .features-table-wrap {
@@ -429,6 +926,36 @@ const useCases = [
     font-weight: 700;
   }
 
+  .features-use-card a,
+  .features-link-card {
+    color: var(--color-brand-hover);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .features-use-card a:hover,
+  .features-link-card:hover {
+    text-decoration: underline;
+  }
+
+  .features-link-card {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-inverse-text);
+    padding: 0 1.25rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    transition: border-color 150ms ease;
+  }
+
+  .features-link-card:hover {
+    border-color: #c4b5fd;
+    text-decoration: none;
+  }
+
   .features-final-cta {
     display: flex;
     align-items: center;
@@ -448,32 +975,58 @@ const useCases = [
     color: var(--color-text-disabled);
   }
 
-  .features-final-cta a {
-    display: inline-flex;
+  .features-final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     flex: 0 0 auto;
+  }
+
+  .features-final-cta__secondary {
+    display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    background: var(--color-inverse-text);
-    color: var(--color-text);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    background: transparent;
+    color: var(--color-inverse-text) !important;
     font-size: 0.875rem;
-    font-weight: 800;
+    font-weight: 700;
     padding: 0 1rem;
     text-decoration: none;
+  }
+
+  @media (max-width: 1100px) {
+    .features-preset-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 960px) {
     .features-hero,
     .features-grid,
     .features-metric-grid,
-    .features-card-grid,
-    .features-usecase-grid {
+    .features-pillar-grid,
+    .features-preset-grid,
+    .features-capability-grid,
+    .features-perf-grid,
+    .features-usecase-grid,
+    .features-links-grid {
       grid-template-columns: 1fr;
     }
 
     .features-sidebar {
       position: static;
+    }
+
+    .features-capability-card {
+      grid-template-columns: 1fr;
+    }
+
+    .features-capability-card__preview img {
+      height: auto;
+      max-height: 10rem;
     }
   }
 
@@ -483,7 +1036,7 @@ const useCases = [
     }
 
     .features-hero h1 {
-      font-size: 2.75rem;
+      font-size: 2.35rem;
     }
 
     .features-final-cta {

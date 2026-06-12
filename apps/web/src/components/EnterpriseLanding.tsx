@@ -27,13 +27,6 @@ const presetOptions: Array<{ id: Preset; label: string; icon: string }> = [
   { id: 'ai', label: 'Pattern', icon: 'Pt' },
 ];
 
-const thumbnailStyles = [
-  { id: 'soft', label: 'Soft shapes' },
-  { id: 'rings', label: 'Rings' },
-  { id: 'lines', label: 'Lines' },
-  { id: 'pattern', label: 'Mini pattern' },
-];
-
 const thumbnailThemes = [
   { id: 'purple', label: 'Purple' },
   { id: 'blue', label: 'Blue' },
@@ -296,7 +289,15 @@ function Icon({ name }: { name: string }) {
   );
 }
 
-function CopyButton({ value, label = 'Copy' }: { value: string; label?: string }) {
+function CopyButton({
+  value,
+  label = 'Copy',
+  compact = false,
+}: {
+  value: string;
+  label?: string;
+  compact?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -318,7 +319,11 @@ function CopyButton({ value, label = 'Copy' }: { value: string; label?: string }
     <button
       type="button"
       onClick={copy}
-      className="inline-flex min-h-10 min-w-[5.75rem] items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2"
+      className={
+        compact
+          ? 'inline-flex shrink-0 min-h-8 min-w-[4.25rem] items-center justify-center rounded-md border border-zinc-200 bg-white px-2.5 text-xs font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2'
+          : 'inline-flex min-h-10 min-w-[5.75rem] items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2'
+      }
       aria-label={copied ? 'Copied' : label}
       aria-live="polite"
     >
@@ -344,6 +349,7 @@ function EnterpriseLanding() {
   const [scenario, setScenario] = useState(0);
   const [enterpriseOpen, setEnterpriseOpen] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
 
   const safeWidth = clampDimension(width, 800);
   const isSquareOrAvatar = preset === 'avatar' || preset === 'square';
@@ -374,6 +380,67 @@ function EnterpriseLanding() {
   const previewSrc =
     usesLiveApiPreview(preset) || !imageFailed ? generatedUrl : previewSvg;
   const showColorControls = preset === 'standard' || preset === 'banner';
+  const showAdvancedPanel =
+    showColorControls || preset === 'thumbnail' || preset === 'animated' || preset === 'ai';
+
+  function selectPreset(next: Preset) {
+    setPreset(next);
+    setImageFailed(false);
+    setCustomizeOpen(false);
+
+    switch (next) {
+      case 'avatar':
+        setWidth(128);
+        setHeight(128);
+        setText('JD');
+        break;
+      case 'square':
+        setWidth(400);
+        setHeight(400);
+        setText('Square');
+        break;
+      case 'banner':
+        setWidth(1200);
+        setHeight(400);
+        setText('Hero Banner');
+        break;
+      case 'thumbnail':
+        setWidth(1200);
+        setHeight(630);
+        setText((current) => current || 'How to Fix Broken Images in Production');
+        setCustomizeOpen(true);
+        break;
+      case 'skeleton':
+        setWidth(640);
+        setHeight(360);
+        break;
+      case 'blur':
+        setWidth(800);
+        setHeight(450);
+        break;
+      case 'animated':
+        setWidth(640);
+        setHeight(360);
+        setCustomizeOpen(true);
+        break;
+      case 'ai':
+        setWidth(800);
+        setHeight(450);
+        setCustomizeOpen(true);
+        break;
+      default:
+        setWidth(800);
+        setHeight(450);
+        setText('Product Image');
+        break;
+    }
+
+    trackEvent('demo_preset_select', {
+      event_category: 'demo',
+      event_label: next,
+      preset: next,
+    });
+  }
 
   const snippets = useMemo(() => {
     return {
@@ -393,7 +460,7 @@ function EnterpriseLanding() {
       <main id="main-content">
         <section className="relative overflow-hidden border-b border-zinc-200 bg-zinc-50" aria-labelledby="hero-heading">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(24,24,27,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(24,24,27,0.05)_1px,transparent_1px)] bg-[size:48px_48px]" aria-hidden="true" />
-          <div className="relative mx-auto grid max-w-7xl gap-6 px-5 py-6 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1fr)] lg:items-center lg:gap-10 lg:px-8 lg:py-24">
+          <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-6 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(420px,500px)] lg:items-start lg:gap-12 lg:px-8 lg:py-20">
             <div>
               <p className="mb-4 inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 shadow-sm sm:mb-5">
                 <span className="h-2 w-2 rounded-full bg-emerald-600" />
@@ -443,7 +510,7 @@ function EnterpriseLanding() {
                   GitHub
                 </a>
               </div>
-              <div className="mt-8 hidden max-w-2xl rounded-lg border border-zinc-200 bg-white p-4 shadow-sm md:block">
+              <div className="mt-8 hidden max-w-2xl rounded-lg border border-zinc-200 bg-white p-4 shadow-sm md:block lg:hidden">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <span className="text-sm font-semibold text-zinc-950">Production fallback URL</span>
                   <span className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">200 OK</span>
@@ -463,91 +530,103 @@ function EnterpriseLanding() {
 
             <div
               id="hero-demo"
-              className="min-w-0 rounded-lg border border-zinc-200 bg-white p-3 shadow-[0_12px_32px_rgba(9,9,11,0.08)] sm:p-4"
+              className="min-w-0 overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-[0_32px_64px_-28px_rgba(91,33,182,0.16),0_20px_40px_-24px_rgba(9,9,11,0.14)] ring-1 ring-zinc-950/[0.04]"
             >
-              <div className="mb-3 flex flex-wrap items-start justify-between gap-3 border-b border-zinc-200 pb-3 sm:mb-4 sm:pb-4">
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-zinc-950">Live fallback builder</p>
-                  <p className="text-sm text-zinc-500">Generate a placeholder image URL, preview it, and copy it.</p>
+              <div className="h-1 bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-500" aria-hidden="true" />
+
+              <div className="relative aspect-[4/3] overflow-hidden border-b border-zinc-100 bg-gradient-to-br from-violet-50/70 via-zinc-50 to-indigo-50/40">
+                <div
+                  className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] [background-size:18px_18px]"
+                  aria-hidden="true"
+                />
+                <div className="absolute left-4 top-4">
+                  <span className="rounded-full bg-white/95 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-zinc-600 shadow-sm ring-1 ring-zinc-200/80">
+                    Live preview
+                  </span>
                 </div>
-                <div className="flex shrink-0 gap-2">
-                  <span className="rounded-md bg-blue-50 px-2 py-1 font-mono text-xs font-semibold text-blue-700">edge</span>
-                  <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-xs font-semibold text-emerald-700">cached</span>
+                <div className="absolute inset-0 flex items-center justify-center p-5 sm:p-7">
+                  <img
+                    src={previewSrc}
+                    onError={() => setImageFailed(true)}
+                    alt="Live generated fallback preview"
+                    style={
+                      isSquareOrAvatar
+                        ? undefined
+                        : { aspectRatio: `${safeWidth} / ${safeHeight}` }
+                    }
+                    className={`max-h-full max-w-full object-contain shadow-[0_12px_32px_-12px_rgba(9,9,11,0.28)] ring-1 ring-black/10 ${
+                      isSquareOrAvatar
+                        ? 'aspect-square max-h-[min(52%,180px)] max-w-[min(52%,180px)] rounded-full'
+                        : 'max-h-[min(72%,220px)] rounded-lg'
+                    }`}
+                  />
+                </div>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/95 via-white/70 to-transparent px-4 pb-3 pt-10">
+                  <p className="text-center font-mono text-[0.7rem] font-medium text-zinc-600 sm:text-xs">
+                    {safeWidth} × {safeHeight}
+                    <span className="mx-2 text-zinc-300">·</span>
+                    {presetOptions.find((item) => item.id === preset)?.label}
+                  </p>
                 </div>
               </div>
 
-              <div className="grid min-w-0 gap-4">
-                <div className="min-w-0 space-y-4">
-                  <fieldset className="min-w-0">
-                    <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Preset</legend>
-                    <div className="grid grid-cols-2 gap-2 min-[420px]:grid-cols-3">
-                      {presetOptions.map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => {
-                            setPreset(item.id);
-                            setImageFailed(false);
-                            if (item.id === 'thumbnail') {
-                              setWidth(1200);
-                              setHeight(630);
-                              setText(
-                                (current) =>
-                                  current ||
-                                  'How to Fix Broken Images in Production',
-                              );
-                            }
-                            trackEvent('demo_preset_select', {
-                              event_category: 'demo',
-                              event_label: item.id,
-                              preset: item.id,
-                            });
-                          }}
-                          aria-pressed={preset === item.id}
-                          aria-label={item.label}
-                          className={`flex min-h-[4.25rem] min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-center text-xs font-semibold leading-tight transition ${preset === item.id ? 'border-violet-500 bg-violet-50 text-violet-900 shadow-sm ring-2 ring-violet-100' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
-                        >
-                          <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-md font-mono text-[0.65rem] ${preset === item.id ? 'bg-violet-700 text-white' : 'bg-zinc-100 text-zinc-600'}`}>{item.icon}</span>
-                          <span className="w-full truncate px-0.5">{item.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="text-sm font-medium text-zinc-700">
-                      Width
-                      <input
-                        type="number"
-                        min="10"
-                        max={MAX_DIMENSION}
-                        value={width}
-                        onChange={(event) => {
-                          setWidth(clampDimension(Number(event.target.value), 800));
-                          setImageFailed(false);
-                        }}
-                        className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                      />
-                    </label>
-                    <label className="text-sm font-medium text-zinc-700">
-                      Height
-                      <input
-                        type="number"
-                        min="10"
-                        max={MAX_DIMENSION}
-                        value={height}
-                        disabled={isSquareOrAvatar}
-                        onChange={(event) => {
-                          setHeight(clampDimension(Number(event.target.value), 450));
-                          setImageFailed(false);
-                        }}
-                        className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200 disabled:bg-zinc-100 disabled:text-zinc-400"
-                      />
-                    </label>
+              <div className="space-y-3.5 p-4 sm:p-5">
+                <div>
+                  <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-400">
+                    Placeholder type
+                  </p>
+                  <div className="grid grid-cols-3 gap-1.5" role="tablist" aria-label="Placeholder preset">
+                    {presetOptions.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={preset === item.id}
+                        onClick={() => selectPreset(item.id)}
+                        className={`rounded-lg border px-1.5 py-2 text-center text-[0.65rem] font-semibold leading-tight transition sm:py-2.5 sm:text-xs ${
+                          preset === item.id
+                            ? 'border-violet-600 bg-violet-600 text-white shadow-sm'
+                            : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300 hover:bg-white'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
                   </div>
+                </div>
 
-                  <label className="block text-sm font-medium text-zinc-700">
-                    Fallback text
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-[5.5rem_5.5rem_1fr]">
+                  <label className="text-xs font-medium text-zinc-600">
+                    Width
+                    <input
+                      type="number"
+                      min="10"
+                      max={MAX_DIMENSION}
+                      value={width}
+                      onChange={(event) => {
+                        setWidth(clampDimension(Number(event.target.value), 800));
+                        setImageFailed(false);
+                      }}
+                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
+                    />
+                  </label>
+                  <label className="text-xs font-medium text-zinc-600">
+                    Height
+                    <input
+                      type="number"
+                      min="10"
+                      max={MAX_DIMENSION}
+                      value={height}
+                      disabled={isSquareOrAvatar}
+                      onChange={(event) => {
+                        setHeight(clampDimension(Number(event.target.value), 450));
+                        setImageFailed(false);
+                      }}
+                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100 disabled:opacity-50"
+                    />
+                  </label>
+                  <label className="col-span-2 text-xs font-medium text-zinc-600 sm:col-span-1">
+                    Label
                     <input
                       type="text"
                       value={text}
@@ -555,172 +634,156 @@ function EnterpriseLanding() {
                         setText(event.target.value);
                         setImageFailed(false);
                       }}
-                      className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
                     />
                   </label>
-
-                  {showColorControls && (
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="text-sm font-medium text-zinc-700">
-                        Background
-                        <input
-                          type="text"
-                          value={`#${safeBg}`}
-                          onChange={(event) => {
-                            setBg(sanitizeHex(event.target.value, safeBg));
-                            setImageFailed(false);
-                          }}
-                          className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                        />
-                      </label>
-                      <label className="text-sm font-medium text-zinc-700">
-                        Text
-                        <input
-                          type="text"
-                          value={`#${safeFg}`}
-                          onChange={(event) => {
-                            setFg(sanitizeHex(event.target.value, safeFg));
-                            setImageFailed(false);
-                          }}
-                          className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2.5 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                        />
-                      </label>
-                    </div>
-                  )}
-
-                  {preset === 'thumbnail' && (
-                    <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-blue-900">
-                        Blog thumbnail
-                      </p>
-                      <label className="block text-sm font-medium text-blue-950">
-                        Category label
-                        <input
-                          type="text"
-                          value={thumbnailLabel}
-                          onChange={(event) => {
-                            setThumbnailLabel(event.target.value);
-                            setImageFailed(false);
-                          }}
-                          className="mt-2 w-full rounded-lg border border-blue-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                          placeholder="Guide, Tutorial, Blog Post"
-                        />
-                      </label>
-                      <div>
-                        <span className="mb-2 block text-sm font-medium text-blue-950">
-                          Style
-                        </span>
-                        <div className="grid grid-cols-2 gap-2">
-                          {thumbnailStyles.map((item) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => {
-                                setThumbnailStyle(item.id);
-                                setImageFailed(false);
-                              }}
-                              className={`rounded-lg border px-2.5 py-2 text-left text-xs font-semibold transition ${thumbnailStyle === item.id ? 'border-blue-500 bg-white text-blue-950 shadow-sm' : 'border-blue-100 bg-white/80 text-blue-900 hover:bg-white'}`}
-                            >
-                              {item.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <span className="mb-2 block text-sm font-medium text-blue-950">
-                          Theme
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {thumbnailThemes.map((item) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => {
-                                setThumbnailTheme(item.id);
-                                setImageFailed(false);
-                              }}
-                              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${thumbnailTheme === item.id ? 'border-blue-500 bg-white text-blue-950 shadow-sm' : 'border-blue-100 bg-white/80 text-blue-900 hover:bg-white'}`}
-                            >
-                              {item.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {preset === 'animated' && (
-                    <div className="space-y-2 rounded-lg border border-violet-200 bg-violet-50 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-violet-900">
-                        Animation
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {animationTypes.map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => {
-                              setAnimationType(item.id);
-                              setImageFailed(false);
-                            }}
-                            className={`rounded-lg border px-2.5 py-2 text-left text-xs font-semibold transition ${animationType === item.id ? 'border-violet-500 bg-white text-violet-950 shadow-sm' : 'border-violet-100 bg-white/80 text-violet-900 hover:bg-white'}`}
-                          >
-                            {item.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {preset === 'ai' && (
-                    <div className="grid grid-cols-2 gap-3 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-                      <label className="text-sm font-medium text-indigo-950">
-                        Context
-                        <input
-                          type="text"
-                          value={aiContext}
-                          onChange={(event) => {
-                            setAiContext(event.target.value);
-                            setImageFailed(false);
-                          }}
-                          className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                          placeholder="tech, ecommerce"
-                        />
-                      </label>
-                      <label className="text-sm font-medium text-indigo-950">
-                        Mood
-                        <input
-                          type="text"
-                          value={aiMood}
-                          onChange={(event) => {
-                            setAiMood(event.target.value);
-                            setImageFailed(false);
-                          }}
-                          className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                          placeholder="minimal, calm"
-                        />
-                      </label>
-                    </div>
-                  )}
                 </div>
 
-                <div className="flex min-w-0 flex-col gap-4">
-                  <div className="relative grid min-h-[220px] place-items-center rounded-lg border border-zinc-200 bg-[radial-gradient(circle_at_1px_1px,#d4d4d8_1px,transparent_0)] p-4 [background-size:22px_22px] sm:min-h-[280px] sm:p-5">
-                    <img
-                      src={previewSrc}
-                      onError={() => setImageFailed(true)}
-                      alt="Live generated fallback preview"
-                      className={`${preset === 'avatar' || preset === 'square' ? 'aspect-square max-w-[220px] rounded-full' : 'max-h-[260px] rounded-lg'} w-full max-w-full border border-zinc-200 bg-white object-contain shadow-sm`}
-                    />
+                {showAdvancedPanel && (
+                  <div className="rounded-lg border border-zinc-200 bg-zinc-50/80">
+                    <button
+                      type="button"
+                      onClick={() => setCustomizeOpen((open) => !open)}
+                      className="flex w-full items-center justify-between px-3 py-2.5 text-left text-xs font-semibold text-zinc-700 transition hover:text-zinc-950"
+                      aria-expanded={customizeOpen}
+                    >
+                      <span>Customize colors &amp; options</span>
+                      <span className="font-mono text-zinc-400">{customizeOpen ? '−' : '+'}</span>
+                    </button>
+
+                    {customizeOpen && (
+                      <div className="space-y-3 border-t border-zinc-200 px-3 pb-3 pt-3">
+                        {showColorControls && (
+                          <div className="grid grid-cols-2 gap-2">
+                            <label className="text-xs font-medium text-zinc-600">
+                              Background
+                              <input
+                                type="text"
+                                value={`#${safeBg}`}
+                                onChange={(event) => {
+                                  setBg(sanitizeHex(event.target.value, safeBg));
+                                  setImageFailed(false);
+                                }}
+                                className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-2.5 py-2 font-mono text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                              />
+                            </label>
+                            <label className="text-xs font-medium text-zinc-600">
+                              Text color
+                              <input
+                                type="text"
+                                value={`#${safeFg}`}
+                                onChange={(event) => {
+                                  setFg(sanitizeHex(event.target.value, safeFg));
+                                  setImageFailed(false);
+                                }}
+                                className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-2.5 py-2 font-mono text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                              />
+                            </label>
+                          </div>
+                        )}
+
+                        {preset === 'thumbnail' && (
+                          <div className="space-y-2">
+                            <label className="block text-xs font-medium text-zinc-600">
+                              Category label
+                              <input
+                                type="text"
+                                value={thumbnailLabel}
+                                onChange={(event) => {
+                                  setThumbnailLabel(event.target.value);
+                                  setImageFailed(false);
+                                }}
+                                className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                              />
+                            </label>
+                            <div className="flex flex-wrap gap-1.5">
+                              {thumbnailThemes.map((item) => (
+                                <button
+                                  key={item.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setThumbnailTheme(item.id);
+                                    setImageFailed(false);
+                                  }}
+                                  className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${thumbnailTheme === item.id ? 'border-violet-600 bg-violet-600 text-white' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'}`}
+                                >
+                                  {item.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {preset === 'animated' && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {animationTypes.map((item) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  setAnimationType(item.id);
+                                  setImageFailed(false);
+                                }}
+                                className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${animationType === item.id ? 'border-violet-600 bg-violet-600 text-white' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'}`}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {preset === 'ai' && (
+                          <div className="grid grid-cols-2 gap-2">
+                            <label className="text-xs font-medium text-zinc-600">
+                              Context
+                              <input
+                                type="text"
+                                value={aiContext}
+                                onChange={(event) => {
+                                  setAiContext(event.target.value);
+                                  setImageFailed(false);
+                                }}
+                                className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                              />
+                            </label>
+                            <label className="text-xs font-medium text-zinc-600">
+                              Mood
+                              <input
+                                type="text"
+                                value={aiMood}
+                                onChange={(event) => {
+                                  setAiMood(event.target.value);
+                                  setImageFailed(false);
+                                }}
+                                className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-2.5 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                              />
+                            </label>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Shareable URL</span>
-                      <CopyButton value={generatedUrl} label="Copy URL" />
-                    </div>
-                    <code className="block break-all font-mono text-xs font-semibold leading-5 text-zinc-950">{displayUrl}</code>
+                )}
+
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2.5">
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-500">
+                      API URL
+                    </span>
+                    <CopyButton value={generatedUrl} label="Copy" compact />
                   </div>
+                  <code className="block break-all font-mono text-[0.7rem] leading-5 text-zinc-800 sm:text-xs">
+                    {displayUrl}
+                  </code>
                 </div>
+
+                <a
+                  href="/placeholder-image-generator/"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 no-underline transition hover:text-violet-900"
+                >
+                  Open full generator with all controls
+                  <span aria-hidden="true">→</span>
+                </a>
               </div>
             </div>
           </div>

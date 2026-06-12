@@ -3,61 +3,175 @@ import DocsLayout from '../layouts/DocsLayout.astro';
 import CodeBlock from '../components/CodeBlock.astro';
 
 const baseUrl = 'https://fallback.pics/api/v1';
+const canonical = 'https://fallback.pics/api/';
 
 const navItems = [
+  { href: '#quick-start', label: 'Quick Start' },
   { href: '#base-url', label: 'Base URL' },
-  { href: '#routes', label: 'Routes' },
+  { href: '#url-patterns', label: 'URL Patterns' },
+  { href: '#routes', label: 'Route Examples' },
   { href: '#parameters', label: 'Parameters' },
   { href: '#examples', label: 'Code Examples' },
   { href: '#headers', label: 'Response Headers' },
   { href: '#errors', label: 'Error Behavior' },
   { href: '#limits', label: 'Usage Limits' },
+  { href: '#faq', label: 'FAQ' },
+];
+
+const urlPatterns = [
+  {
+    pattern: '/api/v1/{width}x{height}',
+    example: '/api/v1/800x450',
+    use: 'Standard SVG placeholder with default brand colors.',
+  },
+  {
+    pattern: '/api/v1/{width}x{height}/{bg}/{fg}',
+    example: '/api/v1/800x450/18181B/FFFFFF',
+    use: 'Custom background and text colors as path segments (hex without #).',
+  },
+  {
+    pattern: '/api/v1/{width}x{height}?text={label}',
+    example: '/api/v1/640x360?text=Product+Image',
+    use: 'Visible fallback copy for product cards and missing media states.',
+  },
+  {
+    pattern: '/api/v1/{width}x{height}.{format}',
+    example: '/api/v1/1200x630.jpg',
+    use: 'Raster output when a client requires PNG, JPEG, or WebP.',
+  },
+  {
+    pattern: '/api/v1/avatar/{size}?text={initials}',
+    example: '/api/v1/avatar/128?text=JD',
+    use: 'Circular initials for profiles, teams, and workspace avatars.',
+  },
+  {
+    pattern: '/api/v1/square/{size}?text={label}',
+    example: '/api/v1/square/400?text=Tile',
+    use: 'Square placeholders for grids, tiles, and catalog cards.',
+  },
+  {
+    pattern: '/api/v1/banner/{width}x{height}',
+    example: '/api/v1/banner/1200x400?text=Hero+Banner',
+    use: 'Wide hero, docs, and marketing banner surfaces.',
+  },
+  {
+    pattern: '/api/v1/thumbnail/{width}x{height}',
+    example: '/api/v1/thumbnail/1200x630?text=Article+Title&style=soft&label=Guide',
+    use: 'Blog and docs featured images with a text safe zone.',
+  },
+  {
+    pattern: '/api/v1/skeleton/{width}x{height}',
+    example: '/api/v1/skeleton/640x360',
+    use: 'Static skeleton placeholder while async media loads.',
+  },
+  {
+    pattern: '/api/v1/blur/{width}x{height}',
+    example: '/api/v1/blur/800x450',
+    use: 'Blurred placeholder for progressive or LQIP-style states.',
+  },
+  {
+    pattern: '/api/v1/animated/{type}/{width}x{height}',
+    example: '/api/v1/animated/skeleton/640x360',
+    use: 'Animated loading states: skeleton, pulse, wave, shimmer, gradient, dots.',
+  },
+  {
+    pattern: '/api/v1/ai/{width}x{height}',
+    example: '/api/v1/ai/800x450?context=saas&mood=minimal',
+    use: 'Deterministic pattern backgrounds with optional context and mood.',
+  },
 ];
 
 const routes = [
   {
-    title: 'Blog thumbnail',
-    path: '/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide',
-    description: 'Generate a featured-image style thumbnail from a title. Decorative elements stay outside the text safe zone.',
-    image: `${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide`,
-  },
-  {
+    category: 'Core',
     title: 'Standard fallback',
     path: '/api/v1/640x360',
-    description: 'Create a deterministic placeholder from dimensions alone. SVG is the default output.',
+    url: `${baseUrl}/640x360`,
+    description: 'Dimensions only. SVG output with default brand styling.',
     image: `${baseUrl}/640x360`,
   },
   {
+    category: 'Core',
     title: 'Custom color and label',
     path: '/api/v1/800x450/18181B/FFFFFF?text=Product+Image',
-    description: 'Set visible fallback copy and brand-safe colors from the URL.',
+    url: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
+    description: 'Brand-safe colors and readable fallback copy from the URL.',
     image: `${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image`,
   },
   {
+    category: 'Presets',
     title: 'Avatar initials',
     path: '/api/v1/avatar/160?text=JD',
-    description: 'Generate compact initials for user, team, or organization avatars.',
+    url: `${baseUrl}/avatar/160?text=JD`,
+    description: 'Compact circular avatars for users, teams, and organizations.',
     image: `${baseUrl}/avatar/160?text=JD`,
   },
   {
-    title: 'Skeleton state',
+    category: 'Presets',
+    title: 'Square product tile',
+    path: '/api/v1/square/400?text=Product',
+    url: `${baseUrl}/square/400?text=Product`,
+    description: 'Equal width and height for ecommerce grids and card layouts.',
+    image: `${baseUrl}/square/400?text=Product`,
+  },
+  {
+    category: 'Presets',
+    title: 'Hero banner',
+    path: '/api/v1/banner/1200x400?text=Docs+Preview',
+    url: `${baseUrl}/banner/1200x400?text=Docs+Preview`,
+    description: 'Wide banners for docs, landing pages, and marketing previews.',
+    image: `${baseUrl}/banner/1200x400?text=Docs+Preview`,
+  },
+  {
+    category: 'Presets',
+    title: 'Blog thumbnail',
+    path: '/api/v1/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide',
+    url: `${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide`,
+    description: 'Featured-image thumbnails with decorative elements outside the text safe zone.',
+    image: `${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&label=Guide`,
+  },
+  {
+    category: 'Loading states',
+    title: 'Skeleton',
+    path: '/api/v1/skeleton/640x360',
+    url: `${baseUrl}/skeleton/640x360`,
+    description: 'Reserve layout space with a neutral skeleton block.',
+    image: `${baseUrl}/skeleton/640x360`,
+  },
+  {
+    category: 'Loading states',
+    title: 'Animated shimmer',
     path: '/api/v1/animated/skeleton/640x360',
-    description: 'Reserve the final image box while asynchronous media loads.',
+    url: `${baseUrl}/animated/skeleton/640x360`,
+    description: 'Motion placeholder while upstream media or charts resolve.',
     image: `${baseUrl}/animated/skeleton/640x360`,
+  },
+  {
+    category: 'Loading states',
+    title: 'Blur placeholder',
+    path: '/api/v1/blur/800x450',
+    url: `${baseUrl}/blur/800x450`,
+    description: 'Soft blurred state for progressive image loading workflows.',
+    image: `${baseUrl}/blur/800x450`,
   },
 ];
 
 const parameters = [
-  { name: 'width', type: 'number', description: 'Image width in pixels. Standard routes support 1-5000px in the active worker.' },
-  { name: 'height', type: 'number', description: 'Image height in pixels. Omit for square and avatar presets.' },
-  { name: 'bgColor', type: 'path hex', description: 'Optional background color as a path segment after dimensions, without the # prefix.' },
-  { name: 'textColor', type: 'path hex', description: 'Optional foreground/text color as the next path segment, without the # prefix.' },
-  { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated image.' },
-  { name: 'style', type: 'query string', description: 'Thumbnail style: soft, rings, lines, or pattern. Used by /thumbnail routes.' },
-  { name: 'theme', type: 'query string', description: 'Thumbnail theme: purple, blue, green, orange, or dark. Used by /thumbnail routes.' },
-  { name: 'label', type: 'query string', description: 'Short category pill for thumbnail routes, such as Blog Post, Guide, Tutorial, or Performance.' },
+  { name: 'width', type: 'path number', description: 'Image width in pixels. Supported range is 10–4000 on public routes.' },
+  { name: 'height', type: 'path number', description: 'Image height in pixels. Omitted for square and avatar presets, which derive height from width.' },
+  { name: 'bg / bgColor', type: 'path or query hex', description: 'Background color without the # prefix. Path segments override defaults; query params can override path values.' },
+  { name: 'fg / textColor', type: 'path or query hex', description: 'Foreground or label color without the # prefix.' },
+  { name: 'text', type: 'query string', description: 'URL-encoded label rendered inside the generated image when the preset supports text.' },
+  { name: 'style', type: 'query string', description: 'Thumbnail background style: soft, rings, lines, or pattern.' },
+  { name: 'theme', type: 'query string', description: 'Thumbnail palette: purple, blue, green, orange, or dark.' },
+  { name: 'label', type: 'query string', description: 'Short category pill on thumbnail routes, such as Guide, Blog Post, or Tutorial.' },
   { name: 'accent', type: 'query hex', description: 'Optional thumbnail accent color without the # prefix.' },
-  { name: 'extension', type: 'path suffix', description: 'Optional route suffix: .svg, .png, .jpg, .jpeg, or .webp. SVG is the default when omitted.' },
+  { name: 'color', type: 'query hex', description: 'Optional thumbnail text color override without the # prefix.' },
+  { name: 'seed', type: 'query string', description: 'Optional deterministic seed for thumbnail decorative variation.' },
+  { name: 'context', type: 'query string', description: 'Optional semantic hint for /ai pattern routes, such as ecommerce or healthcare.' },
+  { name: 'mood', type: 'query string', description: 'Optional tone hint for /ai pattern routes, such as minimal or professional.' },
+  { name: 'type', type: 'path string', description: 'Animation style for /animated routes: skeleton, pulse, wave, shimmer, gradient, or dots.' },
+  { name: 'extension', type: 'path suffix', description: 'Optional .svg, .png, .jpg, .jpeg, or .webp suffix. SVG is the default when omitted.' },
 ];
 
 const headers = [
@@ -71,8 +185,30 @@ const headers = [
 const errorRows = [
   { request: 'POST /api/v1/400x300', response: '405 Method not allowed', detail: 'The public image API is read-only and supports GET plus OPTIONS preflight.' },
   { request: 'GET /api/v1/not-a-size', response: '400 Invalid dimensions format', detail: 'Unknown API image paths return an API error, not homepage HTML.' },
-  { request: 'GET /api/v1/0x300', response: '400 Invalid dimensions', detail: 'Dimensions must be positive and within the documented range.' },
+  { request: 'GET /api/v1/0x300', response: '400 Invalid dimensions', detail: 'Dimensions must be between 10 and 4000 pixels.' },
+  { request: 'GET /api/v1/5000x5000', response: '400 Invalid dimensions', detail: 'Oversized requests are rejected instead of generating an unbounded asset.' },
 ];
+
+const faqs = [
+  {
+    question: 'Do I need an API key?',
+    answer: 'No. Public /api/v1 routes are unauthenticated. Paste the URL into an img tag, CSS background, email template, or server response.',
+  },
+  {
+    question: 'What is the canonical base URL?',
+    answer: 'Use https://fallback.pics/api/v1 for production-generated image URLs so caching, docs, and examples stay consistent.',
+  },
+  {
+    question: 'When should I use SVG versus JPG or WebP?',
+    answer: 'Use SVG for crisp UI placeholders and layout-stable fallbacks. Add .jpg or .webp when a raster asset is required for social crawlers, email clients, or legacy surfaces.',
+  },
+  {
+    question: 'Can I use fallback.pics for broken image recovery?',
+    answer: 'Yes. Point onerror handlers or framework fallbacks to a deterministic /api/v1 URL that matches the slot dimensions and user-facing label.',
+  },
+];
+
+const curlExample = `curl -I "${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"`;
 
 const htmlExample = `<img
   src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
@@ -81,13 +217,21 @@ const htmlExample = `<img
   alt="Product image fallback"
 />`;
 
+const onErrorExample = `<img
+  src="/catalog/product-4821.jpg"
+  width="640"
+  height="640"
+  alt="Product image"
+  onerror="this.onerror=null;this.src='${baseUrl}/640x640?text=Product+Image'"
+/>`;
+
 const cssExample = `.product-card::before {
   background-image: url("${baseUrl}/600x400/F4F4F5/52525B?text=Loading");
 }`;
 
 const jsExample = `export function fallbackImage(width, height, label) {
   const params = new URLSearchParams({ text: label });
-  return "${baseUrl}/" + width + "x" + height + "?" + params;
+  return \`${baseUrl}/\${width}x\${height}?\${params}\`;
 }`;
 
 const reactExample = `export function ProductImageFallback() {
@@ -101,53 +245,151 @@ const reactExample = `export function ProductImageFallback() {
   );
 }`;
 
+const nextExample = `import Image from "next/image";
+
+export function ProductPlaceholder() {
+  return (
+    <Image
+      src="${baseUrl}/800x450/18181B/FFFFFF?text=Product+Image"
+      width={800}
+      height={450}
+      alt="Product image fallback"
+      unoptimized
+    />
+  );
+}`;
+
 const thumbnailExample = `export function BlogFeaturedImage() {
   const src = "${baseUrl}/thumbnail/1200x630?text=How+to+Fix+Broken+Images&style=soft&theme=purple&label=Guide";
 
   return <img src={src} width={1200} height={630} alt="Blog featured image" />;
 }`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'fallback.pics Placeholder Image API Reference',
+  description:
+    'Production API reference for generating placeholder images, avatars, banners, thumbnails, skeleton states, and broken-image fallbacks from cacheable /api/v1 URLs.',
+  url: canonical,
+  author: { '@type': 'Organization', name: 'fallback.pics' },
+  about: {
+    '@type': 'SoftwareApplication',
+    name: 'fallback.pics',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web',
+  },
+};
 ---
 
 <DocsLayout
-  title="API Reference | fallback.pics"
-  description="Production API reference for fallback.pics fallback image infrastructure, including URL routes, output formats, parameters, headers, and framework examples."
+  title="Placeholder Image API Reference | fallback.pics"
+  description="Complete fallback.pics API reference for placeholder images: /api/v1 URL patterns, parameters, response headers, code examples, and production usage limits. No API key required."
+  keywords="placeholder image api, fallback image api, image placeholder api, dummy image api, placeholder image url, broken image fallback api, svg placeholder api"
+  canonical={canonical}
+  ogImage={`${baseUrl}/thumbnail/1200x630?text=Placeholder+Image+API&style=soft&label=API`}
 >
   <div class="api-page">
     <section class="api-hero" id="base-url">
       <div>
-        <p class="api-eyebrow">API Reference</p>
-        <h1>Fallback images generated from predictable URLs.</h1>
+        <p class="api-eyebrow">Placeholder image API reference</p>
+        <h1>Generate fallback images from predictable URLs.</h1>
         <p>
-          Use one cacheable endpoint for product images, avatars, loading states, charts, and broken-image recovery. No SDK or authentication required for public routes.
+          The fallback.pics placeholder image API turns dimensions, colors, labels, and presets into cacheable image responses for product grids, avatars, docs, loading states, and broken-image recovery. No SDK, API key, or account is required for public routes.
         </p>
+        <div class="api-hero__actions">
+          <a class="api-hero__cta" href="/placeholder-image-generator/">Open generator</a>
+          <a class="api-hero__link" href="/docs/">Read docs</a>
+          <a class="api-hero__link" href="/guides/react-image-fallback/">React fallback guide</a>
+        </div>
       </div>
       <div class="api-hero__panel">
         <span>Base URL</span>
         <code>{baseUrl}</code>
+        <p class="api-hero__panel-note">All examples below use this canonical prefix.</p>
       </div>
     </section>
 
     <div class="api-grid">
       <aside class="api-sidebar" aria-label="API navigation">
-        <span>Reference</span>
+        <span>On this page</span>
         {navItems.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
       </aside>
 
       <article class="api-content">
+        <section id="quick-start" class="api-section">
+          <div class="api-section__header">
+            <p>Quick start</p>
+            <h2>Make your first request in seconds.</h2>
+          </div>
+          <p class="api-lead">
+            Paste a URL into any surface that accepts an image source, or verify the response with curl. The worker returns an image body with cache-friendly headers.
+          </p>
+          <CodeBlock label="curl" language="bash" code={curlExample} />
+          <div class="api-quick-grid">
+            <a href={`${baseUrl}/800x450?text=Hello`} target="_blank" rel="noreferrer" class="api-quick-card">
+              <strong>Try a live image</strong>
+              <code>/api/v1/800x450?text=Hello</code>
+            </a>
+            <a href="/placeholder-image-generator/" class="api-quick-card">
+              <strong>Build a custom URL</strong>
+              <span>Interactive generator with all presets</span>
+            </a>
+            <a href="/placeholder-image-api/" class="api-quick-card">
+              <strong>Product overview</strong>
+              <span>When to use placeholder image APIs in production</span>
+            </a>
+          </div>
+        </section>
+
+        <section id="url-patterns" class="api-section">
+          <div class="api-section__header">
+            <p>URL patterns</p>
+            <h2>One base URL, many image states.</h2>
+          </div>
+          <p class="api-lead">
+            Every public route starts with <code>/api/v1</code>. Path segments define dimensions, preset type, and optional colors. Query parameters add labels, thumbnail options, and pattern context.
+          </p>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th>Example</th>
+                  <th>Use case</th>
+                </tr>
+              </thead>
+              <tbody>
+                {urlPatterns.map((row) => (
+                  <tr>
+                    <td><code>{row.pattern}</code></td>
+                    <td><code>{row.example}</code></td>
+                    <td>{row.use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section id="routes" class="api-section">
           <div class="api-section__header">
-            <p>Routes</p>
-            <h2>Purpose-built endpoints for common image states.</h2>
+            <p>Route examples</p>
+            <h2>Live previews for common production surfaces.</h2>
           </div>
+          <p class="api-lead">
+            Each card links to a working response. Open one in a new tab, then copy the path into your app, CMS field, or design system fixture.
+          </p>
           <div class="api-route-grid">
             {routes.map((route) => (
-              <a href={`${baseUrl}${route.path}`} target="_blank" rel="noreferrer" class="api-route-card">
+              <a href={route.url} target="_blank" rel="noreferrer" class="api-route-card">
                 <div class="api-route-card__media">
                   <img src={route.image} alt={`${route.title} preview`} loading="lazy" />
                 </div>
                 <div>
+                  <span class="api-route-card__category">{route.category}</span>
                   <h3>{route.title}</h3>
                   <code>{route.path}</code>
                   <p>{route.description}</p>
@@ -190,15 +432,17 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
         <section id="examples" class="api-section">
           <div class="api-section__header">
-            <p>Code Examples</p>
+            <p>Code examples</p>
             <h2>Use the API anywhere an image URL is accepted.</h2>
           </div>
           <div class="api-code-grid">
             <CodeBlock label="HTML" language="html" code={htmlExample} />
+            <CodeBlock label="Broken image fallback" language="html" code={onErrorExample} />
             <CodeBlock label="CSS" language="css" code={cssExample} />
             <CodeBlock label="JavaScript" language="ts" code={jsExample} />
             <CodeBlock label="React" language="tsx" code={reactExample} />
-            <CodeBlock label="Thumbnail" language="tsx" code={thumbnailExample} />
+            <CodeBlock label="Next.js" language="tsx" code={nextExample} />
+            <CodeBlock label="Blog thumbnail" language="tsx" code={thumbnailExample} />
           </div>
         </section>
 
@@ -251,13 +495,13 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
         <section id="limits" class="api-section">
           <div class="api-section__header">
-            <p>Usage Limits</p>
+            <p>Usage limits</p>
             <h2>Bounded inputs for predictable edge rendering.</h2>
           </div>
           <div class="api-header-grid">
             <div>
               <h3>Dimensions</h3>
-              <code>1px-5000px</code>
+              <code>10px–4000px</code>
               <p>Requests outside the supported range return a 400 response instead of generating an oversized asset.</p>
             </div>
             <div>
@@ -271,17 +515,50 @@ const thumbnailExample = `export function BlogFeaturedImage() {
               <p>Deterministic URLs are safe for long-lived CDN and browser caching across repeated product states.</p>
             </div>
           </div>
-          <div class="api-final-cta">
-            <div>
-              <h2>Ready to ship image fallbacks?</h2>
-              <p>Start with public URL routes. Higher-volume usage, custom domains, and SLA terms can be handled through a separate enterprise agreement.</p>
-            </div>
-            <a href="/docs/">Read the Docs</a>
+        </section>
+
+        <section id="faq" class="api-section">
+          <div class="api-section__header">
+            <p>FAQ</p>
+            <h2>Common API questions.</h2>
+          </div>
+          <div class="api-faq-list">
+            {faqs.map((faq) => (
+              <article class="api-faq-item">
+                <h3>{faq.question}</h3>
+                <p>{faq.answer}</p>
+              </article>
+            ))}
           </div>
         </section>
+
+        <section class="api-related">
+          <h2>Related resources</h2>
+          <div class="api-related__grid">
+            <a href="/placeholder-image-generator/">Placeholder image generator</a>
+            <a href="/placeholder-image-api/">Placeholder image API overview</a>
+            <a href="/broken-image-fallback/">Broken image fallback guide</a>
+            <a href="/guides/nextjs-image-fallback/">Next.js image fallback</a>
+            <a href="/dummy-image-generator/">Dummy image generator</a>
+            <a href="/blog/placeholder-image-api-url-syntax-guide/">URL syntax deep dive</a>
+          </div>
+        </section>
+
+        <div class="api-final-cta">
+          <div>
+            <h2>Ready to ship image fallbacks?</h2>
+            <p>Start with public /api/v1 routes, then standardize dimensions and labels across product, docs, and tests. Enterprise custom domains and SLA terms are available separately.</p>
+          </div>
+          <div class="api-final-cta__actions">
+            <a href="/placeholder-image-generator/">Open generator</a>
+            <a href="/docs/" class="api-final-cta__secondary">Read the docs</a>
+          </div>
+        </div>
       </article>
     </div>
   </div>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </DocsLayout>
 
 <style>
@@ -302,7 +579,8 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
   .api-eyebrow,
   .api-section__header p,
-  .api-sidebar span {
+  .api-sidebar span,
+  .api-route-card__category {
     margin: 0;
     color: var(--color-brand-hover);
     font-size: 0.75rem;
@@ -315,13 +593,13 @@ const thumbnailExample = `export function BlogFeaturedImage() {
     max-width: 56rem;
     margin: 1rem 0 0;
     color: var(--color-text);
-    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-size: clamp(2.35rem, 5vw, 4.5rem);
     font-weight: 650;
     letter-spacing: 0;
-    line-height: 0.98;
+    line-height: 1.02;
   }
 
-  .api-hero p:not(.api-eyebrow) {
+  .api-hero p:not(.api-eyebrow):not(.api-hero__panel-note) {
     max-width: 45rem;
     margin: 1.25rem 0 0;
     color: var(--color-text-muted);
@@ -329,12 +607,51 @@ const thumbnailExample = `export function BlogFeaturedImage() {
     line-height: 1.75;
   }
 
+  .api-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .api-hero__cta,
+  .api-final-cta a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: var(--color-brand);
+    color: var(--color-inverse-text);
+    font-size: 0.875rem;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  .api-hero__link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-inverse-text);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
   .api-hero__panel,
   .api-route-card,
   .api-table-wrap,
   .api-callout,
   .api-header-grid > div,
-  .api-final-cta {
+  .api-final-cta,
+  .api-quick-card,
+  .api-faq-item,
+  .api-related {
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     background: var(--color-inverse-text);
@@ -351,6 +668,13 @@ const thumbnailExample = `export function BlogFeaturedImage() {
     color: var(--color-text-soft);
     font-size: 0.8125rem;
     font-weight: 700;
+  }
+
+  .api-hero__panel-note {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 
   .api-hero__panel code,
@@ -414,11 +738,28 @@ const thumbnailExample = `export function BlogFeaturedImage() {
   }
 
   .api-section__header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .api-lead {
+    margin: 0 0 1.25rem;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 48rem;
+  }
+
+  .api-lead code {
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    background: var(--color-surface-muted);
+    font-size: 0.875em;
+    padding: 0.1rem 0.35rem;
   }
 
   .api-section__header h2,
-  .api-final-cta h2 {
+  .api-final-cta h2,
+  .api-related h2 {
     margin: 0.625rem 0 0;
     color: var(--color-text);
     font-size: clamp(1.75rem, 3vw, 2.75rem);
@@ -429,13 +770,46 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
   .api-route-grid,
   .api-code-grid,
-  .api-header-grid {
+  .api-header-grid,
+  .api-quick-grid,
+  .api-faq-list {
     display: grid;
     gap: 1rem;
   }
 
   .api-route-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .api-quick-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 1rem;
+  }
+
+  .api-quick-card {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+
+  .api-quick-card:hover {
+    border-color: #c4b5fd;
+    transform: translateY(-1px);
+  }
+
+  .api-quick-card strong {
+    color: var(--color-text);
+    font-size: 0.9375rem;
+  }
+
+  .api-quick-card code,
+  .api-quick-card span {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 
   .api-code-grid,
@@ -457,30 +831,33 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
   .api-route-card__media {
     display: grid;
-    min-height: 12rem;
+    min-height: 11rem;
     place-items: center;
     border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface-muted);
+    background: linear-gradient(180deg, var(--color-surface-muted), var(--color-inverse-text));
     padding: 1rem;
   }
 
   .api-route-card img {
     width: 100%;
-    max-height: 11rem;
+    max-height: 10rem;
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     object-fit: contain;
+    background: var(--color-inverse-text);
   }
 
   .api-route-card > div:last-child,
   .api-callout,
-  .api-header-grid > div {
+  .api-header-grid > div,
+  .api-faq-item {
     padding: 1.25rem;
   }
 
   .api-route-card h3,
-  .api-header-grid h3 {
-    margin: 0;
+  .api-header-grid h3,
+  .api-faq-item h3 {
+    margin: 0.35rem 0 0;
     color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
@@ -489,7 +866,8 @@ const thumbnailExample = `export function BlogFeaturedImage() {
   .api-route-card p,
   .api-header-grid p,
   .api-callout,
-  .api-final-cta p {
+  .api-final-cta p,
+  .api-faq-item p {
     color: var(--color-text-muted);
     font-size: 0.9375rem;
     line-height: 1.7;
@@ -544,6 +922,7 @@ const thumbnailExample = `export function BlogFeaturedImage() {
   .api-table code {
     color: var(--color-text);
     font-weight: 700;
+    font-size: 0.8125rem;
   }
 
   .api-callout {
@@ -554,6 +933,28 @@ const thumbnailExample = `export function BlogFeaturedImage() {
 
   .api-callout strong {
     color: var(--color-brand-text-strong);
+  }
+
+  .api-related {
+    padding: 1.5rem;
+  }
+
+  .api-related__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .api-related__grid a {
+    color: var(--color-brand-text-strong);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .api-related__grid a:hover {
+    color: var(--color-brand-hover);
   }
 
   .api-final-cta {
@@ -575,25 +976,25 @@ const thumbnailExample = `export function BlogFeaturedImage() {
     color: var(--color-text-disabled);
   }
 
-  .api-final-cta a {
-    display: inline-flex;
+  .api-final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     flex: 0 0 auto;
-    min-height: 2.75rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    background: var(--color-inverse-text);
-    color: var(--color-text);
-    font-size: 0.875rem;
-    font-weight: 800;
-    padding: 0 1rem;
-    text-decoration: none;
+  }
+
+  .api-final-cta__secondary {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-inverse-text) !important;
   }
 
   @media (max-width: 960px) {
     .api-hero,
     .api-grid,
-    .api-route-grid {
+    .api-route-grid,
+    .api-quick-grid,
+    .api-related__grid {
       grid-template-columns: 1fr;
     }
 
@@ -608,7 +1009,7 @@ const thumbnailExample = `export function BlogFeaturedImage() {
     }
 
     .api-hero h1 {
-      font-size: 2.75rem;
+      font-size: 2.35rem;
     }
 
     .api-final-cta {
