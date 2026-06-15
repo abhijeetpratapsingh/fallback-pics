@@ -104,9 +104,9 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
   const [imageLoading, setImageLoading] = useState(false);
   const [recentUrls, setRecentUrls] = useState<string[]>([]);
 
-  const isSquareOrAvatar = preset === 'avatar' || preset === 'square';
+  const locksSquareDimensions = preset === 'avatar' || preset === 'square';
   const safeWidth = clampDimension(width, 800);
-  const safeHeight = isSquareOrAvatar ? safeWidth : clampDimension(height, 450);
+  const safeHeight = locksSquareDimensions ? safeWidth : clampDimension(height, 450);
   const showColorControls = showColorControlsFor(preset);
 
   const generateUrl = useCallback(() => {
@@ -331,7 +331,7 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
                     onChange={(event) => setHeight(clampDimension(Number(event.target.value), 450))}
                     min="10"
                     max={MAX_DIMENSION}
-                    disabled={isSquareOrAvatar}
+                    disabled={locksSquareDimensions}
                     className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100 disabled:opacity-50"
                   />
                 </label>
@@ -356,7 +356,7 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
                         height: size.h,
                       });
                     }}
-                    disabled={isSquareOrAvatar}
+                    disabled={locksSquareDimensions}
                     className="rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {size.label}
@@ -598,12 +598,14 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
                 alt={`Generated ${presetLabel} placeholder${text ? `: ${text}` : ''}`}
                 onLoad={() => setImageLoading(false)}
                 style={
-                  isSquareOrAvatar ? undefined : { aspectRatio: `${safeWidth} / ${safeHeight}` }
+                  locksSquareDimensions ? undefined : { aspectRatio: `${safeWidth} / ${safeHeight}` }
                 }
                 className={`relative z-[1] max-h-[min(72%,320px)] max-w-full object-contain shadow-[0_12px_32px_-12px_rgba(9,9,11,0.28)] ring-1 ring-black/10 transition-opacity duration-200 ${
-                  isSquareOrAvatar
+                  preset === 'avatar'
                     ? 'aspect-square max-h-[min(52%,200px)] max-w-[min(52%,200px)] rounded-full'
-                    : 'rounded-lg'
+                    : preset === 'square'
+                      ? 'aspect-square max-h-[min(52%,200px)] max-w-[min(52%,200px)] rounded-none'
+                      : 'rounded-lg'
                 }`}
               />
             </div>

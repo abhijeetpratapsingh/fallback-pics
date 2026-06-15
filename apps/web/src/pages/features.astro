@@ -283,7 +283,7 @@ const structuredData = {
           fallback.pics gives teams URL-addressable infrastructure for every missing-image state: product cards, avatars, blog thumbnails, skeleton loaders, blur previews, and broken-src recovery—cached at the edge like static assets.
         </p>
         <div class="features-hero__actions">
-          <a class="features-hero__cta" href="/placeholder-image-generator/">Try the generator</a>
+          <a class="features-hero__cta" href="/placeholder-image-generator/">Open generator</a>
           <a class="features-hero__link" href="/docs/">Read docs</a>
           <a class="features-hero__link" href="/showcase/">View showcase</a>
         </div>
@@ -517,14 +517,6 @@ const structuredData = {
   .features-eyebrow,
   .features-section__header p,
   .features-sidebar span,
-  .features-preset-card__category {
-    margin: 0;
-    color: var(--color-brand-hover);
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
 
   .features-hero h1 {
     max-width: 54rem;
@@ -612,6 +604,7 @@ const structuredData = {
     border-radius: 0.5rem;
     background: var(--color-text);
     color: var(--color-code-accent);
+    font-family: var(--font-mono);
     font-size: 0.75rem;
     line-height: 1.6;
     padding: 0.75rem;
@@ -819,8 +812,15 @@ const structuredData = {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
+    margin: 0;
     border-radius: 999px;
     background: rgb(255 255 255 / 0.92);
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
     padding: 0.25rem 0.5rem;
   }
 

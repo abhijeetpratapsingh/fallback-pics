@@ -19,7 +19,7 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
       data-analytics-event="code_copy"
       data-analytics-category="conversion"
       data-analytics-label={label}
-      aria-label={`Copy ${label}`}
+      aria-label={`Copy code snippet: ${label}`}
     >
       Copy
     </button>
@@ -104,7 +104,7 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
   .code-block__language {
     margin-left: auto;
     color: var(--color-text-disabled);
-    font-family: var(--font-web);
+    font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 600;
   }
@@ -140,8 +140,8 @@ const { code, label = 'Example', language = 'text' } = Astro.props;
     margin: 0;
     overflow-x: auto;
     padding: 1.25rem;
-    color: var(--color-border);
-    font-family: var(--font-web);
+    color: var(--color-code-text);
+    font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.65;
   }

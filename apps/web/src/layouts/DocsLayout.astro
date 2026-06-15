@@ -51,4 +51,65 @@ const {
       overflow-wrap: anywhere;
     }
   }
+
+  .docs-shell :global(.docs-sidebar a.is-active),
+  .docs-shell :global(.features-sidebar a.is-active),
+  .docs-shell :global(.api-sidebar a.is-active) {
+    background: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+    font-weight: 700;
+  }
 </style>
+
+<script>
+  function initDocSidebarSpy() {
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>(
+        '.docs-sidebar a[href^="#"], .features-sidebar a[href^="#"], .api-sidebar a[href^="#"]',
+      ),
+    );
+    if (!links.length) return;
+
+    const sections = links
+      .map((link) => {
+        const id = link.getAttribute('href')?.slice(1);
+        if (!id) return null;
+        const section = document.getElementById(id);
+        return section ? { link, section } : null;
+      })
+      .filter(Boolean) as Array<{ link: HTMLAnchorElement; section: HTMLElement }>;
+
+    if (!sections.length) return;
+
+    const setActive = (id: string) => {
+      links.forEach((link) => {
+        const active = link.getAttribute('href') === `#${id}`;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]?.target.id) setActive(visible[0].target.id);
+      },
+      { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.25, 0.5, 1] },
+    );
+
+    sections.forEach(({ section }) => observer.observe(section));
+
+    if (location.hash) {
+      const hashId = location.hash.slice(1);
+      if (sections.some(({ section }) => section.id === hashId)) setActive(hashId);
+    } else {
+      setActive(sections[0].section.id);
+    }
+  }
+
+  initDocSidebarSpy();
+  document.addEventListener('astro:page-load', initDocSidebarSpy);
+</script>

@@ -57,7 +57,6 @@ function codeLanguage(code: string) {
 
   {page.sections.map((section) => (
     <section id={sectionId(section.heading)} class="content-section">
-      <p class="content-section__eyebrow">Guide section</p>
       <h2>{section.heading}</h2>
       {section.body.map((paragraph) => <p>{paragraph}</p>)}
       {section.bullets && (
@@ -127,7 +126,10 @@ function codeLanguage(code: string) {
     <div class="content-cta__code">
       <code>{page.exampleUrl}</code>
     </div>
-    <a href="/api/">View API Reference</a>
+    <div class="content-cta__actions">
+      <a class="content-cta__primary" href="#generator">Open generator</a>
+      <a class="content-cta__secondary" href="/api/">View API reference</a>
+    </div>
   </Fragment>
 
   <script is:inline slot="structured-data" type="application/ld+json" set:html={JSON.stringify(structuredData)} />

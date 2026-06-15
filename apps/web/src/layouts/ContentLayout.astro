@@ -299,6 +299,7 @@ const hasCta = Astro.slots.has('cta');
     border-radius: 0.5rem;
     background: var(--color-text);
     color: var(--color-code-accent);
+    font-family: var(--font-mono);
     font-size: 0.8125rem;
     line-height: 1.6;
     padding: 0.85rem;
@@ -429,17 +430,39 @@ const hasCta = Astro.slots.has('cta');
     padding: 1rem;
   }
 
-  .content-cta :global(a) {
+  .content-cta :global(.content-cta__actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .content-cta :global(.content-cta__primary),
+  .content-cta :global(a:not(.content-cta__secondary)) {
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
     justify-content: center;
-    justify-self: center;
     border-radius: 0.5rem;
     background: var(--color-inverse-text);
     color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+  }
+
+  .content-cta :global(.content-cta__secondary) {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    background: transparent;
+    color: var(--color-inverse-text);
+    font-size: 0.875rem;
+    font-weight: 700;
     padding: 0 1rem;
     text-decoration: none;
   }

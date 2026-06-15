@@ -221,7 +221,7 @@ function createPreviewSvg(width: number, height: number, bg: string, fg: string,
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
   }
 
-  const radius = preset === 'avatar' || preset === 'square' ? safeWidth / 2 : 16;
+  const radius = preset === 'avatar' ? safeWidth / 2 : preset === 'square' ? 0 : 16;
   const dimensionsY = Math.round(safeHeight / 2 + fontSize * 0.95);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}"><rect width="100%" height="100%" rx="${radius}" fill="#${bg}"/><path d="M0 ${safeHeight * 0.82} C ${safeWidth * 0.24} ${safeHeight * 0.72}, ${safeWidth * 0.38} ${safeHeight * 0.95}, ${safeWidth} ${safeHeight * 0.72} L ${safeWidth} ${safeHeight} L 0 ${safeHeight} Z" fill="#ffffff" opacity="0.08"/><text x="50%" y="50%" font-family="Roboto Slab, serif" font-size="${fontSize}" font-weight="650" fill="#${fg}" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text><text x="50%" y="${dimensionsY}" font-family="Roboto Slab, serif" font-size="${Math.max(12, Math.round(fontSize * 0.36))}" fill="#${fg}" opacity="0.72" text-anchor="middle" dominant-baseline="middle">${safeWidth}x${safeHeight}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
@@ -352,8 +352,8 @@ function EnterpriseLanding() {
   const [customizeOpen, setCustomizeOpen] = useState(false);
 
   const safeWidth = clampDimension(width, 800);
-  const isSquareOrAvatar = preset === 'avatar' || preset === 'square';
-  const safeHeight = isSquareOrAvatar ? safeWidth : clampDimension(height, 450);
+  const locksSquareDimensions = preset === 'avatar' || preset === 'square';
+  const safeHeight = locksSquareDimensions ? safeWidth : clampDimension(height, 450);
   const safeBg = sanitizeHex(bg, '18181B');
   const safeFg = sanitizeHex(fg, 'FFFFFF');
   const builderOptions: BuilderOptions = {
@@ -474,7 +474,7 @@ function EnterpriseLanding() {
               </p>
               <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-3">
                 <a
-                  href="#developers"
+                  href="#hero-demo"
                   data-analytics-event="cta_click"
                   data-analytics-category="conversion"
                   data-analytics-label="Hero start using API"
@@ -532,7 +532,7 @@ function EnterpriseLanding() {
               id="hero-demo"
               className="min-w-0 overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-[0_32px_64px_-28px_rgba(91,33,182,0.16),0_20px_40px_-24px_rgba(9,9,11,0.14)] ring-1 ring-zinc-950/[0.04]"
             >
-              <div className="h-1 bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-500" aria-hidden="true" />
+              <div className="h-1 bg-gradient-to-r from-violet-600 to-violet-400" aria-hidden="true" />
 
               <div className="relative aspect-[4/3] overflow-hidden border-b border-zinc-100 bg-gradient-to-br from-violet-50/70 via-zinc-50 to-indigo-50/40">
                 <div
@@ -550,14 +550,16 @@ function EnterpriseLanding() {
                     onError={() => setImageFailed(true)}
                     alt="Live generated fallback preview"
                     style={
-                      isSquareOrAvatar
+                      locksSquareDimensions
                         ? undefined
                         : { aspectRatio: `${safeWidth} / ${safeHeight}` }
                     }
                     className={`max-h-full max-w-full object-contain shadow-[0_12px_32px_-12px_rgba(9,9,11,0.28)] ring-1 ring-black/10 ${
-                      isSquareOrAvatar
+                      preset === 'avatar'
                         ? 'aspect-square max-h-[min(52%,180px)] max-w-[min(52%,180px)] rounded-full'
-                        : 'max-h-[min(72%,220px)] rounded-lg'
+                        : preset === 'square'
+                          ? 'aspect-square max-h-[min(52%,180px)] max-w-[min(52%,180px)] rounded-none'
+                          : 'max-h-[min(72%,220px)] rounded-lg'
                     }`}
                   />
                 </div>
@@ -617,7 +619,7 @@ function EnterpriseLanding() {
                       min="10"
                       max={MAX_DIMENSION}
                       value={height}
-                      disabled={isSquareOrAvatar}
+                      disabled={locksSquareDimensions}
                       onChange={(event) => {
                         setHeight(clampDimension(Number(event.target.value), 450));
                         setImageFailed(false);

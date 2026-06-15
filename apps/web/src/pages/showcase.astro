@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 
 const API_BASE = 'https://fallback.pics/api/v1';
+const canonical = 'https://fallback.pics/showcase/';
 
 type Category = 'Product' | 'People' | 'Loading' | 'Marketing' | 'Apps' | 'Docs' | 'Data' | 'Recovery';
 type Aspect = 'wide' | 'square' | 'portrait' | 'banner' | 'avatar';
@@ -19,6 +20,17 @@ type ShowcaseItem = {
 };
 
 const categories: Category[] = ['Product', 'People', 'Loading', 'Marketing', 'Apps', 'Docs', 'Data', 'Recovery'];
+
+const categoryMeta: Record<Category, { blurb: string }> = {
+  Product: { blurb: 'Catalog cards, variants, carts, and campaign banners when vendor media is missing.' },
+  People: { blurb: 'Initials avatars, org logos, and profile fallbacks for users and teams.' },
+  Loading: { blurb: 'Skeleton and animated states that preserve layout while images resolve.' },
+  Marketing: { blurb: 'Open Graph art, newsletters, case studies, and social share previews.' },
+  Apps: { blurb: 'Attachments, video thumbs, PDF previews, and location media slots.' },
+  Docs: { blurb: 'Article thumbnails, changelogs, tutorials, and help center visuals.' },
+  Data: { blurb: 'Dashboard reports, chart placeholders, and analytics empty states.' },
+  Recovery: { blurb: 'Upload failures, broken src replacement, and offline media states.' },
+};
 
 function item(
   category: Category,
@@ -43,21 +55,29 @@ function item(
   };
 }
 
-function fallbackSvg(item: ShowcaseItem) {
-  const dimensions = item.aspect === 'avatar'
+function fallbackSvg(showcaseItem: ShowcaseItem) {
+  const dimensions = showcaseItem.aspect === 'avatar'
     ? [320, 320]
-    : item.aspect === 'square'
+    : showcaseItem.aspect === 'square'
       ? [640, 640]
-      : item.aspect === 'portrait'
+      : showcaseItem.aspect === 'portrait'
         ? [540, 720]
-        : item.aspect === 'banner'
+        : showcaseItem.aspect === 'banner'
           ? [1200, 420]
           : [800, 500];
   const [width, height] = dimensions;
   const fontSize = Math.max(22, Math.min(width, height) * 0.085);
-  const radius = item.aspect === 'avatar' ? width / 2 : 28;
-  const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg"><rect width="${width}" height="${height}" rx="${radius}" fill="#${item.bg}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="${fontSize}" font-weight="750" fill="#${item.fg}">${item.label}</text></svg>`;
+  const radius = showcaseItem.aspect === 'avatar' ? width / 2 : 28;
+  const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg"><rect width="${width}" height="${height}" rx="${radius}" fill="#${showcaseItem.bg}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="${fontSize}" font-weight="750" fill="#${showcaseItem.fg}">${showcaseItem.label}</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+function presetFromRecipe(recipe: string) {
+  const segment = recipe.split('/').filter(Boolean)[0] ?? 'standard';
+  if (segment.includes('x') || segment.match(/^\d/)) return 'standard';
+  if (segment === 'ai') return 'pattern';
+  if (segment === 'animated') return 'animated';
+  return segment;
 }
 
 const showcaseItems: ShowcaseItem[] = [
@@ -95,36 +115,54 @@ const showcaseItems: ShowcaseItem[] = [
   item('Loading', 'Skeleton app sidebar preview', 'Sidebar', '/animated/skeleton/360x720', 'F4F4F5', 'A1A1AA', 'portrait'),
 
   item('Marketing', 'Blog cover placeholder', 'Blog Cover', '/1200x630/18181B/FFFFFF?text=Blog+Cover', '18181B', 'FFFFFF', 'wide'),
-  item('Docs', 'Docs article thumbnail', 'Docs Preview', '/800x450/F5F3FF/6D28D9?text=Docs+Preview', 'F5F3FF', '6D28D9', 'wide'),
+  item('Marketing', 'Blog thumbnail preset', 'Release Notes', '/thumbnail/1200x630?text=Release+Notes&style=soft&label=Blog&theme=purple', '7C3AED', 'FFFFFF', 'wide', true),
   item('Marketing', 'Open Graph image placeholder', 'Open Graph', '/1200x630/7C3AED/FFFFFF?text=Open+Graph', '7C3AED', 'FFFFFF', 'wide', true),
+  item('Marketing', 'Case study cover', 'Case Study', '/1200x630/FFF7ED/C2410C?text=Case+Study', 'FFF7ED', 'C2410C', 'wide'),
+  item('Marketing', 'Newsletter card visual', 'Newsletter', '/800x500/FDF2F8/BE185D?text=Newsletter', 'FDF2F8', 'BE185D', 'wide'),
+  item('Marketing', 'Social share preview', 'Social Preview', '/1200x630/DBEAFE/1D4ED8?text=Social+Preview', 'DBEAFE', '1D4ED8', 'wide'),
+  item('Marketing', 'Blur progressive reveal', 'Blur Preview', '/blur/800x450', 'F4F4F5', 'A1A1AA', 'wide'),
+
+  item('Docs', 'Docs article thumbnail', 'Docs Preview', '/800x450/F5F3FF/6D28D9?text=Docs+Preview', 'F5F3FF', '6D28D9', 'wide'),
   item('Docs', 'Changelog card visual', 'Changelog', '/800x450/ECFDF5/047857?text=Changelog', 'ECFDF5', '047857', 'wide'),
   item('Docs', 'Tutorial preview image', 'Tutorial', '/800x450/EFF6FF/1D4ED8?text=Tutorial', 'EFF6FF', '1D4ED8', 'wide'),
   item('Docs', 'API docs preview image', 'API Docs', '/800x450/18181B/FFFFFF?text=API+Docs', '18181B', 'FFFFFF', 'wide'),
-  item('Marketing', 'Case study cover', 'Case Study', '/1200x630/FFF7ED/C2410C?text=Case+Study', 'FFF7ED', 'C2410C', 'wide'),
   item('Docs', 'Help center article image', 'Help Center', '/800x450/F4F4F5/52525B?text=Help+Center', 'F4F4F5', '52525B', 'wide'),
-  item('Marketing', 'Newsletter card visual', 'Newsletter', '/800x500/FDF2F8/BE185D?text=Newsletter', 'FDF2F8', 'BE185D', 'wide'),
-  item('Marketing', 'Social share preview', 'Social Preview', '/1200x630/DBEAFE/1D4ED8?text=Social+Preview', 'DBEAFE', '1D4ED8', 'wide'),
 
   item('Data', 'Dashboard report preview', 'Report Preview', '/800x500/18181B/FFFFFF?text=Report+Preview', '18181B', 'FFFFFF', 'wide', true),
-  item('Data', 'Chart placeholder', 'Chart', '/800x500/ECFDF5/047857?text=Chart', 'ECFDF5', '047857', 'wide'),
+  item('Data', 'Chart placeholder', 'Chart', '/chart/bar/800x400', 'ECFDF5', '047857', 'wide'),
   item('Data', 'Analytics card empty state', 'No Data Yet', '/640x480/F5F3FF/6D28D9?text=No+Data+Yet', 'F5F3FF', '6D28D9', 'wide'),
+
   item('Apps', 'File attachment preview', 'Attachment', '/640x480/F4F4F5/52525B?text=Attachment', 'F4F4F5', '52525B', 'wide'),
   item('Apps', 'Video thumbnail placeholder', 'Video Preview', '/800x450/18181B/FFFFFF?text=Video+Preview', '18181B', 'FFFFFF', 'wide'),
   item('Apps', 'PDF preview placeholder', 'PDF Preview', '/640x800/FEF3C7/B45309?text=PDF+Preview', 'FEF3C7', 'B45309', 'portrait'),
   item('Apps', 'Map/location image fallback', 'Location', '/800x500/E0F2FE/0369A1?text=Location', 'E0F2FE', '0369A1', 'wide'),
+  item('Apps', 'Pattern decorative background', 'Pattern', '/ai/800x450?context=saas&mood=minimal', 'F5F3FF', '6D28D9', 'wide'),
+
   item('Recovery', 'Upload failed placeholder', 'Upload Failed', '/800x500/FFF1F2/BE123C?text=Upload+Failed', 'FFF1F2', 'BE123C', 'wide'),
   item('Recovery', 'Broken image replacement', 'Image Unavailable', '/800x500/18181B/FFFFFF?text=Image+Unavailable', '18181B', 'FFFFFF', 'wide', true),
   item('Recovery', 'Offline media state', 'Offline', '/800x500/F4F4F5/52525B?text=Offline', 'F4F4F5', '52525B', 'wide'),
 ];
 
-const featuredItems = showcaseItems.filter((item) => item.featured).slice(0, 8);
+const featuredItems = showcaseItems.filter((entry) => entry.featured);
+
+const presetSpotlight = [
+  { name: 'Standard', url: `${API_BASE}/800x450?text=Product+Image`, route: '/api/v1/800x450?text=Product+Image' },
+  { name: 'Thumbnail', url: `${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft&label=Guide`, route: '/api/v1/thumbnail/1200x630?style=soft&label=Guide' },
+  { name: 'Avatar', url: `${API_BASE}/avatar/128?text=JD`, route: '/api/v1/avatar/128?text=JD' },
+  { name: 'Square', url: `${API_BASE}/square/400?text=Tile`, route: '/api/v1/square/400?text=Tile' },
+  { name: 'Banner', url: `${API_BASE}/banner/1200x400?text=Campaign`, route: '/api/v1/banner/1200x400?text=Campaign' },
+  { name: 'Skeleton', url: `${API_BASE}/skeleton/640x360`, route: '/api/v1/skeleton/640x360' },
+  { name: 'Animated', url: `${API_BASE}/animated/skeleton/640x360`, route: '/api/v1/animated/skeleton/640x360' },
+  { name: 'Blur', url: `${API_BASE}/blur/800x450`, route: '/api/v1/blur/800x450' },
+  { name: 'Pattern', url: `${API_BASE}/ai/800x450?context=saas&mood=minimal`, route: '/api/v1/ai/800x450?context=saas&mood=minimal' },
+];
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'fallback.pics Showcase',
   description: 'A visual gallery of generated fallback images, avatars, banners, skeleton states, and missing-media examples.',
-  url: 'https://fallback.pics/showcase/',
+  url: canonical,
   mainEntity: showcaseItems.map((showcaseItem) => ({
     '@type': 'ImageObject',
     name: showcaseItem.title,
@@ -135,11 +173,11 @@ const structuredData = {
 ---
 
 <Layout
-  title="Showcase | fallback.pics"
-  description="Explore 50 visual examples of fallback.pics generated placeholders, avatars, banners, skeleton states, product fallbacks, docs thumbnails, and recovery states."
+  title="Showcase — Placeholder Image Gallery | fallback.pics"
+  description="Browse {showcaseItems.length} live fallback.pics examples: product placeholders, avatars, blog thumbnails, skeleton loaders, and broken-image recovery states."
   keywords="fallback image showcase, placeholder image examples, avatar placeholder examples, skeleton placeholder examples, generated fallback images"
-  canonical="https://fallback.pics/showcase/"
-  ogImage="https://fallback.pics/api/v1/1200x630/18181B/FFFFFF?text=fallback.pics+Showcase"
+  canonical={canonical}
+  ogImage={`${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft&label=Gallery`}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
@@ -147,57 +185,131 @@ const structuredData = {
     <section class="showcase-hero" aria-labelledby="showcase-heading">
       <div class="showcase-hero__copy">
         <p class="showcase-eyebrow">Showcase</p>
-        <h1 id="showcase-heading">Fallbacks worth shipping.</h1>
+        <h1 id="showcase-heading">See what a single URL can replace.</h1>
         <p>
-          Fifty visual examples of product placeholders, avatars, banners, skeletons, previews,
-          and recovery states generated from simple fallback.pics URLs.
+          {showcaseItems.length} live examples across {categories.length} product categories—every image generated from a readable fallback.pics route. Filter by surface, copy a URL, or open the generator to customize.
         </p>
         <div class="showcase-hero__actions">
-          <a href="/placeholder-image-generator/">Build your first fallback URL</a>
-          <a href="/api/">View API</a>
+          <a class="showcase-hero__cta" href="/placeholder-image-generator/">Open generator</a>
+          <a class="showcase-hero__link" href="/features/">View features</a>
+          <a class="showcase-hero__link" href="/api/">API reference</a>
         </div>
+        <dl class="showcase-stats">
+          <div>
+            <dt>{showcaseItems.length}</dt>
+            <dd>live examples</dd>
+          </div>
+          <div>
+            <dt>{categories.length}</dt>
+            <dd>categories</dd>
+          </div>
+          <div>
+            <dt>{presetSpotlight.length}</dt>
+            <dd>preset routes</dd>
+          </div>
+        </dl>
       </div>
 
-      <div class="showcase-collage" aria-label="Featured generated fallback visuals">
-        {featuredItems.map((item) => (
-          <figure class:list={['showcase-collage__item', `showcase-collage__item--${item.aspect}`]} data-category={item.category}>
-            <img src={item.url} data-fallback-src={fallbackSvg(item)} alt={`${item.title} preview`} loading="eager" />
-            <figcaption>{item.label}</figcaption>
-          </figure>
+      <div class="showcase-hero__panel" aria-label="Featured showcase preview">
+        <span>Featured thumbnail</span>
+        <img
+          src={`${API_BASE}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&label=Showcase&theme=purple`}
+          alt="fallback.pics thumbnail showcase preview"
+          width="1200"
+          height="630"
+        />
+        <code>/api/v1/thumbnail/1200x630?style=soft&label=Showcase</code>
+      </div>
+    </section>
+
+    <section class="showcase-spotlight" aria-labelledby="showcase-spotlight-heading">
+      <div class="showcase-spotlight__header">
+        <div>
+          <p class="showcase-eyebrow">Presets</p>
+          <h2 id="showcase-spotlight-heading">Start from a route, not a blank canvas.</h2>
+        </div>
+        <p>Nine preset families cover the surfaces teams adopt first. Each card opens the live image.</p>
+      </div>
+      <div class="showcase-spotlight__grid">
+        {presetSpotlight.map((preset) => (
+          <a href={preset.url} target="_blank" rel="noreferrer" class="showcase-spotlight__card">
+            <div class="showcase-spotlight__media">
+              <img src={preset.url} alt={`${preset.name} preset example`} loading="lazy" />
+            </div>
+            <div>
+              <strong>{preset.name}</strong>
+              <code>{preset.route}</code>
+            </div>
+          </a>
         ))}
       </div>
     </section>
 
-    <section class="showcase-library" aria-labelledby="showcase-library-heading">
-      <div class="showcase-library__header">
+    <section id="gallery" class="showcase-library" aria-labelledby="showcase-library-heading">
+      <div class="showcase-library__intro">
         <div>
-          <p class="showcase-eyebrow">Visual library</p>
-          <h2 id="showcase-library-heading">50 ways to make missing media look intentional.</h2>
+          <p class="showcase-eyebrow">Gallery</p>
+          <h2 id="showcase-library-heading">Browse by product surface.</h2>
         </div>
-        <p>{showcaseItems.length} generated image states across {categories.length} platform categories.</p>
+        <p class="showcase-library__count" data-showcase-count>
+          Showing {showcaseItems.length} of {showcaseItems.length} examples
+        </p>
       </div>
 
-      <div class="showcase-filters" aria-label="Filter showcase visuals by category">
-        <button type="button" class="showcase-filter showcase-filter--active" data-showcase-filter="all">All</button>
-        {categories.map((category) => (
-          <button type="button" class="showcase-filter" data-showcase-filter={category}>{category}</button>
+      <div class="showcase-toolbar">
+        <div class="showcase-filters" role="tablist" aria-label="Filter showcase by category">
+          <button type="button" class="showcase-filter showcase-filter--active" data-showcase-filter="all" role="tab" aria-selected="true">All</button>
+          {categories.map((category) => (
+            <button type="button" class="showcase-filter" data-showcase-filter={category} role="tab" aria-selected="false">{category}</button>
+          ))}
+        </div>
+        <a class="showcase-toolbar__link" href="/placeholder-image-generator/">Customize any example →</a>
+      </div>
+
+      <p class="showcase-category-blurb" data-showcase-blurb>
+        Every example is a deterministic GET URL—click a card to open the image or copy the route into your app.
+      </p>
+
+      <div class="showcase-featured" aria-label="Featured examples">
+        {featuredItems.map((entry) => (
+          <a
+            href={entry.url}
+            target="_blank"
+            rel="noreferrer"
+            class="showcase-featured__card"
+            data-showcase-featured
+            data-category={entry.category}
+          >
+            <img src={entry.url} data-fallback-src={fallbackSvg(entry)} alt={`${entry.title} preview`} loading="lazy" />
+            <span>{entry.category}</span>
+            <strong>{entry.title}</strong>
+          </a>
         ))}
       </div>
 
       <div class="showcase-grid" data-showcase-grid>
-        {showcaseItems.map((item) => (
+        {showcaseItems.map((entry) => (
           <article
-            class:list={['showcase-card', `showcase-card--${item.aspect}`]}
+            class:list={['showcase-card', `showcase-card--${entry.aspect}`]}
             data-showcase-card
-            data-category={item.category}
+            data-category={entry.category}
           >
-            <div class="showcase-card__media">
-              <img src={item.url} data-fallback-src={fallbackSvg(item)} alt={`${item.title} preview`} loading="lazy" />
-            </div>
+            <a href={entry.url} target="_blank" rel="noreferrer" class="showcase-card__media" aria-label={`Open ${entry.title} live image`}>
+              <img src={entry.url} data-fallback-src={fallbackSvg(entry)} alt={`${entry.title} preview`} loading="lazy" />
+              <span class="showcase-card__open">Open live</span>
+            </a>
             <div class="showcase-card__body">
-              <span>{item.category}</span>
-              <h3>{item.title}</h3>
-              <code>{item.recipe}</code>
+              <div class="showcase-card__meta">
+                <span class="showcase-card__category">{entry.category}</span>
+                <span class="showcase-card__preset">{presetFromRecipe(entry.recipe)}</span>
+              </div>
+              <h3>{entry.title}</h3>
+              <div class="showcase-card__route">
+                <code>{entry.recipe}</code>
+                <button type="button" class="showcase-card__copy" data-copy-url={`${API_BASE}${entry.recipe}`} aria-label={`Copy URL for ${entry.title}`}>
+                  Copy
+                </button>
+              </div>
             </div>
           </article>
         ))}
@@ -206,18 +318,21 @@ const structuredData = {
 
     <section class="showcase-cta" aria-labelledby="showcase-cta-heading">
       <div>
-        <p class="showcase-eyebrow">One URL</p>
-        <h2 id="showcase-cta-heading">Turn every empty image slot into a designed state.</h2>
+        <p class="showcase-eyebrow">Next step</p>
+        <h2 id="showcase-cta-heading">Turn your highest-traffic image slot into a designed state.</h2>
+        <p>Pick an example above, paste the URL into HTML or your framework, then refine dimensions and labels in the generator.</p>
       </div>
       <div class="showcase-cta__actions">
-        <a href="/placeholder-image-generator/">Build your first fallback URL</a>
-        <a href="/docs/">Read docs</a>
+        <a class="showcase-cta__primary" href="/placeholder-image-generator/">Open generator</a>
+        <a class="showcase-cta__secondary" href="/docs/">Read docs</a>
       </div>
     </section>
   </main>
 
-  <script>
-    const fallbackImages = document.querySelectorAll<HTMLImageElement>('img[data-fallback-src]');
+  <script define:vars={{ categoryMeta, showcaseItemsLength: showcaseItems.length }}>
+    const blurbEl = document.querySelector('[data-showcase-blurb]');
+    const countEl = document.querySelector('[data-showcase-count]');
+    const fallbackImages = document.querySelectorAll('img[data-fallback-src]');
     fallbackImages.forEach((image) => {
       image.addEventListener('error', () => {
         const fallbackSrc = image.dataset.fallbackSrc;
@@ -225,8 +340,38 @@ const structuredData = {
       });
     });
 
-    const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-showcase-filter]'));
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-showcase-card]'));
+    function updateCount(visible) {
+      if (countEl) {
+        countEl.textContent = `Showing ${visible} of ${showcaseItemsLength} examples`;
+      }
+    }
+
+    function updateBlurb(category) {
+      if (!blurbEl) return;
+      if (category === 'all') {
+        blurbEl.textContent = 'Every example is a deterministic GET URL—click a card to open the image or copy the route into your app.';
+        return;
+      }
+      blurbEl.textContent = categoryMeta[category]?.blurb ?? '';
+    }
+
+    const filterButtons = Array.from(document.querySelectorAll('[data-showcase-filter]'));
+    const cards = Array.from(document.querySelectorAll('[data-showcase-card]'));
+    const featuredCards = Array.from(document.querySelectorAll('[data-showcase-featured]'));
+
+    function applyFilter(activeCategory) {
+      let visible = 0;
+      cards.forEach((card) => {
+        const show = activeCategory === 'all' || card.dataset.category === activeCategory;
+        card.hidden = !show;
+        if (show) visible += 1;
+      });
+      featuredCards.forEach((card) => {
+        card.hidden = activeCategory !== 'all' && card.dataset.category !== activeCategory;
+      });
+      updateCount(visible);
+      updateBlurb(activeCategory);
+    }
 
     filterButtons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -234,27 +379,41 @@ const structuredData = {
         filterButtons.forEach((item) => {
           const active = item === button;
           item.classList.toggle('showcase-filter--active', active);
-          item.setAttribute('aria-pressed', String(active));
+          item.setAttribute('aria-selected', String(active));
         });
-        cards.forEach((card) => {
-          card.hidden = activeCategory !== 'all' && card.dataset.category !== activeCategory;
-        });
+        applyFilter(activeCategory);
       });
     });
 
-    filterButtons[0]?.setAttribute('aria-pressed', 'true');
+    document.querySelectorAll('[data-copy-url]').forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const url = button.dataset.copyUrl;
+        if (!url) return;
+        try {
+          await navigator.clipboard.writeText(url);
+          const original = button.textContent;
+          button.textContent = 'Copied';
+          window.setTimeout(() => {
+            button.textContent = original;
+          }, 1400);
+        } catch {
+          button.textContent = 'Failed';
+        }
+      });
+    });
   </script>
 
   <style>
     .showcase-page {
       overflow-x: clip;
-      background:
-        linear-gradient(to bottom, rgba(124, 58, 237, 0.045), transparent 34rem),
-        var(--color-surface-subtle);
+      background: var(--color-surface-subtle);
       color: var(--color-text);
     }
 
     .showcase-hero,
+    .showcase-spotlight,
     .showcase-library,
     .showcase-cta {
       width: min(100% - 2rem, 80rem);
@@ -263,15 +422,14 @@ const structuredData = {
 
     .showcase-hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.74fr) minmax(24rem, 1fr);
-      gap: 2.5rem;
-      align-items: center;
-      min-height: calc(100vh - 4rem);
-      padding: 5rem 0 4rem;
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.44fr);
+      gap: 2rem;
+      align-items: end;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .showcase-eyebrow,
-    .showcase-card__body span {
+    .showcase-eyebrow {
       margin: 0;
       color: var(--color-brand-hover);
       font-size: 0.75rem;
@@ -281,195 +439,264 @@ const structuredData = {
     }
 
     .showcase-hero h1 {
+      max-width: 52rem;
       margin: 1rem 0 0;
       color: var(--color-text);
-      font-size: clamp(3.25rem, 8vw, 7.5rem);
+      font-size: clamp(2.35rem, 5vw, 4.25rem);
       font-weight: 650;
-      line-height: 0.9;
+      line-height: 1.02;
       letter-spacing: 0;
     }
 
     .showcase-hero__copy > p:not(.showcase-eyebrow) {
-      max-width: 43rem;
-      margin: 1.5rem 0 0;
+      max-width: 44rem;
+      margin: 1.25rem 0 0;
       color: var(--color-text-muted);
-      font-size: 1.125rem;
+      font-size: 1.0625rem;
       line-height: 1.75;
     }
 
-    .showcase-hero__actions,
-    .showcase-cta__actions {
+    .showcase-hero__actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
-      margin-top: 1.75rem;
+      margin-top: 1.5rem;
     }
 
-    .showcase-hero__actions a,
-    .showcase-cta__actions a {
+    .showcase-hero__cta,
+    .showcase-cta__primary {
       display: inline-flex;
-      min-height: 2.85rem;
+      min-height: 2.75rem;
       align-items: center;
       justify-content: center;
       border-radius: 0.5rem;
+      background: var(--color-brand);
+      color: var(--color-inverse-text);
       font-size: 0.875rem;
       font-weight: 800;
       padding: 0 1rem;
       text-decoration: none;
     }
 
-    .showcase-hero__actions a:first-child,
-    .showcase-cta__actions a:first-child {
-      background: var(--color-brand-hover);
-      color: var(--color-inverse-text);
-    }
-
-    .showcase-hero__actions a:last-child,
-    .showcase-cta__actions a:last-child {
+    .showcase-hero__link,
+    .showcase-cta__secondary {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      border-radius: 0.5rem;
       border: 1px solid var(--color-border);
-      background: var(--color-surface);
+      background: var(--color-inverse-text);
       color: var(--color-text);
+      font-size: 0.875rem;
+      font-weight: 700;
+      padding: 0 1rem;
+      text-decoration: none;
     }
 
-    .showcase-collage {
+    .showcase-stats {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      grid-auto-rows: 5.35rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.75rem;
+      margin: 1.75rem 0 0;
+      padding: 0;
     }
 
-    .showcase-collage__item,
-    .showcase-card {
-      overflow: hidden;
+    .showcase-stats > div {
       border: 1px solid var(--color-border);
       border-radius: 0.5rem;
-      background: var(--color-surface);
-      box-shadow: 0 18px 48px rgba(24, 24, 27, 0.08);
+      background: var(--color-inverse-text);
+      padding: 0.875rem 1rem;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
     }
 
-    .showcase-collage__item {
-      position: relative;
+    .showcase-stats dt {
       margin: 0;
-      background:
-        radial-gradient(circle at 1px 1px, rgba(124, 58, 237, 0.16) 1px, transparent 0),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(244, 244, 245, 0.9));
-      background-size: 20px 20px, 100% 100%;
-      padding: 0.72rem;
-    }
-
-    .showcase-collage__item:nth-child(1) {
-      grid-column: span 4;
-      grid-row: span 3;
-    }
-
-    .showcase-collage__item:nth-child(2) {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
-    .showcase-collage__item:nth-child(3) {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
-    .showcase-collage__item:nth-child(4),
-    .showcase-collage__item:nth-child(5) {
-      grid-column: span 3;
-      grid-row: span 2;
-    }
-
-    .showcase-collage__item:nth-child(6),
-    .showcase-collage__item:nth-child(7),
-    .showcase-collage__item:nth-child(8) {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
-    .showcase-collage img,
-    .showcase-card img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 1px solid rgba(24, 24, 27, 0.08);
-      border-radius: 0.45rem;
-      background: var(--color-surface);
-      box-shadow: 0 14px 28px rgba(24, 24, 27, 0.12);
-      object-fit: contain;
-    }
-
-    .showcase-collage__item--avatar img,
-    .showcase-card--avatar img {
-      width: min(78%, 18rem);
-      height: min(78%, 18rem);
-      margin: auto;
-      border-radius: 999px;
-    }
-
-    .showcase-collage figcaption {
-      position: absolute;
-      left: 0.75rem;
-      bottom: 0.75rem;
-      max-width: calc(100% - 1.5rem);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 0.5rem;
-      background: rgba(24, 24, 27, 0.74);
-      color: var(--color-inverse-text);
-      font-size: 0.8125rem;
-      font-weight: 800;
-      line-height: 1.2;
-      padding: 0.45rem 0.55rem;
-      backdrop-filter: blur(10px);
-    }
-
-    .showcase-library {
-      border-top: 1px solid var(--color-border);
-      padding: 4rem 0 5rem;
-    }
-
-    .showcase-library__header {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(14rem, 24rem);
-      gap: 1.5rem;
-      align-items: end;
-      margin-bottom: 1.5rem;
-    }
-
-    .showcase-library h2,
-    .showcase-cta h2 {
-      max-width: 48rem;
-      margin: 0.75rem 0 0;
       color: var(--color-text);
-      font-size: clamp(2rem, 4vw, 4.6rem);
+      font-size: 1.5rem;
       font-weight: 650;
       line-height: 1;
+    }
+
+    .showcase-stats dd {
+      margin: 0.35rem 0 0;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .showcase-hero__panel {
+      display: grid;
+      gap: 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-inverse-text);
+      padding: 1.25rem;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    }
+
+    .showcase-hero__panel span {
+      color: var(--color-text-soft);
+      font-size: 0.8125rem;
+      font-weight: 700;
+    }
+
+    .showcase-hero__panel img {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-surface-muted);
+    }
+
+    .showcase-hero__panel code,
+    .showcase-spotlight__card code,
+    .showcase-card__route code {
+      display: block;
+      overflow-wrap: anywhere;
+      border-radius: 0.5rem;
+      background: var(--color-text);
+      color: var(--color-code-accent);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      line-height: 1.55;
+      padding: 0.625rem 0.75rem;
+    }
+
+    .showcase-spotlight {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .showcase-spotlight__header {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .showcase-spotlight__header p:last-child {
+      max-width: 42rem;
+    }
+
+    .showcase-spotlight__header p:last-child,
+    .showcase-library__count,
+    .showcase-category-blurb,
+    .showcase-cta > div > p:last-child {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.65;
+    }
+
+    .showcase-spotlight h2,
+    .showcase-library h2,
+    .showcase-cta h2 {
+      margin: 0.625rem 0 0;
+      color: var(--color-text);
+      font-size: clamp(1.75rem, 3vw, 2.75rem);
+      font-weight: 650;
+      line-height: 1.08;
       letter-spacing: 0;
     }
 
-    .showcase-library__header > p {
-      color: var(--color-text-muted);
-      font-size: 1rem;
+    .showcase-spotlight__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.875rem;
+    }
+
+    .showcase-spotlight__card {
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-inverse-text);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+
+    .showcase-spotlight__card:hover {
+      border-color: #c4b5fd;
+      transform: translateY(-1px);
+    }
+
+    .showcase-spotlight__media {
+      display: grid;
+      min-height: 7.5rem;
+      place-items: center;
+      border-bottom: 1px solid var(--color-border);
+      background: linear-gradient(180deg, var(--color-surface-muted), var(--color-inverse-text));
+      padding: 0.75rem;
+    }
+
+    .showcase-spotlight__media img {
+      width: 100%;
+      max-height: 6.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      object-fit: contain;
+      background: var(--color-inverse-text);
+    }
+
+    .showcase-spotlight__card > div:last-child {
+      display: grid;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .showcase-spotlight__card strong {
+      color: var(--color-text);
+      font-size: 0.875rem;
+      font-weight: 800;
+    }
+
+    .showcase-library {
+      padding: 3rem 0 4rem;
+    }
+
+    .showcase-library__intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .showcase-library__count {
       font-weight: 700;
-      line-height: 1.65;
+      white-space: nowrap;
+    }
+
+    .showcase-toolbar {
+      position: sticky;
+      top: 4.5rem;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      padding: 0.75rem 0;
+      background: linear-gradient(var(--color-surface-subtle) 70%, transparent);
     }
 
     .showcase-filters {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
-      overflow-x: auto;
-      padding: 0 0 1rem;
     }
 
     .showcase-filter {
       flex: 0 0 auto;
-      min-height: 2.35rem;
+      min-height: 2.25rem;
       border: 1px solid var(--color-border);
       border-radius: 999px;
-      background: var(--color-surface);
+      background: var(--color-inverse-text);
       color: var(--color-text-muted);
       cursor: pointer;
       font-size: 0.8125rem;
       font-weight: 800;
-      padding: 0 0.95rem;
+      padding: 0 0.9rem;
     }
 
     .showcase-filter--active,
@@ -479,11 +706,82 @@ const structuredData = {
       color: var(--color-brand-strong);
     }
 
+    .showcase-toolbar__link {
+      flex: 0 0 auto;
+      color: var(--color-brand-hover);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .showcase-toolbar__link:hover {
+      text-decoration: underline;
+    }
+
+    .showcase-category-blurb {
+      margin-bottom: 1.25rem;
+      max-width: 42rem;
+    }
+
+    .showcase-featured {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .showcase-featured__card {
+      display: grid;
+      gap: 0.5rem;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-inverse-text);
+      padding: 0.75rem;
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+
+    .showcase-featured__card:hover {
+      border-color: #c4b5fd;
+      transform: translateY(-1px);
+    }
+
+    .showcase-featured__card[hidden] {
+      display: none;
+    }
+
+    .showcase-featured__card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      object-fit: contain;
+      background: var(--color-surface-muted);
+    }
+
+    .showcase-featured__card span {
+      color: var(--color-brand-hover);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .showcase-featured__card strong {
+      color: var(--color-text);
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
     .showcase-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
-      margin-top: 1rem;
     }
 
     .showcase-card[hidden] {
@@ -492,15 +790,22 @@ const structuredData = {
 
     .showcase-card {
       display: grid;
-      min-height: 100%;
-      box-shadow: 0 1px 2px rgba(24, 24, 27, 0.06);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-inverse-text);
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
       transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
     }
 
     .showcase-card:hover {
-      border-color: var(--color-brand-soft);
-      box-shadow: 0 18px 40px rgba(24, 24, 27, 0.08);
+      border-color: #c4b5fd;
+      box-shadow: 0 12px 32px rgb(15 23 42 / 0.08);
       transform: translateY(-2px);
+    }
+
+    .showcase-card--banner {
+      grid-column: span 2;
     }
 
     .showcase-card__media {
@@ -508,13 +813,10 @@ const structuredData = {
       display: grid;
       place-items: center;
       aspect-ratio: 16 / 10;
-      min-height: 12rem;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 1px 1px, rgba(124, 58, 237, 0.13) 1px, transparent 0),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(244, 244, 245, 0.92));
-      background-size: 18px 18px, 100% 100%;
+      background: linear-gradient(180deg, var(--color-surface-muted), var(--color-inverse-text));
       padding: 0.85rem;
+      text-decoration: none;
     }
 
     .showcase-card--square .showcase-card__media,
@@ -528,119 +830,183 @@ const structuredData = {
 
     .showcase-card--banner .showcase-card__media {
       aspect-ratio: 21 / 8;
-      min-height: 9.5rem;
     }
 
-    .showcase-card[data-category='Loading'] .showcase-card__media::before {
-      content: '';
+    .showcase-card__media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      background: var(--color-inverse-text);
+      object-fit: contain;
+    }
+
+    .showcase-card--avatar .showcase-card__media img {
+      width: min(72%, 10rem);
+      height: min(72%, 10rem);
+      border-radius: 999px;
+    }
+
+    .showcase-card__open {
       position: absolute;
-      inset: 1.15rem;
-      border-radius: 0.5rem;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.74), rgba(255,255,255,0)) -100% 0 / 50% 100% no-repeat,
-        linear-gradient(#e4e4e7, #e4e4e7) 1rem 1rem / 42% 0.8rem no-repeat,
-        linear-gradient(#e4e4e7, #e4e4e7) 1rem 2.45rem / 64% 0.65rem no-repeat,
-        linear-gradient(#e4e4e7, #e4e4e7) 1rem calc(100% - 2rem) / 48% 0.65rem no-repeat,
-        rgba(250, 250, 250, 0.78);
-      box-shadow: inset 0 0 0 1px rgba(24, 24, 27, 0.06);
-      animation: showcase-shimmer 1.8s linear infinite;
-      pointer-events: none;
+      right: 0.75rem;
+      bottom: 0.75rem;
+      border-radius: 999px;
+      background: rgb(24 24 27 / 0.78);
+      color: var(--color-inverse-text);
+      font-size: 0.6875rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 0.35rem 0.55rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 150ms ease, transform 150ms ease;
     }
 
-    .showcase-card[data-category='Loading'] .showcase-card__media img {
-      opacity: 0.22;
-      box-shadow: none;
-    }
-
-    @keyframes showcase-shimmer {
-      to {
-        background-position:
-          200% 0,
-          1rem 1rem,
-          1rem 2.45rem,
-          1rem calc(100% - 2rem),
-          0 0;
-      }
+    .showcase-card:hover .showcase-card__open {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .showcase-card__body {
       display: grid;
-      gap: 0.65rem;
-      padding: 1rem;
+      gap: 0.5rem;
+      padding: 0.875rem 1rem 1rem;
+    }
+
+    .showcase-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .showcase-card__category,
+    .showcase-card__preset {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1;
+    }
+
+    .showcase-card__category {
+      margin: 0;
+      color: var(--color-text-soft);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .showcase-card__preset {
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-muted);
+      color: var(--color-text-muted);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: capitalize;
+      padding: 0.2rem 0.5rem;
     }
 
     .showcase-card h3 {
       margin: 0;
       color: var(--color-text);
-      font-size: 1.1rem;
+      font-size: 0.975rem;
       font-weight: 800;
-      line-height: 1.16;
+      line-height: 1.25;
     }
 
-    .showcase-card code {
-      display: block;
-      overflow-wrap: anywhere;
-      border-radius: 0.5rem;
-      background: var(--color-surface-muted);
-      color: var(--color-text-muted);
-      font-family: var(--font-web);
+    .showcase-card__route {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.5rem;
+      align-items: start;
+    }
+
+    .showcase-card__copy {
+      flex: 0 0 auto;
+      min-height: 2rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      background: var(--color-inverse-text);
+      color: var(--color-text);
+      cursor: pointer;
       font-size: 0.75rem;
-      font-weight: 700;
-      line-height: 1.45;
-      padding: 0.55rem;
+      font-weight: 800;
+      padding: 0 0.65rem;
+    }
+
+    .showcase-card__copy:hover {
+      border-color: var(--color-brand-soft);
+      background: var(--color-brand-soft);
+      color: var(--color-brand-strong);
     }
 
     .showcase-cta {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 2rem;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
       border-top: 1px solid var(--color-border);
-      padding: 4rem 0 5rem;
+      padding: 3rem 0 5rem;
+    }
+
+    .showcase-cta__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      flex: 0 0 auto;
     }
 
     @media (max-width: 1080px) {
       .showcase-hero,
-      .showcase-library__header,
+      .showcase-spotlight__header,
+      .showcase-library__intro,
       .showcase-cta {
         grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: stretch;
       }
 
+      .showcase-spotlight__grid,
+      .showcase-featured,
       .showcase-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .showcase-hero {
-        min-height: auto;
-        padding-top: 3rem;
-      }
-
-      .showcase-collage {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-auto-rows: 8.5rem;
       }
 
-      .showcase-collage__item,
-      .showcase-collage__item:nth-child(n) {
+      .showcase-card--banner {
         grid-column: span 1;
-        grid-row: span 1;
-      }
-
-      .showcase-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 520px) {
-      .showcase-collage,
+    @media (max-width: 640px) {
+      .showcase-hero {
+        padding-top: 2.5rem;
+      }
+
+      .showcase-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .showcase-spotlight__grid,
+      .showcase-featured,
       .showcase-grid {
         grid-template-columns: 1fr;
       }
 
-      .showcase-card__media {
-        min-height: 11rem;
+      .showcase-cta__actions {
+        width: 100%;
+      }
+
+      .showcase-cta__primary,
+      .showcase-cta__secondary {
+        flex: 1;
+        justify-content: center;
       }
     }
   </style>
