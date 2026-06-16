@@ -31,6 +31,10 @@ const presetOptions: Array<{ id: Preset; label: string; icon: string }> = [
   { id: 'ai', label: 'Pattern', icon: 'Pt' },
 ];
 
+const heroPresetOptions = presetOptions.filter((item) =>
+  ['standard', 'avatar', 'banner', 'skeleton', 'chart'].includes(item.id),
+);
+
 const thumbnailStyles = [
   { id: 'soft', label: 'Soft shapes' },
   { id: 'rings', label: 'Rings' },
@@ -252,7 +256,7 @@ function createPreviewSvg(width: number, height: number, bg: string, fg: string,
 
   const radius = preset === 'avatar' ? safeWidth / 2 : preset === 'square' ? 0 : 16;
   const dimensionsY = Math.round(safeHeight / 2 + fontSize * 0.95);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}"><rect width="100%" height="100%" rx="${radius}" fill="#${bg}"/><path d="M0 ${safeHeight * 0.82} C ${safeWidth * 0.24} ${safeHeight * 0.72}, ${safeWidth * 0.38} ${safeHeight * 0.95}, ${safeWidth} ${safeHeight * 0.72} L ${safeWidth} ${safeHeight} L 0 ${safeHeight} Z" fill="#ffffff" opacity="0.08"/><text x="50%" y="50%" font-family="Roboto Slab, serif" font-size="${fontSize}" font-weight="650" fill="#${fg}" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text><text x="50%" y="${dimensionsY}" font-family="Roboto Slab, serif" font-size="${Math.max(12, Math.round(fontSize * 0.36))}" fill="#${fg}" opacity="0.72" text-anchor="middle" dominant-baseline="middle">${safeWidth}x${safeHeight}</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${safeWidth}" height="${safeHeight}" viewBox="0 0 ${safeWidth} ${safeHeight}"><rect width="100%" height="100%" rx="${radius}" fill="#${bg}"/><path d="M0 ${safeHeight * 0.82} C ${safeWidth * 0.24} ${safeHeight * 0.72}, ${safeWidth * 0.38} ${safeHeight * 0.95}, ${safeWidth} ${safeHeight * 0.72} L ${safeWidth} ${safeHeight} L 0 ${safeHeight} Z" fill="#ffffff" opacity="0.08"/><text x="50%" y="50%" font-family="Inter, system-ui, sans-serif" font-size="${fontSize}" font-weight="650" fill="#${fg}" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text><text x="50%" y="${dimensionsY}" font-family="Inter, system-ui, sans-serif" font-size="${Math.max(12, Math.round(fontSize * 0.36))}" fill="#${fg}" opacity="0.72" text-anchor="middle" dominant-baseline="middle">${safeWidth}x${safeHeight}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
@@ -508,9 +512,9 @@ function EnterpriseLanding() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(24,24,27,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(24,24,27,0.05)_1px,transparent_1px)] bg-[size:48px_48px]" aria-hidden="true" />
           <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-6 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(420px,500px)] lg:items-start lg:gap-12 lg:px-8 lg:py-20">
             <div>
-              <p className="mb-4 inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 shadow-sm sm:mb-5">
-                <span className="h-2 w-2 rounded-full bg-emerald-600" />
-                Placeholder image API for stable media states
+              <p className="mb-4 inline-flex max-w-full items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold leading-5 text-zinc-700 shadow-sm sm:mb-5">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-600" />
+                <span className="min-w-0">Placeholder API for stable media states</span>
               </p>
               <h1 id="hero-heading" className="max-w-4xl text-4xl font-semibold leading-[1.02] tracking-normal text-zinc-950 sm:text-6xl lg:text-7xl">
                 Never show broken images again.
@@ -621,10 +625,10 @@ function EnterpriseLanding() {
               <div className="space-y-3.5 p-4 sm:p-5">
                 <div>
                   <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-wider text-zinc-400">
-                    Placeholder type
+                    Popular presets
                   </p>
-                  <div className="grid grid-cols-3 gap-1.5" role="tablist" aria-label="Placeholder preset">
-                    {presetOptions.map((item) => (
+                  <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-5" role="tablist" aria-label="Popular placeholder preset">
+                    {heroPresetOptions.map((item) => (
                       <button
                         key={item.id}
                         type="button"
@@ -641,50 +645,6 @@ function EnterpriseLanding() {
                       </button>
                     ))}
                   </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-[5.5rem_5.5rem_1fr]">
-                  <label className="text-xs font-medium text-zinc-600">
-                    Width
-                    <input
-                      type="number"
-                      min="10"
-                      max={MAX_DIMENSION}
-                      value={width}
-                      onChange={(event) => {
-                        setWidth(clampDimension(Number(event.target.value), 800));
-                        setImageFailed(false);
-                      }}
-                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
-                    />
-                  </label>
-                  <label className="text-xs font-medium text-zinc-600">
-                    Height
-                    <input
-                      type="number"
-                      min="10"
-                      max={MAX_DIMENSION}
-                      value={height}
-                      disabled={locksSquareDimensions}
-                      onChange={(event) => {
-                        setHeight(clampDimension(Number(event.target.value), 450));
-                        setImageFailed(false);
-                      }}
-                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 font-mono text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100 disabled:opacity-50"
-                    />
-                  </label>
-                  <label className="col-span-2 text-xs font-medium text-zinc-600 sm:col-span-1">
-                    Label
-                    <input
-                      type="text"
-                      value={text}
-                      onChange={(event) => {
-                        setText(event.target.value);
-                        setImageFailed(false);
-                      }}
-                      className="mt-1 w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-sm text-zinc-950 outline-none transition focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
-                    />
-                  </label>
                 </div>
 
                 {showAdvancedPanel && (
