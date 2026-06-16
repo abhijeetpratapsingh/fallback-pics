@@ -1,6 +1,5 @@
 const THUMBNAIL_STYLES = ["soft", "rings", "lines", "pattern"] as const;
 const THUMBNAIL_THEMES = ["purple", "blue", "green", "orange", "dark"] as const;
-const BLOG_THUMBNAIL_LABEL = "fallback.pics";
 
 function slugVariant(slug: string, options: readonly string[]): string {
   let hash = 0;
@@ -33,7 +32,6 @@ export function buildBlogThumbnailUrl(
     text: title,
     style: slugVariant(slug, THUMBNAIL_STYLES),
     theme: slugVariant(slug, THUMBNAIL_THEMES),
-    label: BLOG_THUMBNAIL_LABEL,
   });
 
   return `${baseUrl}/thumbnail/1200x630?${params.toString().replace(/%20/g, "+")}`;
@@ -48,10 +46,7 @@ export function toSocialImageUrl(imageUrl: string): string {
     const segments = url.pathname.split("/");
     const last = segments[segments.length - 1] || "";
 
-    if (
-      url.pathname.includes("/thumbnail/") &&
-      /^\d+x\d+$/i.test(last)
-    ) {
+    if (url.pathname.includes("/thumbnail/") && /^\d+x\d+$/i.test(last)) {
       segments[segments.length - 1] = `${last}.jpg`;
       url.pathname = segments.join("/");
     }

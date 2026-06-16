@@ -115,7 +115,7 @@ const showcaseItems: ShowcaseItem[] = [
   item('Loading', 'Skeleton app sidebar preview', 'Sidebar', '/animated/skeleton/360x720', 'F4F4F5', 'A1A1AA', 'portrait'),
 
   item('Marketing', 'Blog cover placeholder', 'Blog Cover', '/1200x630/18181B/FFFFFF?text=Blog+Cover', '18181B', 'FFFFFF', 'wide'),
-  item('Marketing', 'Blog thumbnail preset', 'Release Notes', '/thumbnail/1200x630?text=Release+Notes&style=soft&label=Blog&theme=purple', '7C3AED', 'FFFFFF', 'wide', true),
+  item('Marketing', 'Blog thumbnail preset', 'Release Notes', '/thumbnail/1200x630?text=Release+Notes&style=soft&theme=purple', '7C3AED', 'FFFFFF', 'wide', true),
   item('Marketing', 'Open Graph image placeholder', 'Open Graph', '/1200x630/7C3AED/FFFFFF?text=Open+Graph', '7C3AED', 'FFFFFF', 'wide', true),
   item('Marketing', 'Case study cover', 'Case Study', '/1200x630/FFF7ED/C2410C?text=Case+Study', 'FFF7ED', 'C2410C', 'wide'),
   item('Marketing', 'Newsletter card visual', 'Newsletter', '/800x500/FDF2F8/BE185D?text=Newsletter', 'FDF2F8', 'BE185D', 'wide'),
@@ -147,7 +147,7 @@ const featuredItems = showcaseItems.filter((entry) => entry.featured);
 
 const presetSpotlight = [
   { name: 'Standard', url: `${API_BASE}/800x450?text=Product+Image`, route: '/api/v1/800x450?text=Product+Image' },
-  { name: 'Thumbnail', url: `${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft&label=Guide`, route: '/api/v1/thumbnail/1200x630?style=soft&label=Guide' },
+  { name: 'Thumbnail', url: `${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft`, route: '/api/v1/thumbnail/1200x630?style=soft' },
   { name: 'Avatar', url: `${API_BASE}/avatar/128?text=JD`, route: '/api/v1/avatar/128?text=JD' },
   { name: 'Square', url: `${API_BASE}/square/400?text=Tile`, route: '/api/v1/square/400?text=Tile' },
   { name: 'Banner', url: `${API_BASE}/banner/1200x400?text=Campaign`, route: '/api/v1/banner/1200x400?text=Campaign' },
@@ -177,7 +177,7 @@ const structuredData = {
   description="Browse {showcaseItems.length} live fallback.pics examples: product placeholders, avatars, blog thumbnails, skeleton loaders, and broken-image recovery states."
   keywords="fallback image showcase, placeholder image examples, avatar placeholder examples, skeleton placeholder examples, generated fallback images"
   canonical={canonical}
-  ogImage={`${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft&label=Gallery`}
+  ogImage={`${API_BASE}/thumbnail/1200x630?text=Showcase&style=soft`}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
@@ -213,12 +213,12 @@ const structuredData = {
       <div class="showcase-hero__panel" aria-label="Featured showcase preview">
         <span>Featured thumbnail</span>
         <img
-          src={`${API_BASE}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&label=Showcase&theme=purple`}
+          src={`${API_BASE}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&theme=purple`}
           alt="fallback.pics thumbnail showcase preview"
           width="1200"
           height="630"
         />
-        <code>/api/v1/thumbnail/1200x630?style=soft&label=Showcase</code>
+        <code>/api/v1/thumbnail/1200x630?style=soft&theme=purple</code>
       </div>
     </section>
 

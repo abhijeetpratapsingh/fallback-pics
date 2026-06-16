@@ -36,8 +36,8 @@ const presets = [
   {
     name: 'Thumbnail',
     category: 'Content',
-    route: '/api/v1/thumbnail/1200x630?text=Blog+Post+Title&style=soft&label=Guide',
-    url: `${baseUrl}/thumbnail/1200x630?text=Blog+Post+Title&style=soft&label=Guide`,
+    route: '/api/v1/thumbnail/1200x630?text=Blog+Post+Title&style=soft',
+    url: `${baseUrl}/thumbnail/1200x630?text=Blog+Post+Title&style=soft`,
     detail: 'Featured-image style art with safe-zone decoration, themes, and category pills.',
   },
   {
@@ -127,9 +127,9 @@ const capabilities = [
   },
   {
     title: 'Blog thumbnail engine',
-    detail: 'Generate OG-safe featured images from post titles with style, theme, label, and deterministic seed options.',
-    example: '/api/v1/thumbnail/1200x630?style=rings&theme=blue&label=Blog',
-    url: `${baseUrl}/thumbnail/1200x630?style=rings&theme=blue&label=Blog&text=Release+Notes`,
+    detail: 'Generate OG-safe featured images from post titles with style, theme, and deterministic seed options.',
+    example: '/api/v1/thumbnail/1200x630?style=rings&theme=blue',
+    url: `${baseUrl}/thumbnail/1200x630?style=rings&theme=blue&text=Release+Notes`,
   },
   {
     title: 'Chart placeholders',
@@ -272,7 +272,7 @@ const structuredData = {
   description="Explore fallback.pics features: nine preset routes, SVG and raster formats, blog thumbnails, skeleton loaders, edge caching, and production-ready broken-image recovery."
   keywords="placeholder image features, fallback image api, image placeholder service, broken image fallback, blog thumbnail generator, skeleton placeholder"
   canonical={canonical}
-  ogImage={`${baseUrl}/thumbnail/1200x630?text=Features&style=soft&label=Product`}
+  ogImage={`${baseUrl}/thumbnail/1200x630?text=Features&style=soft`}
 >
   <div class="features-page">
     <section class="features-hero">
@@ -291,12 +291,12 @@ const structuredData = {
       <div class="features-hero__panel">
         <span>Live preview</span>
         <img
-          src={`${baseUrl}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&label=Features&theme=purple`}
+          src={`${baseUrl}/thumbnail/1200x630?text=Never+Show+Broken+Images&style=soft&theme=purple`}
           alt="fallback.pics thumbnail preset preview"
           width="1200"
           height="630"
         />
-        <code>/api/v1/thumbnail/1200x630?style=soft&label=Features</code>
+        <code>/api/v1/thumbnail/1200x630?style=soft&theme=purple</code>
       </div>
     </section>
 
