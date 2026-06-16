@@ -75,6 +75,16 @@ const urlPatterns = [
     use: 'Animated loading states: skeleton, pulse, wave, shimmer, gradient, dots.',
   },
   {
+    pattern: '/api/v1/chart/{type}/{width}x{height}',
+    example: '/api/v1/chart/line/800x500',
+    use: 'Deterministic chart placeholders: bar, line, area, pie, donut, scatter, radar, heatmap.',
+  },
+  {
+    pattern: '/api/v1/gradient/{width}x{height}',
+    example: '/api/v1/gradient/800x450',
+    use: 'Static brand gradient placeholder for hero, card, and media surfaces.',
+  },
+  {
     pattern: '/api/v1/ai/{width}x{height}',
     example: '/api/v1/ai/800x450?context=saas&mood=minimal',
     use: 'Deterministic pattern backgrounds with optional context and mood.',
@@ -154,6 +164,22 @@ const routes = [
     description: 'Soft blurred state for progressive image loading workflows.',
     image: `${baseUrl}/blur/800x450`,
   },
+  {
+    category: 'Visual presets',
+    title: 'Line chart placeholder',
+    path: '/api/v1/chart/line/800x500',
+    url: `${baseUrl}/chart/line/800x500`,
+    description: 'Dashboard-ready chart placeholder generated from the route.',
+    image: `${baseUrl}/chart/line/800x500`,
+  },
+  {
+    category: 'Visual presets',
+    title: 'Gradient placeholder',
+    path: '/api/v1/gradient/800x450',
+    url: `${baseUrl}/gradient/800x450`,
+    description: 'Static purple-to-blue gradient for empty media, previews, and hero states.',
+    image: `${baseUrl}/gradient/800x450`,
+  },
 ];
 
 const parameters = [
@@ -171,6 +197,7 @@ const parameters = [
   { name: 'context', type: 'query string', description: 'Optional semantic hint for /ai pattern routes, such as ecommerce or healthcare.' },
   { name: 'mood', type: 'query string', description: 'Optional tone hint for /ai pattern routes, such as minimal or professional.' },
   { name: 'type', type: 'path string', description: 'Animation style for /animated routes: skeleton, pulse, wave, shimmer, gradient, or dots.' },
+  { name: 'chart type', type: 'path string', description: 'Chart style for /chart routes: bar, line, area, pie, donut, scatter, radar, or heatmap.' },
   { name: 'extension', type: 'path suffix', description: 'Optional .svg, .png, .jpg, .jpeg, or .webp suffix. SVG is the default when omitted.' },
 ];
 

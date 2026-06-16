@@ -11,6 +11,8 @@ type PresetId =
   | 'skeleton'
   | 'blur'
   | 'animated'
+  | 'chart'
+  | 'gradient'
   | 'ai';
 
 const presets: Array<{ id: PresetId; label: string; description: string }> = [
@@ -22,6 +24,8 @@ const presets: Array<{ id: PresetId; label: string; description: string }> = [
   { id: 'skeleton', label: 'Skeleton', description: 'Loading placeholders' },
   { id: 'blur', label: 'Blur', description: 'Blurred media state' },
   { id: 'animated', label: 'Animated', description: 'Motion placeholders' },
+  { id: 'chart', label: 'Chart', description: 'Dashboard visualizations' },
+  { id: 'gradient', label: 'Gradient', description: 'Static brand gradient' },
   { id: 'ai', label: 'Pattern', description: 'Contextual SVG pattern' },
 ];
 
@@ -58,6 +62,17 @@ const thumbnailThemes = [
   { id: 'dark', label: 'Dark' },
 ];
 
+const chartTypes = [
+  { id: 'bar', label: 'Bar' },
+  { id: 'line', label: 'Line' },
+  { id: 'area', label: 'Area' },
+  { id: 'pie', label: 'Pie' },
+  { id: 'donut', label: 'Donut' },
+  { id: 'scatter', label: 'Scatter' },
+  { id: 'radar', label: 'Radar' },
+  { id: 'heatmap', label: 'Heatmap' },
+];
+
 const MAX_DIMENSION = 5000;
 
 const clampDimension = (value: number, fallback = 400) =>
@@ -90,6 +105,7 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
   const [aiContext, setAiContext] = useState('');
   const [aiMood, setAiMood] = useState('');
   const [animationType, setAnimationType] = useState('skeleton');
+  const [chartType, setChartType] = useState('bar');
   const [thumbnailStyle, setThumbnailStyle] = useState('soft');
   const [thumbnailTheme, setThumbnailTheme] = useState('purple');
   const [thumbnailLabel, setThumbnailLabel] = useState('Blog Post');
@@ -125,6 +141,8 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
       url += `banner/${safeWidth}x${safeHeight}`;
     } else if (preset === 'animated') {
       url += `animated/${animationType}/${safeWidth}x${safeHeight}`;
+    } else if (preset === 'chart') {
+      url += `chart/${chartType}/${safeWidth}x${safeHeight}`;
     } else if (preset === 'thumbnail') {
       url += `thumbnail/${safeWidth}x${safeHeight}`;
     } else if (preset === 'ai') {
@@ -162,6 +180,7 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
     aiContext,
     aiMood,
     animationType,
+    chartType,
     thumbnailStyle,
     thumbnailTheme,
     thumbnailLabel,
@@ -217,6 +236,16 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
       case 'animated':
         setWidth(640);
         setHeight(360);
+        break;
+      case 'chart':
+        setWidth(800);
+        setHeight(500);
+        setText('Revenue');
+        break;
+      case 'gradient':
+        setWidth(800);
+        setHeight(450);
+        setText('Gradient');
         break;
       case 'ai':
         setWidth(800);
@@ -508,6 +537,22 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
                     />
                   </label>
                   <div className="flex flex-wrap gap-1.5">
+                    {thumbnailStyles.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setThumbnailStyle(item.id)}
+                        className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${
+                          thumbnailStyle === item.id
+                            ? 'border-blue-600 bg-blue-600 text-white'
+                            : 'border-blue-100 bg-white text-blue-900 hover:border-blue-200'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
                     {thumbnailThemes.map((item) => (
                       <button
                         key={item.id}
@@ -523,6 +568,39 @@ export default function LiveDemoEnhanced({ embedded = false }: LiveDemoEnhancedP
                       </button>
                     ))}
                   </div>
+                </div>
+              </section>
+            )}
+
+            {preset === 'chart' && (
+              <section className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-3">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-emerald-950">
+                  Chart type
+                </h3>
+                <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Chart type">
+                  {chartTypes.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={chartType === item.id}
+                      onClick={() => {
+                        setChartType(item.id);
+                        trackEvent('demo_chart_select', {
+                          event_category: 'demo',
+                          event_label: item.label,
+                          chart_type: item.id,
+                        });
+                      }}
+                      className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${
+                        chartType === item.id
+                          ? 'border-emerald-600 bg-emerald-600 text-white'
+                          : 'border-emerald-100 bg-white text-emerald-900 hover:border-emerald-200'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
               </section>
             )}

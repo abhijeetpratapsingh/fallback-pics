@@ -12,6 +12,8 @@ type Preset =
   | 'skeleton'
   | 'blur'
   | 'animated'
+  | 'chart'
+  | 'gradient'
   | 'ai';
 type CodeTab = 'html' | 'react' | 'next' | 'css' | 'curl';
 
@@ -24,7 +26,16 @@ const presetOptions: Array<{ id: Preset; label: string; icon: string }> = [
   { id: 'skeleton', label: 'Skeleton', icon: 'Sk' },
   { id: 'blur', label: 'Blur', icon: 'Bl' },
   { id: 'animated', label: 'Animated', icon: 'An' },
+  { id: 'chart', label: 'Chart', icon: 'Ch' },
+  { id: 'gradient', label: 'Gradient', icon: 'Gr' },
   { id: 'ai', label: 'Pattern', icon: 'Pt' },
+];
+
+const thumbnailStyles = [
+  { id: 'soft', label: 'Soft shapes' },
+  { id: 'rings', label: 'Rings' },
+  { id: 'lines', label: 'Lines' },
+  { id: 'pattern', label: 'Mini pattern' },
 ];
 
 const thumbnailThemes = [
@@ -42,6 +53,17 @@ const animationTypes = [
   { id: 'shimmer', label: 'Shimmer line' },
   { id: 'gradient', label: 'Rotating gradient' },
   { id: 'dots', label: 'Loading dots' },
+];
+
+const chartTypes = [
+  { id: 'bar', label: 'Bar' },
+  { id: 'line', label: 'Line' },
+  { id: 'area', label: 'Area' },
+  { id: 'pie', label: 'Pie' },
+  { id: 'donut', label: 'Donut' },
+  { id: 'scatter', label: 'Scatter' },
+  { id: 'radar', label: 'Radar' },
+  { id: 'heatmap', label: 'Heatmap' },
 ];
 
 const trustMetrics = [
@@ -158,6 +180,7 @@ type BuilderOptions = {
   thumbnailTheme: string;
   thumbnailLabel: string;
   animationType: string;
+  chartType: string;
   aiContext: string;
   aiMood: string;
 };
@@ -190,6 +213,12 @@ function buildPath(
   if (preset === 'blur') return `/blur/${width}x${height}`;
   if (preset === 'animated') {
     return `/animated/${options.animationType}/${width}x${height}`;
+  }
+  if (preset === 'chart') {
+    return `/chart/${options.chartType}/${width}x${height}`;
+  }
+  if (preset === 'gradient') {
+    return `/gradient/${width}x${height}`;
   }
   if (preset === 'ai') {
     const params = new URLSearchParams();
@@ -343,6 +372,7 @@ function EnterpriseLanding() {
   const [thumbnailTheme, setThumbnailTheme] = useState('purple');
   const [thumbnailLabel, setThumbnailLabel] = useState('Blog Post');
   const [animationType, setAnimationType] = useState('skeleton');
+  const [chartType, setChartType] = useState('bar');
   const [aiContext, setAiContext] = useState('');
   const [aiMood, setAiMood] = useState('');
   const [codeTab, setCodeTab] = useState<CodeTab>('html');
@@ -361,6 +391,7 @@ function EnterpriseLanding() {
     thumbnailTheme,
     thumbnailLabel,
     animationType,
+    chartType,
     aiContext,
     aiMood,
   };
@@ -381,7 +412,11 @@ function EnterpriseLanding() {
     usesLiveApiPreview(preset) || !imageFailed ? generatedUrl : previewSvg;
   const showColorControls = preset === 'standard' || preset === 'banner';
   const showAdvancedPanel =
-    showColorControls || preset === 'thumbnail' || preset === 'animated' || preset === 'ai';
+    showColorControls ||
+    preset === 'thumbnail' ||
+    preset === 'animated' ||
+    preset === 'chart' ||
+    preset === 'ai';
 
   function selectPreset(next: Preset) {
     setPreset(next);
@@ -422,6 +457,17 @@ function EnterpriseLanding() {
         setWidth(640);
         setHeight(360);
         setCustomizeOpen(true);
+        break;
+      case 'chart':
+        setWidth(800);
+        setHeight(500);
+        setText('Revenue');
+        setCustomizeOpen(true);
+        break;
+      case 'gradient':
+        setWidth(800);
+        setHeight(450);
+        setText('Gradient');
         break;
       case 'ai':
         setWidth(800);
@@ -699,6 +745,21 @@ function EnterpriseLanding() {
                               />
                             </label>
                             <div className="flex flex-wrap gap-1.5">
+                              {thumbnailStyles.map((item) => (
+                                <button
+                                  key={item.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setThumbnailStyle(item.id);
+                                    setImageFailed(false);
+                                  }}
+                                  className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${thumbnailStyle === item.id ? 'border-violet-600 bg-violet-600 text-white' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'}`}
+                                >
+                                  {item.label}
+                                </button>
+                              ))}
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
                               {thumbnailThemes.map((item) => (
                                 <button
                                   key={item.id}
@@ -713,6 +774,24 @@ function EnterpriseLanding() {
                                 </button>
                               ))}
                             </div>
+                          </div>
+                        )}
+
+                        {preset === 'chart' && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {chartTypes.map((item) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  setChartType(item.id);
+                                  setImageFailed(false);
+                                }}
+                                className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold transition ${chartType === item.id ? 'border-violet-600 bg-violet-600 text-white' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'}`}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
                           </div>
                         )}
 

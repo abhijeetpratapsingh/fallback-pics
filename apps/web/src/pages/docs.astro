@@ -58,6 +58,18 @@ const endpointExamples = [
     url: `${baseUrl}/animated/skeleton/640x360`,
     description: 'Motion placeholder that preserves layout while media loads.',
   },
+  {
+    title: 'Chart placeholder',
+    path: '/api/v1/chart/line/800x500',
+    url: `${baseUrl}/chart/line/800x500`,
+    description: 'Deterministic chart art for dashboards, reports, and app previews.',
+  },
+  {
+    title: 'Gradient placeholder',
+    path: '/api/v1/gradient/800x450',
+    url: `${baseUrl}/gradient/800x450`,
+    description: 'Static brand gradient for image slots that need a polished fallback.',
+  },
 ];
 
 const urlPatterns = [
@@ -66,6 +78,8 @@ const urlPatterns = [
   { pattern: '/api/v1/avatar/{size}?text={initials}', example: '/api/v1/avatar/128?text=JD', note: 'Profile and team avatars' },
   { pattern: '/api/v1/thumbnail/{w}x{h}?text=...&label=...', example: '/api/v1/thumbnail/1200x630?text=Article+Title&label=Guide', note: 'Blog and OG thumbnails' },
   { pattern: '/api/v1/animated/{type}/{w}x{h}', example: '/api/v1/animated/skeleton/640x360', note: 'Loading animations' },
+  { pattern: '/api/v1/chart/{type}/{w}x{h}', example: '/api/v1/chart/bar/800x500', note: 'Dashboard chart placeholders' },
+  { pattern: '/api/v1/gradient/{w}x{h}', example: '/api/v1/gradient/800x450', note: 'Static brand gradients' },
 ];
 
 const parameters = [
@@ -77,6 +91,7 @@ const parameters = [
   { name: 'style', type: 'query string', detail: 'Thumbnail decoration: soft, rings, lines, or pattern.' },
   { name: 'theme', type: 'query string', detail: 'Thumbnail palette: purple, blue, green, orange, or dark.' },
   { name: 'label', type: 'query string', detail: 'Short category pill on thumbnail routes, such as Guide or Blog Post.' },
+  { name: 'type', type: 'path string', detail: 'Animation or chart variant, depending on route.' },
   { name: 'extension', type: 'path suffix', detail: 'Optional .svg, .png, .jpg, .jpeg, or .webp for raster output.' },
 ];
 
@@ -89,6 +104,8 @@ const presets = [
   { name: 'skeleton', route: '/api/v1/skeleton/640x360', url: `${baseUrl}/skeleton/640x360`, use: 'Static skeleton blocks that preserve dimensions' },
   { name: 'animated', route: '/api/v1/animated/skeleton/640x360', url: `${baseUrl}/animated/skeleton/640x360`, use: 'Shimmer, pulse, wave, and other loading motion' },
   { name: 'blur', route: '/api/v1/blur/800x450', url: `${baseUrl}/blur/800x450`, use: 'Soft blurred placeholders before real media arrives' },
+  { name: 'chart', route: '/api/v1/chart/bar/800x500', url: `${baseUrl}/chart/bar/800x500`, use: 'Deterministic dashboard and report visualizations' },
+  { name: 'gradient', route: '/api/v1/gradient/800x450', url: `${baseUrl}/gradient/800x450`, use: 'Static brand gradients for media and preview slots' },
   { name: 'pattern', route: '/api/v1/ai/800x450?context=saas&mood=minimal', url: `${baseUrl}/ai/800x450?context=saas&mood=minimal`, use: 'Deterministic decorative backgrounds with optional context' },
 ];
 
@@ -139,7 +156,7 @@ const faqs = [
   },
   {
     question: 'When should I use a preset instead of width x height?',
-    answer: 'Use presets when the output shape is specialized: avatar for initials, thumbnail for blog art, skeleton for loaders, or banner for wide hero slots.',
+    answer: 'Use presets when the output shape is specialized: avatar for initials, thumbnail for blog art, skeleton for loaders, chart for report previews, gradient for branded media slots, or banner for wide hero slots.',
   },
   {
     question: 'Where is the difference between docs and API reference?',
